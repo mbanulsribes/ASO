@@ -1,0 +1,32 @@
+/* Cabecera principal */
+.md-header {
+    position: relative;
+    padding-top: 75px;
+    background: #202536;
+}
+
+/* Banner ASO */
+.md-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 75px;
+
+    background-image: url("../img/head-banner.png");
+    background-repeat: no-repeat;
+
+    /* NO deformar */
+    background-size: cover;
+
+    /* Ajustar qué zona de la imagen vemos */
+    background-position: center 48%;
+}
+
+/* Barra de MkDocs */
+.md-header__inner {
+    display: none !important;
+}
+

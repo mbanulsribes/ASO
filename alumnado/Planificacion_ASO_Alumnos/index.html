@@ -1,0 +1,1152 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="2.º ASIR · Curso 2026/27 · Guía inicial del módulo">
+      
+      
+        <meta name="author" content="María Bañuls">
+      
+      
+      
+      
+        <link rel="next" href="../index_eval1/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Administración de Sistemas Operativos - Administración de Sistemas Operativos</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#administracion-de-sistemas-operativos" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-header__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Sistemas Operativos
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Administración de Sistemas Operativos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../index_eval1/" class="md-tabs__link">
+          
+  
+  
+  Planificación
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-nav__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Administración de Sistemas Operativos
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2o-asir-curso-202627" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.º ASIR · Curso 2026/27
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planificación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index_eval1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación 1eval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="administracion-de-sistemas-operativos">🖥️ Administración de Sistemas Operativos</h1>
+<h2 id="2o-asir-curso-202627">2.º ASIR · Curso 2026/27</h2>
+<div class="admonition info">
+<p class="admonition-title">Datos básicos del módulo</p>
+<p><strong>Módulo profesional:</strong> Administración de Sistemas Operativos<br />
+<strong>Código:</strong> 0374<br />
+<strong>Ciclo:</strong> Técnico Superior en Administración de Sistemas Informáticos en Red<br />
+<strong>Nivel:</strong> Ciclo Formativo de Grado Superior<br />
+<strong>Curso:</strong> 2.º ASIR<br />
+<strong>Carga semanal en nuestro grupo:</strong> <strong>4 horas</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Lunes  → 2 horas
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Martes → 2 horas
+</span></code></pre></div>
+</div>
+<hr />
+<h1 id="bienvenida">👋 Bienvenida</h1>
+<p>En este módulo aprenderemos a <strong>administrar sistemas operativos en un entorno de red</strong>.</p>
+<p>No se trata únicamente de aprender comandos de Linux o de Windows.</p>
+<p>El objetivo es que seas capaz de enfrentarte a situaciones propias de un administrador de sistemas:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>observar
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   ↓
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>comprender el problema
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   ↓
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>elegir una herramienta
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   ↓
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>configurar
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   ↓
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>comprobar
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   ↓
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>diagnosticar
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   ↓
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>documentar
+</span></code></pre></div>
+<p>Durante el curso trabajaremos sobre un laboratorio con sistemas <strong>Linux y Windows</strong>, utilizando máquinas virtuales y herramientas reales de administración.</p>
+<div class="admonition success">
+<p class="admonition-title">Objetivo final</p>
+<p>Al terminar el módulo deberías ser capaz de administrar servicios y sistemas con bastante más autonomía que al principio del curso.</p>
+<p>No esperamos que memorices toda la documentación de un sistema operativo.</p>
+<p>Esperamos que sepas <strong>entender qué necesitas hacer, buscar la herramienta adecuada, utilizarla correctamente y comprobar el resultado</strong>.</p>
+</div>
+<hr />
+<h1 id="que-vamos-a-aprender">🧭 ¿Qué vamos a aprender?</h1>
+<p>El módulo gira alrededor de varias áreas de administración:</p>
+<ul>
+<li>servicios de directorio y administración centralizada;</li>
+<li>automatización mediante scripts;</li>
+<li>administración remota;</li>
+<li>procesos, servicios y tareas programadas;</li>
+<li>integración entre sistemas Windows y Linux;</li>
+<li>administración de recursos compartidos;</li>
+<li>servidores de impresión;</li>
+<li>diagnóstico de incidencias;</li>
+<li>herramientas actuales de virtualización y contenedores.</li>
+</ul>
+<p>A lo largo del curso utilizaremos, entre otras tecnologías:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Proxmox
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Ubuntu Server
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Windows Server
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Bash
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>PowerShell
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>SSH / SCP
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Active Directory
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>GPO
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Samba
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>systemd
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>cron
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>CUPS
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Docker
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Docker Compose
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Kubernetes
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Tecnología y currículo</p>
+<p>No todas estas herramientas constituyen por sí mismas un Resultado de Aprendizaje.</p>
+<p>Algunas, como Proxmox o Docker, nos ayudan a construir un laboratorio moderno y a practicar administración de sistemas.</p>
+<p>La referencia para evaluar el módulo son los <strong>Resultados de Aprendizaje (RA)</strong>.</p>
+</div>
+<hr />
+<h1 id="resultados-de-aprendizaje">🎯 Resultados de Aprendizaje</h1>
+<p>El módulo profesional <strong>0374 Administración de Sistemas Operativos</strong> se estructura en siete Resultados de Aprendizaje.</p>
+<h2 id="ra1-servicio-de-directorio">RA1 · Servicio de directorio</h2>
+<blockquote>
+<p>Administra el servicio de directorio interpretando especificaciones e integrándolo en una red.</p>
+</blockquote>
+<p>Trabajaremos, entre otros contenidos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Active Directory
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dominio
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>controlador de dominio
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>usuarios
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grupos
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>OU
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>GPO
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>autenticación centralizada
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>DNS asociado a AD
+</span></code></pre></div>
+<hr />
+<h2 id="ra2-procesos">RA2 · Procesos</h2>
+<blockquote>
+<p>Administra procesos del sistema describiéndolos y aplicando criterios de seguridad y eficiencia.</p>
+</blockquote>
+<p>Trabajaremos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>procesos
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>PID
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>CPU
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>memoria
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>top / htop
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ps
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>señales
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>kill
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>servicios
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>systemd
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>logs
+</span></code></pre></div>
+<hr />
+<h2 id="ra3-automatizacion-de-tareas">RA3 · Automatización de tareas</h2>
+<blockquote>
+<p>Gestiona la automatización de tareas del sistema, aplicando criterios de eficiencia y utilizando comandos y herramientas gráficas.</p>
+</blockquote>
+<p>Trabajaremos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>automatización
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>scripts
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>tareas programadas
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>cron
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>logs
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>comprobación de ejecuciones
+</span></code></pre></div>
+<hr />
+<h2 id="ra4-administracion-remota">RA4 · Administración remota</h2>
+<blockquote>
+<p>Administra de forma remota el sistema operativo en red valorando su importancia y aplicando criterios de seguridad.</p>
+</blockquote>
+<p>Trabajaremos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>SSH
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>SCP
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>cliente / servidor
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>claves pública y privada
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>authorized_keys
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>servicios de acceso remoto
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>diagnóstico
+</span></code></pre></div>
+<hr />
+<h2 id="ra5-servidores-de-impresion">RA5 · Servidores de impresión</h2>
+<blockquote>
+<p>Administra servidores de impresión describiendo sus funciones e integrándolos en una red.</p>
+</blockquote>
+<p>Trabajaremos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>servidor de impresión
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>colas
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>trabajos
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>impresoras lógicas
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>CUPS
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>compartición
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>administración de colas
+</span></code></pre></div>
+<hr />
+<h2 id="ra6-integracion-de-sistemas">RA6 · Integración de sistemas</h2>
+<blockquote>
+<p>Integra sistemas operativos libres y propietarios, justificando y garantizando su interoperabilidad.</p>
+</blockquote>
+<p>Trabajaremos especialmente:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Windows ↔ Linux
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>SMB
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Samba
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>usuarios
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>grupos
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>permisos
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>recursos compartidos
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>acceso desde distintos sistemas
+</span></code></pre></div>
+<hr />
+<h2 id="ra7-lenguajes-de-guiones">RA7 · Lenguajes de guiones</h2>
+<blockquote>
+<p>Utiliza lenguajes de guiones en sistemas operativos, describiendo su aplicación y administrando servicios del sistema operativo.</p>
+</blockquote>
+<p>Utilizaremos principalmente:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Bash
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>PowerShell
+</span></code></pre></div>
+<p>para automatizar tareas reales de administración.</p>
+<hr />
+<h1 id="mapa-general-del-curso">🗺️ Mapa general del curso</h1>
+<p>La organización por unidades podrá ajustarse durante el curso, pero el recorrido previsto es el siguiente.</p>
+<h2 id="1a-evaluacion">1.ª evaluación</h2>
+<h3 id="ut0-laboratorio-de-administracion">UT0 · Laboratorio de administración</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Proxmox
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Ubuntu Server
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Windows Server
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>red virtual
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>snapshots
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>diagnóstico básico
+</span></code></pre></div>
+<p>Esta unidad prepara el entorno sobre el que trabajaremos durante todo el curso.</p>
+<h3 id="ut1-automatizacion-con-bash">UT1 · Automatización con Bash</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>scripts
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>variables
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>parámetros
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>if
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>validación
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>redirecciones
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>códigos de salida
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>automatización
+</span></code></pre></div>
+<p><strong>RA relacionados:</strong> RA3 y principalmente RA7.</p>
+<h3 id="ut2-administracion-con-powershell">UT2 · Administración con PowerShell</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cmdlets
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>objetos
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>propiedades
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>pipeline
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>filtros
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>scripts
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>informes
+</span></code></pre></div>
+<p><strong>RA relacionados:</strong> principalmente RA7 y algunas evidencias relacionadas con administración de procesos.</p>
+<h3 id="ut3-administracion-remota">UT3 · Administración remota</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>SSH
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>claves
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>SCP
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>configuración
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>seguridad
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>diagnóstico
+</span></code></pre></div>
+<p><strong>RA principal:</strong> RA4.</p>
+<h3 id="ut4-active-directory-parte-1">UT4 · Active Directory — Parte 1</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>dominio
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>controlador de dominio
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>DNS
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>usuarios
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>grupos
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>OU
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>privilegios
+</span></code></pre></div>
+<p><strong>RA principal:</strong> RA1.</p>
+<hr />
+<h1 id="2a-evaluacion">2.ª evaluación</h1>
+<h3 id="ut4-active-directory-parte-2">UT4 · Active Directory — Parte 2</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>GPO
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ámbito
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>preferencias
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Drive Maps
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>gpupdate
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>gpresult
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>diagnóstico
+</span></code></pre></div>
+<p>Continúa desarrollando <strong>RA1</strong>.</p>
+<h3 id="ut5-integracion-windowslinux">UT5 · Integración Windows/Linux</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Samba
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>SMB
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>permisos Linux
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>usuarios
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>grupos
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>recursos compartidos
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Windows ↔ Linux
+</span></code></pre></div>
+<p><strong>RA principal:</strong> RA6.</p>
+<h3 id="ut6-procesos-y-servicios">UT6 · Procesos y servicios</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>procesos
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>PID
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>top
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>htop
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>señales
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>systemd
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>logs
+</span></code></pre></div>
+<p><strong>RA principal:</strong> RA2.</p>
+<h3 id="ut7-automatizacion-y-tareas-programadas">UT7 · Automatización y tareas programadas</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>cron
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>planificación
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>logs
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>comprobación
+</span></code></pre></div>
+<p><strong>RA principal:</strong> RA3.</p>
+<h3 id="ut-de-impresion">UT de impresión</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>CUPS
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>colas
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>impresoras
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>trabajos de impresión
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>compartición
+</span></code></pre></div>
+<p><strong>RA principal:</strong> RA5.</p>
+<h3 id="ut8-contenedores-y-orquestacion">UT8 · Contenedores y orquestación</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Docker
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>imágenes
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>contenedores
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>redes
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>volúmenes
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>Docker Compose
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Kubernetes
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Contenedores</p>
+<p>Docker y Kubernetes son herramientas relevantes en sistemas actuales y nos permiten ampliar la visión profesional del módulo.</p>
+<p>Se utilizarán como <strong>contenido tecnológico y de ampliación</strong>, sin sustituir los Resultados de Aprendizaje oficiales del módulo.</p>
+</div>
+<hr />
+<h1 id="horario-y-ritmo-semanal">🕐 Horario y ritmo semanal</h1>
+<p>Tenemos <strong>4 horas de clase por semana</strong>.</p>
+<h2 id="lunes-2-horas">🟦 Lunes · 2 horas</h2>
+<p>El lunes será habitualmente una sesión de <strong>trabajo autónomo guiado</strong>.</p>
+<p>El tema estará preparado para que puedas avanzar siguiendo el material.</p>
+<p>La estructura habitual será:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>situación
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    ↓
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>lectura breve
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    ↓
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>práctica guiada
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    ↓
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>experimentación
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    ↓
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>preguntas
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    ↓
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>evidencia
+</span></code></pre></div>
+<h3 id="por-que-trabajaremos-asi">¿Por qué trabajaremos así?</h3>
+<p>En administración de sistemas se aprende mucho cuando primero tienes que:</p>
+<ul>
+<li>probar;</li>
+<li>observar;</li>
+<li>equivocarte;</li>
+<li>investigar;</li>
+<li>comparar resultados.</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">El lunes no es una hora libre</p>
+<p>Trabajo autónomo significa que <strong>tú eres responsable de avanzar</strong>.</p>
+<p>Habrá una tarea concreta y normalmente deberás dejar una evidencia de lo realizado.</p>
+</div>
+<hr />
+<h1 id="martes-2-horas">🟧 Martes · 2 horas</h1>
+<p>El martes utilizaremos un modelo parecido a una <strong>flipped classroom práctica</strong>.</p>
+<p>No comenzaremos normalmente con una explicación teórica larga.</p>
+<p>Empezaremos por un problema.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>PRÁCTICA / PROBLEMA
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>        ↓
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>¿QUÉ HA PASADO?
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>        ↓
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>PREGUNTAS
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>        ↓
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>TEORÍA
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>        ↓
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>CONSOLIDACIÓN
+</span></code></pre></div>
+<h2 id="ejemplo">Ejemplo</h2>
+<p>En lugar de empezar diciendo:</p>
+<blockquote>
+<p>«Hoy vamos a estudiar permisos de Samba.»</p>
+</blockquote>
+<p>podríamos empezar con:</p>
+<blockquote>
+<p>«Puedes abrir la carpeta compartida desde Windows, pero no puedes crear un fichero. ¿Por qué?»</p>
+</blockquote>
+<p>Después de intentar diagnosticarlo estudiaremos:</p>
+<ul>
+<li>permisos Linux;</li>
+<li>propietario;</li>
+<li>grupo;</li>
+<li>configuración Samba;</li>
+<li>acceso efectivo.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">La teoría importa</p>
+<p>Que la teoría aparezca después de la práctica <strong>no significa que sea opcional</strong>.</p>
+<p>El tema escrito contiene la teoría que necesitas para:</p>
+<ul>
+<li>comprender lo realizado;</li>
+<li>resolver problemas diferentes;</li>
+<li>preparar los retos;</li>
+<li>preparar el examen.</li>
+</ul>
+</div>
+<hr />
+<h1 id="los-temas-funcionan-como-un-libro">📚 Los temas funcionan como un libro</h1>
+<p>Todos los contenidos estarán disponibles en estos apuntes.</p>
+<p>Encontrarás diferentes tipos de notas.</p>
+<div class="admonition info">
+<p class="admonition-title">Concepto importante</p>
+<p>Ideas que debes comprender.</p>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Ejemplo</p>
+<p>Aplicación de la teoría a una situación concreta.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Como administrador</p>
+<p>Buenas prácticas, métodos de trabajo o trucos útiles.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Error frecuente</p>
+<p>Algo que suele provocar fallos.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Atención</p>
+<p>Errores que pueden afectar a seguridad, datos o funcionamiento del sistema.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Comprueba que lo entiendes</p>
+<p>Preguntas para detectar si realmente comprendes el concepto.</p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Para el examen</p>
+<p>Conocimientos o procedimientos especialmente importantes.</p>
+</div>
+<hr />
+<h1 id="practicas-y-retos">🧪 Prácticas y retos</h1>
+<p>No todas las actividades tendrán el mismo nivel de ayuda.</p>
+<h2 id="nivel-1-practica-guiada">Nivel 1 · Práctica guiada</h2>
+<p>El procedimiento está bastante indicado.</p>
+<p>Objetivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>aprender una herramienta nueva
+</span></code></pre></div>
+<h2 id="nivel-2-practica-semiguiada">Nivel 2 · Práctica semiguiada</h2>
+<p>Conoces las herramientas, pero debes completar parte del procedimiento.</p>
+<p>Objetivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>aplicar
+</span></code></pre></div>
+<h2 id="nivel-3-reto-profesional">Nivel 3 · Reto profesional</h2>
+<p>Recibirás principalmente:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>situación
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>+
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>requisitos
+</span></code></pre></div>
+<p>Tendrás que decidir el procedimiento.</p>
+<p>Objetivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>analizar
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>→ decidir
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>→ implementar
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>→ comprobar
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>→ justificar
+</span></code></pre></div>
+<div class="admonition example">
+<p class="admonition-title">Ejemplo de diferencia</p>
+<p><strong>Práctica guiada:</strong></p>
+<blockquote>
+<p>Ejecuta <code>systemctl status ssh</code>.</p>
+</blockquote>
+<p><strong>Reto:</strong></p>
+<blockquote>
+<p>El servidor responde a <code>ping</code>, pero no puedes entrar por SSH. Diagnostica la incidencia.</p>
+</blockquote>
+</div>
+<p>El segundo problema exige que decidas <strong>qué herramienta utilizar y por qué</strong>.</p>
+<hr />
+<h1 id="metodo-de-diagnostico">🔧 Método de diagnóstico</h1>
+<p>Una de las competencias más importantes del módulo será aprender a diagnosticar.</p>
+<p>Cuando algo no funciona no utilizaremos como método:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>cambiar cosas hasta que funcione
+</span></code></pre></div>
+<p>Intentaremos trabajar así:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>SÍNTOMA
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>   ↓
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>HIPÓTESIS
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>   ↓
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>PRUEBA
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>   ↓
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>RESULTADO
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>   ↓
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>SOLUCIÓN
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>   ↓
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>COMPROBACIÓN
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Regla</p>
+<p>Cambia una cosa cada vez.</p>
+<p>Si cambias cinco configuraciones simultáneamente y de repente funciona, probablemente no has aprendido cuál era el problema.</p>
+</div>
+<hr />
+<h1 id="evaluacion">📝 Evaluación</h1>
+<p>Los exámenes serán fundamentalmente <strong>prácticos y aplicados</strong>.</p>
+<p>No consistirán únicamente en repetir exactamente los retos realizados en clase.</p>
+<p>Podrás encontrarte:</p>
+<ul>
+<li>una configuración incompleta;</li>
+<li>una configuración incorrecta;</li>
+<li>un servicio que no funciona;</li>
+<li>un script que debe adaptarse;</li>
+<li>datos que debes interpretar;</li>
+<li>una decisión que debes justificar.</li>
+</ul>
+<div class="admonition success">
+<p class="admonition-title">Pero no habrá contenidos sorpresa</p>
+<p>Todo procedimiento o concepto necesario para resolver el examen deberá haber sido:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>explicado
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>+
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>visto
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>+
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>practicado
+</span></code></pre></div>
+</div>
+<p>La dificultad estará en <strong>utilizar lo aprendido en una situación ligeramente diferente</strong>, no en adivinar algo que nunca hemos trabajado.</p>
+<hr />
+<h1 id="evaluacion-por-resultados-de-aprendizaje">🎯 Evaluación por Resultados de Aprendizaje</h1>
+<p>Las unidades nos ayudan a organizar el curso, pero la referencia de evaluación son los <strong>RA</strong>.</p>
+<p>Por eso una misma actividad puede proporcionar evidencia de varios resultados.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>script Bash que automatiza altas
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>         │
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>         ├── RA7 · scripting
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>         └── RA3 · automatización
+</span></code></pre></div>
+<p>Otro ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>recurso Samba Linux accesible desde Windows
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>         │
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>         └── RA6 · integración de sistemas
+</span></code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Importante</p>
+<p>Aprobar una actividad no significa necesariamente haber demostrado todos los RA del módulo.</p>
+<p>A lo largo del curso iremos recogiendo evidencias de cada resultado.</p>
+</div>
+<hr />
+<h1 id="que-se-espera-de-ti">🧠 ¿Qué se espera de ti?</h1>
+<h2 id="1-autonomia-progresiva">1. Autonomía progresiva</h2>
+<p>Al principio habrá mucha guía.</p>
+<p>Al final deberías necesitar menos.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>inicio del curso        final del curso
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>mucha guía  ───────────────→  mayor autonomía
+</span></code></pre></div>
+<h2 id="2-comprender-no-copiar">2. Comprender, no copiar</h2>
+<p>Puedes utilizar documentación y ayuda cuando esté permitido.</p>
+<p>Pero copiar un comando sin saber qué hace tiene poco valor en administración de sistemas.</p>
+<p>Debes intentar poder responder:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>¿Qué hace?
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>¿Por qué lo utilizo?
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>¿Cómo sé que ha funcionado?
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>¿Qué comprobaría si falla?
+</span></code></pre></div>
+<h2 id="3-comprobar-siempre">3. Comprobar siempre</h2>
+<p>No basta con ejecutar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>smbd
+</span></code></pre></div>
+<p>Después debes comprobar.</p>
+<p>Por ejemplo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>smbd
+</span></code></pre></div>
+<h2 id="4-documentar">4. Documentar</h2>
+<p>Un administrador no solo arregla problemas.</p>
+<p>También debe dejar información que otra persona pueda entender.</p>
+<p>En algunas actividades utilizaremos estructuras como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>problema:
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>causa:
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>prueba realizada:
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>solución:
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>comprobación:
+</span></code></pre></div>
+<h2 id="5-seguridad-antes-que-atajos">5. Seguridad antes que atajos</h2>
+<p>Durante el curso veremos soluciones que técnicamente pueden «hacer que funcione» pero son malas prácticas.</p>
+<p>Ejemplos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>chmod<span class="w"> </span><span class="m">777</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="nb">kill</span><span class="w"> </span>-9
+</span></code></pre></div>
+<p>o conceder privilegios administrativos a todo el mundo.</p>
+<div class="admonition danger">
+<p class="admonition-title">Que funcione no significa que esté bien</p>
+<p>En un ciclo superior también evaluaremos <strong>la calidad de la decisión técnica</strong>.</p>
+</div>
+<hr />
+<h1 id="nuestro-laboratorio">💻 Nuestro laboratorio</h1>
+<p>Trabajaremos principalmente con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Proxmox
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>├── Ubuntu Server
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>└── Windows Server
+</span></code></pre></div>
+<p>Estas máquinas evolucionarán durante el curso.</p>
+<p>Por eso será importante utilizar:</p>
+<ul>
+<li>snapshots;</li>
+<li>nombres claros;</li>
+<li>configuraciones ordenadas;</li>
+<li>copias cuando proceda;</li>
+<li>documentación.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Cuida tu laboratorio</p>
+<p>Tus máquinas son tu herramienta de trabajo.</p>
+<p>No esperes al día del examen para descubrir que una VM lleva tres semanas sin arrancar.</p>
+</div>
+<hr />
+<h1 id="que-hago-cuando-no-se-seguir">🆘 ¿Qué hago cuando no sé seguir?</h1>
+<p>Antes de preguntar simplemente:</p>
+<blockquote>
+<p>«No funciona.»</p>
+</blockquote>
+<p>intenta aportar información.</p>
+<h2 id="buena-pregunta">Buena pregunta</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Estoy configurando SSH.
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>El ping funciona.
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>ssh usuario@192.168.10.20 devuelve Connection refused.
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>He comprobado la IP.
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>No sé qué revisar después.
+</span></code></pre></div>
+<p>Eso permite diagnosticar.</p>
+<h2 id="mala-pregunta">Mala pregunta</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>No va.
+</span></code></pre></div>
+<hr />
+<h1 id="herramientas-de-ayuda">🔍 Herramientas de ayuda</h1>
+<p>Aprenderemos también a consultar ayuda.</p>
+<p>Linux:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>comando<span class="w"> </span>--help
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>man<span class="w"> </span>comando
+</span></code></pre></div>
+<p>PowerShell:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="nb">Get-Help</span> <span class="n">Comando</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="nb">Get-Help</span> <span class="n">Comando</span> <span class="n">-Examples</span>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="nb">Get-Command</span>
+</span></code></pre></div>
+<p>Docker:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>docker<span class="w"> </span>COMANDO<span class="w"> </span>--help
+</span></code></pre></div>
+<p>Kubernetes:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>kubectl<span class="w"> </span>...<span class="w"> </span>--help
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">No memorices Internet</p>
+<p>Un profesional no conoce todos los comandos de memoria.</p>
+<p>Sabe <strong>qué busca y cómo localizar información fiable</strong>.</p>
+</div>
+<hr />
+<h1 id="vision-global">🧩 Visión global</h1>
+<p>Al final del módulo deberías poder mirar una infraestructura sencilla como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>                 ACTIVE DIRECTORY
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>                        │
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>                 usuarios / grupos
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>                        │
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>          ┌─────────────┴─────────────┐
+</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>          │                           │
+</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>       Windows                      Linux
+</span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>          │                           │
+</span><span id="__span-45-9"><a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>          ├────── SMB / Samba ────────┤
+</span><span id="__span-45-10"><a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>          │                           │
+</span><span id="__span-45-11"><a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>          └────── SSH / SCP ──────────┘
+</span><span id="__span-45-12"><a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>                                      │
+</span><span id="__span-45-13"><a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a>                               procesos / cron
+</span><span id="__span-45-14"><a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a>                                      │
+</span><span id="__span-45-15"><a id="__codelineno-45-15" name="__codelineno-45-15" href="#__codelineno-45-15"></a>                                    Docker
+</span></code></pre></div>
+<p>y entender qué función desempeña cada elemento.</p>
+<hr />
+<h1 id="empezamos">🚀 Empezamos</h1>
+<p>No necesitas llegar al módulo sabiendo administrar todos estos sistemas.</p>
+<p>Sí necesitarás:</p>
+<ul>
+<li>trabajar cada semana;</li>
+<li>mantener tu laboratorio operativo;</li>
+<li>leer los temas;</li>
+<li>probar;</li>
+<li>equivocarte;</li>
+<li>preguntar;</li>
+<li>documentar;</li>
+<li>y, sobre todo, <strong>entender lo que haces</strong>.</li>
+</ul>
+<div class="admonition success">
+<p class="admonition-title">La meta</p>
+<p>Pasar de:</p>
+<blockquote>
+<p>«Dime qué comando tengo que poner.»</p>
+</blockquote>
+<p>a:</p>
+<blockquote>
+<p>«Este es el problema, estas son mis hipótesis y voy a comprobarlas.»</p>
+</blockquote>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2026-2027 María Bañuls Ribes — <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es' target='_blank'>Licencia CC BY-NC-SA</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "header.autohide", "content.action.print"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

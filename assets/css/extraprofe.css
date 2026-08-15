@@ -1,0 +1,102 @@
+@media print {
+
+  /* Ocultar cabecera completa */
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer {
+    display: none !important;
+  }
+
+  /* Quitar espacios reservados por la cabecera */
+  .md-container,
+  .md-main,
+  .md-main__inner {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Aprovechar todo el ancho */
+  .md-content,
+  .md-content__inner {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Fondo blanco para imprimir */
+  html,
+  body,
+  .md-container,
+  .md-main,
+  .md-content,
+  .md-content__inner {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Texto negro */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p,
+  li,
+  strong,
+  em,
+  td,
+  th {
+    color: black !important;
+  }
+
+  /* Enlaces normales al imprimir */
+  a {
+    color: black !important;
+    text-decoration: none !important;
+  }
+
+  /* Evitar cortes incómodos */
+  pre,
+  code,
+  table,
+  blockquote,
+  .admonition {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* A4 */
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+}
+
+.print-button {
+  position: fixed;
+  top: 120px;
+  right: 25px;
+  z-index: 9999;
+
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 6px;
+
+  background: #5146b8;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.print-button:hover {
+  background: #655bd0;
+}
+
+@media print {
+  .print-button {
+    display: none !important;
+  }
+}

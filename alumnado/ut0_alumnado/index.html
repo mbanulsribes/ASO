@@ -1,0 +1,797 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Virtualización, redes virtuales, diagnóstico y snapshots">
+      
+      
+        <meta name="author" content="María Bañuls">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>UT0 · Laboratorio virtual con Proxmox - Administración de Sistemas Operativos</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ut0-laboratorio-virtual-con-proxmox" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-header__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Sistemas Operativos
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              UT0 · Laboratorio virtual con Proxmox
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../Planificacion_ASO_Alumnos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../index_eval1/" class="md-tabs__link">
+          
+  
+  
+  Planificación
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-nav__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Administración de Sistemas Operativos
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Planificacion_ASO_Alumnos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planificación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index_eval1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación 1eval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>UT0 · Laboratorio virtual con Proxmox</h1>
+
+<h2 id="ut0-laboratorio-virtual-con-proxmox">🧪 UT0 · Laboratorio virtual con Proxmox</h2>
+<div class="admonition info">
+<p class="admonition-title">Cómo trabajaremos</p>
+<p>Esta UT ocupa <strong>4 sesiones de 2 horas</strong>.</p>
+<ul>
+<li><strong>Lunes:</strong> trabajo autónomo guiado.</li>
+<li><strong>Martes:</strong> práctica inicial, preguntas, teoría y consolidación.</li>
+</ul>
+<p>El objetivo no es aprender todas las opciones de Proxmox, sino disponer de un entorno fiable sobre el que trabajar durante el resto del curso.</p>
+</div>
+<h2 id="1-resultados-de-aprendizaje-de-la-unidad">1. Resultados de aprendizaje de la unidad</h2>
+<p>Al terminar deberás poder:</p>
+<ul>
+<li>distinguir host, hipervisor, guest y VM;</li>
+<li>justificar para qué usamos virtualización en administración de sistemas;</li>
+<li>crear y dimensionar una VM de forma razonable;</li>
+<li>instalar Ubuntu Server y Windows Server;</li>
+<li>identificar interfaces y direcciones IP;</li>
+<li>comprender la función de un bridge;</li>
+<li>comprobar conectividad;</li>
+<li>realizar diagnóstico básico de red;</li>
+<li>crear y utilizar snapshots de laboratorio.</li>
+</ul>
+<hr />
+<h2 id="2-virtualizacion">📖 2. Virtualización</h2>
+<p>La <strong>virtualización</strong> permite ejecutar varios sistemas operativos aislados utilizando los mismos recursos físicos.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SERVIDOR FÍSICO
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── CPU
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── RAM
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── almacenamiento
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└── red
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>     │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>     ▼
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Proxmox VE
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>     ├── VM Ubuntu Server
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>     └── VM Windows Server
+</span></code></pre></div>
+<h6 id="21-host-hipervisor-y-guest">2.1 Host, hipervisor y guest</h6>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td>Equipo físico que aporta los recursos</td>
+</tr>
+<tr>
+<td>Hipervisor</td>
+<td>Capa que crea y administra VMs</td>
+</tr>
+<tr>
+<td>Guest</td>
+<td>Sistema operativo instalado dentro de una VM</td>
+</tr>
+<tr>
+<td>VM</td>
+<td>Máquina virtual con hardware lógico propio</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">Comprueba que lo entiendes</p>
+<p>Si una VM tiene asignados 2 GB de RAM y el host dispone de 32 GB, ¿puede esa VM utilizar automáticamente los 32 GB?</p>
+<p>No. La VM ve los recursos que tiene asignados.</p>
+</div>
+<h6 id="22-hipervisores-de-tipo-1">2.2 Hipervisores de tipo 1</h6>
+<p>En un hipervisor de tipo 1, la plataforma de virtualización se ejecuta directamente sobre el hardware del servidor.</p>
+<p>Esto lo diferencia de soluciones de escritorio en las que primero se arranca Windows o Linux y después un programa de virtualización.</p>
+<div class="admonition note">
+<p class="admonition-title">Nivel CFGS</p>
+<p>No necesitas memorizar clasificaciones históricas de hipervisores, pero sí comprender la diferencia entre <strong>virtualización de servidor</strong> y ejecutar una VM dentro de un sistema de escritorio.</p>
+</div>
+<hr />
+<h2 id="3-recursos-virtuales">3. Recursos virtuales</h2>
+<h6 id="31-cpu">3.1 CPU</h6>
+<p>Asignar más vCPU no garantiza automáticamente mejor rendimiento.</p>
+<p>El host comparte su capacidad entre varias máquinas.</p>
+<h6 id="32-ram">3.2 RAM</h6>
+<p>Ejemplo de laboratorio:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Host disponible: 16 GB
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Ubuntu Server: 2 GB
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Windows Server: 4 GB
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Resto: Proxmox + otros procesos/VMs
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Sobreasignación</p>
+<p>Un laboratorio con muchas VMs sobredimensionadas puede funcionar peor que uno con asignaciones moderadas.</p>
+</div>
+<h6 id="33-disco">3.3 Disco</h6>
+<p>La VM ve un disco lógico que puede particionar y formatear.</p>
+<p>Para la VM:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/dev/sda
+</span></code></pre></div>
+<p>o:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>C:
+</span></code></pre></div>
+<p>es su disco, aunque físicamente el almacenamiento esté gestionado por Proxmox.</p>
+<hr />
+<h2 id="4-iso-e-instalacion">4. ISO e instalación</h2>
+<p>Una ISO es una imagen de instalación.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ISO → arranque → instalación → disco virtual
+</span></code></pre></div>
+<p>Una vez instalado el sistema, la ISO deja de ser necesaria para el arranque normal.</p>
+<hr />
+<h2 id="5-red-virtual">5. Red virtual</h2>
+<p>Cada VM puede disponer de una o varias interfaces virtuales.</p>
+<p>En Proxmox es habitual conectarlas a un <strong>bridge</strong>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>                 vmbr0
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>          ┌────────────────┐
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>          │ bridge virtual │
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>          └───────┬────────┘
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                  │
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>       ┌──────────┴──────────┐
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>       │                     │
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a> Ubuntu Server         Windows Server
+</span></code></pre></div>
+<p>Podemos interpretar el bridge como un switch lógico.</p>
+<div class="admonition note">
+<p class="admonition-title">Importante</p>
+<p>El nombre <code>vmbr0</code> es habitual, pero el laboratorio puede utilizar otro bridge. Lo importante es comprender su función.</p>
+</div>
+<hr />
+<h2 id="6-direccion-ip-y-conectividad">6. Dirección IP y conectividad</h2>
+<h6 id="linux">Linux</h6>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ip<span class="w"> </span>a
+</span></code></pre></div>
+<h6 id="windows">Windows</h6>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">ipconfig</span>
+</span></code></pre></div>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Ubuntu   192.168.10.21/24
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Windows  192.168.10.22/24
+</span></code></pre></div>
+<p>Ambos equipos parecen pertenecer a la misma red <code>/24</code>.</p>
+<h6 id="ping"><code>ping</code></h6>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ping<span class="w"> </span><span class="m">192</span>.168.10.22
+</span></code></pre></div>
+<p>permite comprobar conectividad IP básica mediante ICMP.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>ping</code> no es una prueba absoluta</p>
+<p>Un firewall puede bloquear ICMP. Que no haya respuesta no significa automáticamente que no exista conectividad para otros servicios.</p>
+</div>
+<hr />
+<h2 id="7-diagnostico-basico-de-red">7. Diagnóstico básico de red</h2>
+<p>No cambies configuraciones al azar.</p>
+<p>Sigue una secuencia:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>1. ¿La VM está arrancada?
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2. ¿Existe la interfaz virtual?
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>3. ¿Está conectada al bridge correcto?
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>4. ¿Tiene IP?
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>5. ¿IP/máscara son coherentes?
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>6. ¿Hay conectividad con el otro extremo?
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>7. ¿Puede intervenir un firewall?
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Método profesional</p>
+<p>Modifica <strong>una variable cada vez</strong>, comprueba y documenta el resultado.</p>
+</div>
+<hr />
+<h2 id="8-snapshots">8. Snapshots</h2>
+<p>Un snapshot permite guardar un estado de una VM.</p>
+<p>Ejemplos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>00-ubuntu-limpio
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>00-windows-limpio
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>01-antes-ssh
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>02-antes-ad
+</span></code></pre></div>
+<div class="admonition danger">
+<p class="admonition-title">Snapshot ≠ backup</p>
+<p>En el laboratorio lo utilizaremos como punto de recuperación. No sustituye una estrategia real de copias de seguridad.</p>
+</div>
+<hr />
+<h2 id="lunes-1409-sesion-1-ubuntu-server">🟦 Lunes 14/09 · Sesión 1 — Ubuntu Server</h2>
+<h6 id="situacion">Situación</h6>
+<p>Necesitas un servidor Linux para realizar prácticas sin modificar el equipo físico.</p>
+<h6 id="trabajo-autonomo">Trabajo autónomo</h6>
+<ol>
+<li>Accede a Proxmox.</li>
+<li>Localiza nodo, almacenamiento y VMs.</li>
+<li>Crea una VM Ubuntu Server.</li>
+<li>Instala el sistema.</li>
+<li>Inicia sesión.</li>
+<li>Ejecuta:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>hostname
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ip<span class="w"> </span>a
+</span></code></pre></div>
+<h6 id="evidencia">Evidencia</h6>
+<p>Entrega:</p>
+<ul>
+<li>nombre de la VM;</li>
+<li>captura de <code>hostname</code>;</li>
+<li>captura de <code>ip a</code>;</li>
+<li>breve explicación de qué diferencia hay entre host y guest.</li>
+</ul>
+<hr />
+<h2 id="martes-1509-sesion-2-virtualizacion-y-recursos">🟧 Martes 15/09 · Sesión 2 — Virtualización y recursos</h2>
+<h6 id="practica-inicial">Práctica inicial</h6>
+<p>Sin consultar teoría:</p>
+<ol>
+<li>localiza cuánta RAM tiene tu VM;</li>
+<li>localiza cuántas vCPU;</li>
+<li>localiza la interfaz virtual;</li>
+<li>localiza el disco virtual.</li>
+</ol>
+<h6 id="preguntas">Preguntas</h6>
+<ul>
+<li>¿qué recursos son físicos y cuáles virtuales?</li>
+<li>¿qué ocurriría si duplicaras la RAM asignada?</li>
+<li>¿podrías instalar otro sistema operativo sobre la misma VM?</li>
+</ul>
+<h6 id="teoria">Teoría</h6>
+<p>Se formalizan:</p>
+<ul>
+<li>host;</li>
+<li>hipervisor;</li>
+<li>guest;</li>
+<li>vCPU;</li>
+<li>RAM virtual;</li>
+<li>disco virtual;</li>
+<li>ISO.</li>
+</ul>
+<h6 id="consolidacion">Consolidación</h6>
+<p>Explica en 5 líneas por qué una VM es útil para un administrador de sistemas.</p>
+<hr />
+<h2 id="lunes-2109-sesion-3-windows-server">🟦 Lunes 21/09 · Sesión 3 — Windows Server</h2>
+<h6 id="trabajo-autonomo_1">Trabajo autónomo</h6>
+<p>Crea una VM Windows Server.</p>
+<p>Después ejecuta:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">hostname</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">ipconfig</span>
+</span></code></pre></div>
+<h6 id="compara">Compara</h6>
+<table>
+<thead>
+<tr>
+<th>Linux</th>
+<th>Windows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hostname</code></td>
+<td><code>hostname</code></td>
+</tr>
+<tr>
+<td><code>ip a</code></td>
+<td><code>ipconfig</code></td>
+</tr>
+<tr>
+<td>Bash</td>
+<td>PowerShell</td>
+</tr>
+<tr>
+<td>interfaz Linux</td>
+<td>adaptador Windows</td>
+</tr>
+</tbody>
+</table>
+<h6 id="evidencia_1">Evidencia</h6>
+<p>Anota:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>IP Ubuntu:
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>IP Windows:
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Bridge Ubuntu:
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Bridge Windows:
+</span></code></pre></div>
+<hr />
+<h2 id="martes-2209-sesion-4-red-diagnostico-y-snapshots">🟧 Martes 22/09 · Sesión 4 — Red, diagnóstico y snapshots</h2>
+<h6 id="practica-inicial_1">Práctica inicial</h6>
+<p>Desde Ubuntu:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ping<span class="w"> </span>IP_WINDOWS
+</span></code></pre></div>
+<p>Desde Windows:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">ping</span> <span class="n">IP_UBUNTU</span>
+</span></code></pre></div>
+<h6 id="preguntas_1">Preguntas</h6>
+<ul>
+<li>¿qué demuestra un ping correcto?</li>
+<li>¿qué no demuestra?</li>
+<li>¿qué revisarías si falla?</li>
+</ul>
+<h6 id="teoria_1">Teoría</h6>
+<ul>
+<li>bridge;</li>
+<li>interfaz virtual;</li>
+<li>IP;</li>
+<li>subred;</li>
+<li>ICMP;</li>
+<li>diagnóstico básico.</li>
+</ul>
+<h6 id="consolidacion_1">Consolidación</h6>
+<p>Crea snapshots:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>00-ubuntu-limpio
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>00-windows-limpio
+</span></code></pre></div>
+<hr />
+<h2 id="reto-profesional-ut0">🎯 Reto profesional UT0</h2>
+<h6 id="escenario">Escenario</h6>
+<p>Te incorporas al equipo de sistemas de una pequeña empresa. Te piden crear un laboratorio virtual con dos servidores para realizar pruebas sin afectar a los sistemas reales.</p>
+<h6 id="requisitos">Requisitos</h6>
+<p>Debes desplegar:</p>
+<ul>
+<li>un Ubuntu Server;</li>
+<li>un Windows Server;</li>
+<li>recursos razonables;</li>
+<li>conectividad entre ambos;</li>
+<li>snapshots iniciales.</li>
+</ul>
+<p>Además, debes entregar una <strong>ficha técnica</strong> con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>VM
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>SO
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>vCPU
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>RAM
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>IP
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>Bridge
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>Estado del ping
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>Snapshot
+</span></code></pre></div>
+<h6 id="incidencia-incluida">Incidencia incluida</h6>
+<p>La profesora modificará o indicará una configuración incorrecta en una de las VMs.</p>
+<p>Debes:</p>
+<ol>
+<li>identificar el problema;</li>
+<li>justificar cómo lo has localizado;</li>
+<li>corregirlo;</li>
+<li>comprobar el resultado.</li>
+</ol>
+<div class="admonition abstract">
+<p class="admonition-title">Nivel esperado</p>
+<p>El reto no se supera únicamente con capturas. Debes demostrar que entiendes la configuración y puedes diagnosticar una incidencia básica.</p>
+</div>
+<hr />
+<h2 id="tipo-examen">📝 Tipo examen</h2>
+<p>Podrías recibir una VM que:</p>
+<ul>
+<li>no tiene IP;</li>
+<li>está conectada al bridge incorrecto;</li>
+<li>no responde a otra VM.</li>
+</ul>
+<p>Se te pedirá identificar la causa y documentar la solución.</p>
+<hr />
+<h2 id="resumen-de-estudio">✅ Resumen de estudio</h2>
+<p>Debes dominar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>host
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>hipervisor
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>guest
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>VM
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>ISO
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>vCPU
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>RAM virtual
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>bridge
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>IP
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>ping
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>snapshot
+</span></code></pre></div>
+<p>Y saber utilizar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ip<span class="w"> </span>a
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ping<span class="w"> </span>IP
+</span></code></pre></div>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">ipconfig</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">ping</span> <span class="n">IP</span>
+</span></code></pre></div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2026-2027 María Bañuls Ribes — <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es' target='_blank'>Licencia CC BY-NC-SA</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "header.autohide", "content.action.print"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

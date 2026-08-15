@@ -1,0 +1,691 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AD DS, dominios, DC, DNS, objetos, OU, usuarios y grupos">
+      
+      
+        <meta name="author" content="María Bañuls">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>UT4 · Active Directory (parte 1) - Administración de Sistemas Operativos</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ut4-active-directory-parte-1" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-header__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Sistemas Operativos
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              UT4 · Active Directory (parte 1)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../Planificacion_ASO_Alumnos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../index_eval1/" class="md-tabs__link">
+          
+  
+  
+  Planificación
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-nav__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Administración de Sistemas Operativos
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Planificacion_ASO_Alumnos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planificación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index_eval1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación 1eval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>UT4 · Active Directory (parte 1)</h1>
+
+<h2 id="ut4-active-directory-parte-1">🏢 UT4 · Active Directory — Parte 1</h2>
+<div class="admonition info">
+<p class="admonition-title">Carga</p>
+<p>Esta UT ocupa <strong>4 sesiones de 2 horas</strong> en la 1.ª evaluación.</p>
+<p>Las GPO avanzadas se dejan para la 2.ª evaluación.</p>
+</div>
+<h2 id="1-objetivos">1. Objetivos</h2>
+<p>Al terminar podrás:</p>
+<ul>
+<li>explicar qué problema resuelve un servicio de directorio;</li>
+<li>distinguir cuenta local y de dominio;</li>
+<li>definir dominio, bosque y DC;</li>
+<li>comprender por qué DNS es esencial para AD;</li>
+<li>instalar AD DS;</li>
+<li>promocionar un servidor;</li>
+<li>crear usuarios, grupos y OU;</li>
+<li>aplicar una estructura administrativa sencilla;</li>
+<li>razonar sobre privilegios.</li>
+</ul>
+<hr />
+<h2 id="2-servicio-de-directorio">📖 2. Servicio de directorio</h2>
+<p>Un directorio almacena información estructurada sobre objetos.</p>
+<p>Ejemplos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>usuarios
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grupos
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>equipos
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>impresoras
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>recursos
+</span></code></pre></div>
+<p>Active Directory Domain Services proporciona un servicio de directorio para entornos Windows.</p>
+<hr />
+<h2 id="3-cuenta-local-y-de-dominio">3. Cuenta local y de dominio</h2>
+<h6 id="local">Local</h6>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PC-A
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>└── ana
+</span></code></pre></div>
+<p>Existe en un equipo concreto.</p>
+<h6 id="dominio">Dominio</h6>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aso.local
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>└── ana
+</span></code></pre></div>
+<p>La identidad pertenece al dominio.</p>
+<hr />
+<h2 id="4-dominio">4. Dominio</h2>
+<p>Un dominio agrupa objetos bajo una infraestructura administrativa común.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>aso.local
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── usuarios
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── grupos
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── equipos
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>└── OU
+</span></code></pre></div>
+<hr />
+<h2 id="5-controlador-de-dominio">5. Controlador de dominio</h2>
+<p>Un DC ejecuta AD DS y presta servicios esenciales al dominio.</p>
+<p>Entre otras funciones:</p>
+<ul>
+<li>autenticación;</li>
+<li>acceso al directorio;</li>
+<li>localización de servicios;</li>
+<li>replicación cuando hay varios DC.</li>
+</ul>
+<p>En nuestro laboratorio trabajaremos con un único DC.</p>
+<hr />
+<h2 id="6-bosque">6. Bosque</h2>
+<p>El bosque es la estructura superior.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Bosque
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>└── aso.local
+</span></code></pre></div>
+<p>No estudiaremos arquitecturas multidominio en esta parte.</p>
+<hr />
+<h2 id="7-dns-y-active-directory">7. DNS y Active Directory</h2>
+<p>AD DS depende de DNS para localizar controladores y servicios.</p>
+<div class="admonition info">
+<p class="admonition-title">Idea esencial</p>
+<p>En un dominio, DNS no es un accesorio. Forma parte del funcionamiento de Active Directory.</p>
+</div>
+<p>No estudiaremos DNS de forma completa aquí, pero sí debes comprender esta dependencia.</p>
+<hr />
+<h2 id="8-instalar-ad-ds-y-promocionar">8. Instalar AD DS y promocionar</h2>
+<p>Son dos fases:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>1. instalar rol AD DS
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2. promocionar a DC
+</span></code></pre></div>
+<p>Instalar el rol no crea automáticamente el dominio.</p>
+<hr />
+<h2 id="9-objetos-y-atributos">9. Objetos y atributos</h2>
+<p>Un usuario es un objeto con atributos.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>usuario
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── nombre
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├── identificador
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>├── credenciales
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>├── pertenencia a grupos
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>└── otros atributos
+</span></code></pre></div>
+<hr />
+<h2 id="10-organizational-units-ou">10. Organizational Units (OU)</h2>
+<p>Las <strong>OU</strong> permiten organizar objetos de forma administrativa.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>aso.local
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── OU=Alumnos
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>├── OU=Profesorado
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>└── OU=Equipos
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">OU ≠ grupo</p>
+<p>Una OU organiza objetos y sirve como ámbito administrativo/políticas.</p>
+<p>Un grupo agrupa identidades principalmente para facilitar asignación de permisos y otros usos.</p>
+</div>
+<hr />
+<h2 id="11-usuarios-y-grupos">11. Usuarios y grupos</h2>
+<p>En lugar de asignar permisos uno a uno:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>usuarios → grupos → permisos
+</span></code></pre></div>
+<p>es una estrategia más escalable.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Grupo: Sistemas
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── ana
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>├── luis
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>└── marta
+</span></code></pre></div>
+<hr />
+<h2 id="12-privilegios">12. Privilegios</h2>
+<p>Grupos como <code>Domain Admins</code> tienen privilegios elevados.</p>
+<div class="admonition danger">
+<p class="admonition-title">Principio de mínimo privilegio</p>
+<p>Un usuario no debería recibir más privilegios de los necesarios.</p>
+</div>
+<p>En laboratorio podemos utilizar grupos administrativos para comprender su efecto, pero debemos reconocer el riesgo.</p>
+<hr />
+<h2 id="13-autenticacion-y-autorizacion">13. Autenticación y autorización</h2>
+<h6 id="autenticacion">Autenticación</h6>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>¿Quién eres?
+</span></code></pre></div>
+<h6 id="autorizacion">Autorización</h6>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>¿Qué puedes hacer?
+</span></code></pre></div>
+<p>Son procesos diferentes.</p>
+<hr />
+<h2 id="martes-1711-problema-y-teoria">🟧 Martes 17/11 · Problema y teoría</h2>
+<p>Práctica inicial:</p>
+<p>Diseña en papel cómo administrarías:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>200 usuarios
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>150 PCs
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>3 departamentos
+</span></code></pre></div>
+<p>Preguntas:</p>
+<ul>
+<li>¿usuarios locales o centralizados?</li>
+<li>¿cómo agruparías departamentos?</li>
+<li>¿cómo aplicarías permisos?</li>
+</ul>
+<p>Teoría:</p>
+<ul>
+<li>directorio;</li>
+<li>dominio;</li>
+<li>DC;</li>
+<li>bosque;</li>
+<li>DNS;</li>
+<li>OU;</li>
+<li>grupos.</li>
+</ul>
+<p>Crear snapshot:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>01-antes-AD
+</span></code></pre></div>
+<hr />
+<h2 id="lunes-2311-instalar-ad-ds">🟦 Lunes 23/11 · Instalar AD DS</h2>
+<p>Trabajo autónomo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Server Manager
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>→ Add Roles and Features
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>→ Active Directory Domain Services
+</span></code></pre></div>
+<p>Evidencia:</p>
+<ul>
+<li>rol instalado;</li>
+<li>diferencia entre instalar y promocionar;</li>
+<li>snapshot disponible.</li>
+</ul>
+<hr />
+<h2 id="martes-2411-promocionar">🟧 Martes 24/11 · Promocionar</h2>
+<p>Práctica inicial:</p>
+<p>crear:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>nuevo bosque
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>aso.local
+</span></code></pre></div>
+<p>Después:</p>
+<ul>
+<li>reinicio;</li>
+<li>comprobar herramientas;</li>
+<li>revisar DNS asociado.</li>
+</ul>
+<p>Teoría:</p>
+<ul>
+<li>bosque;</li>
+<li>dominio;</li>
+<li>DC;</li>
+<li>DNS;</li>
+<li>autenticación.</li>
+</ul>
+<hr />
+<h2 id="lunes-3011-reto-profesional">🟦 Lunes 30/11 · Reto profesional</h2>
+<h2 id="reto-ut4-estructura-de-una-pequena-empresa">🎯 Reto UT4 · Estructura de una pequeña empresa</h2>
+<h6 id="escenario">Escenario</h6>
+<p>La empresa <strong>AulaNet</strong> tiene:</p>
+<ul>
+<li>Dirección;</li>
+<li>Sistemas;</li>
+<li>Administración;</li>
+<li>12 usuarios;</li>
+<li>varios equipos.</li>
+</ul>
+<h6 id="debes">Debes</h6>
+<ol>
+<li>crear una estructura de OU razonable;</li>
+<li>crear usuarios;</li>
+<li>crear grupos por función;</li>
+<li>asignar usuarios a grupos;</li>
+<li>crear un usuario de administración delegada;</li>
+<li>justificar qué cuentas deben tener privilegios elevados y cuáles no;</li>
+<li>documentar la estructura.</li>
+</ol>
+<p>Ejemplo de documentación:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>OU
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>├── Usuarios
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│   ├── Dirección
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│   ├── Sistemas
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│   └── Administración
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>└── Equipos
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">No hay una única estructura válida</p>
+<p>Se evalúa que la propuesta sea coherente, justificable y administrable.</p>
+</div>
+<h6 id="ampliacion">Ampliación</h6>
+<p>Explica qué cambiaría si la empresa creciera a 500 usuarios.</p>
+<hr />
+<h2 id="tipo-examen">📝 Tipo examen</h2>
+<p>Podrías recibir un escenario empresarial y tener que:</p>
+<ul>
+<li>decidir OU;</li>
+<li>crear usuarios;</li>
+<li>crear grupos;</li>
+<li>justificar pertenencias;</li>
+<li>explicar por qué un usuario no debe ser <code>Domain Admin</code>.</li>
+</ul>
+<hr />
+<h2 id="resumen">✅ Resumen</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>AD DS
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>directorio
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>dominio
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>bosque
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>DC
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>DNS
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>objeto
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>atributo
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>OU
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>usuario
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>grupo
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>autenticación
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>autorización
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>mínimo privilegio
+</span></code></pre></div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2026-2027 María Bañuls Ribes — <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es' target='_blank'>Licencia CC BY-NC-SA</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "header.autohide", "content.action.print"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

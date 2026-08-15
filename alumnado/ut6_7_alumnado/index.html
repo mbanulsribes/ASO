@@ -1,0 +1,606 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Procesos, señales, systemd, cron y análisis de recursos">
+      
+      
+        <meta name="author" content="María Bañuls">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>UT6-7 · Procesos, servicios, planificación y monitorización - Administración de Sistemas Operativos</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ut6-7-procesos-servicios-planificacion-y-monitorizacion" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-header__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Sistemas Operativos
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              UT6-7 · Procesos, servicios, planificación y monitorización
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../Planificacion_ASO_Alumnos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../index_eval1/" class="md-tabs__link">
+          
+  
+  
+  Planificación
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Administración de Sistemas Operativos" class="md-nav__button md-logo" aria-label="Administración de Sistemas Operativos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Administración de Sistemas Operativos
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Planificacion_ASO_Alumnos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planificación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index_eval1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planificación 1eval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>UT6-7 · Procesos, servicios, planificación y monitorización</h1>
+
+<h2 id="ut6-7-procesos-servicios-planificacion-y-monitorizacion">📊 UT6-7 · Procesos, servicios, planificación y monitorización</h2>
+<div class="admonition info">
+<p class="admonition-title">Cómo trabajaremos</p>
+<p>Esta unidad pertenece a <strong>2.º ASIR</strong> y se trabaja con <strong>4 horas semanales</strong>:</p>
+<ul>
+<li><strong>Lunes (2 h):</strong> práctica autónoma guiada apoyada en este tema.</li>
+<li><strong>Martes (2 h):</strong> práctica o problema inicial → preguntas → teoría → consolidación.</li>
+</ul>
+<p>Las prácticas guiadas sirven para aprender la técnica. El <strong>reto final</strong> exige analizar el problema, tomar decisiones, comprobar el resultado y justificar la solución.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Unidad compacta</p>
+<p>Disponemos de <strong>4 horas</strong>. No estudiaremos internals del kernel en profundidad. Nos centraremos en las herramientas que un administrador necesita para observar y actuar.</p>
+</div>
+<h2 id="1-que-debes-aprender">1. Qué debes aprender</h2>
+<ul>
+<li>diferenciar programa y proceso;</li>
+<li>identificar PID y PPID;</li>
+<li>observar consumo;</li>
+<li>utilizar señales;</li>
+<li>gestionar procesos;</li>
+<li>comprender servicios <code>systemd</code>;</li>
+<li>consultar logs básicos;</li>
+<li>programar tareas con <code>cron</code>;</li>
+<li>comprobar que una tarea realmente se ejecuta.</li>
+</ul>
+<hr />
+<h2 id="2-programa-y-proceso">📖 2. Programa y proceso</h2>
+<p>Un programa es código almacenado.</p>
+<p>Un <strong>proceso</strong> es una instancia en ejecución.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>programa: /usr/bin/python3
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>             ↓ ejecutar
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>proceso PID 3210
+</span></code></pre></div>
+<p>Puede haber varios procesos del mismo programa.</p>
+<hr />
+<h2 id="3-pid">3. PID</h2>
+<p>Cada proceso posee un identificador:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PID
+</span></code></pre></div>
+<p>Herramientas:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ps
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ps<span class="w"> </span>aux
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pgrep
+</span></code></pre></div>
+<p>Ejemplo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nginx
+</span></code></pre></div>
+<hr />
+<h2 id="4-monitorizacion">4. Monitorización</h2>
+<p>Herramientas interactivas:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>top
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>htop
+</span></code></pre></div>
+<p>Permiten observar:</p>
+<ul>
+<li>CPU;</li>
+<li>memoria;</li>
+<li>procesos;</li>
+<li>carga.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Un valor alto no implica automáticamente un fallo</p>
+<p>Debes observar contexto, duración y función del proceso antes de terminarlo.</p>
+</div>
+<hr />
+<h2 id="5-senales">5. Señales</h2>
+<p><code>kill</code> envía señales.</p>
+<p>Ejemplo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">kill</span><span class="w"> </span>PID
+</span></code></pre></div>
+<p>solicita normalmente una terminación mediante <code>SIGTERM</code>.</p>
+<p>Forzar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>PID
+</span></code></pre></div>
+<p>envía <code>SIGKILL</code>.</p>
+<div class="admonition danger">
+<p class="admonition-title"><code>kill -9</code> no es el primer paso</p>
+<p><code>SIGKILL</code> impide al proceso realizar limpieza. Utilízalo cuando una terminación normal no funciona y entiendas las consecuencias.</p>
+</div>
+<hr />
+<h2 id="6-segundo-plano">6. Segundo plano</h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>comando<span class="w"> </span><span class="p">&amp;</span>
+</span></code></pre></div>
+<p>ejecuta un proceso en background de la shell.</p>
+<p>Herramientas relacionadas:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">jobs</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">fg</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">bg</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>nohup
+</span></code></pre></div>
+<hr />
+<h2 id="7-servicios-con-systemd">7. Servicios con systemd</h2>
+<p>Un servicio administrado por systemd no es lo mismo que dejar simplemente un comando en segundo plano.</p>
+<p>Comandos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>servicio
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>servicio
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>servicio
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>servicio
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>servicio
+</span></code></pre></div>
+<hr />
+<h2 id="8-logs">8. Logs</h2>
+<p>Para servicios systemd:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>journalctl
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>servicio
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Diagnóstico</p>
+<p>Ante un servicio que no arranca:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>status → logs → configuración → corregir → reiniciar → comprobar
+</span></code></pre></div>
+</div>
+<hr />
+<h2 id="9-cron">9. Cron</h2>
+<p><code>cron</code> permite programar ejecuciones.</p>
+<p>Editor del usuario:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>crontab<span class="w"> </span>-e
+</span></code></pre></div>
+<p>Formato:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>minuto hora día_mes mes día_semana comando
+</span></code></pre></div>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>30 23 * * * /home/alumno/backup.sh
+</span></code></pre></div>
+<p>Ejecuta a las 23:30 todos los días.</p>
+<div class="admonition warning">
+<p class="admonition-title">Cron y entorno</p>
+<p>Una tarea puede funcionar manualmente y fallar desde cron por rutas, permisos o variables de entorno.</p>
+<p>Utiliza rutas absolutas y registra salida cuando estés diagnosticando.</p>
+</div>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>30 23 * * * /home/alumno/backup.sh &gt;&gt; /home/alumno/backup.log 2&gt;&amp;1
+</span></code></pre></div>
+<hr />
+<h2 id="lunes-0802-sesion-1-observar-y-controlar">🟦 Lunes 08/02 · Sesión 1 — Observar y controlar</h2>
+<h6 id="trabajo-autonomo">Trabajo autónomo</h6>
+<ol>
+<li>abre <code>top</code>;</li>
+<li>instala/utiliza <code>htop</code> si procede;</li>
+<li>identifica PID;</li>
+<li>ejecuta un proceso en segundo plano;</li>
+<li>localízalo;</li>
+<li>termina primero de forma normal;</li>
+<li>prueba <code>systemctl status</code> sobre servicios conocidos.</li>
+</ol>
+<h6 id="evidencia">Evidencia</h6>
+<p>Explica por qué no deberías comenzar siempre con:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">kill</span><span class="w"> </span>-9
+</span></code></pre></div>
+<hr />
+<h2 id="martes-0902-sesion-2-cron-y-reto">🟧 Martes 09/02 · Sesión 2 — Cron y reto</h2>
+<h6 id="practica-inicial">Práctica inicial</h6>
+<p>Programa una tarea sencilla cada pocos minutos para comprobar inmediatamente que funciona.</p>
+<p>Después cambia a la planificación real.</p>
+<h6 id="teoria">Teoría</h6>
+<ul>
+<li>cron;</li>
+<li>rutas absolutas;</li>
+<li>logs;</li>
+<li>entorno;</li>
+<li>comprobación.</li>
+</ul>
+<h2 id="reto-ut6-7-automatizacion-verificable">🎯 Reto UT6-7 · Automatización verificable</h2>
+<p>Programa el script de backup de la UT1 para que:</p>
+<ol>
+<li>se ejecute diariamente a la hora indicada;</li>
+<li>escriba un log;</li>
+<li>permita comprobar si terminó correctamente;</li>
+<li>no dependa del directorio desde el que se ejecute.</li>
+</ol>
+<p>Además, debes diagnosticar un <code>cron</code> preparado que no funciona.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Tipo examen</p>
+<p>No bastará escribir una línea de crontab: debes ser capaz de comprobar si la tarea realmente se ejecutó y localizar errores básicos.</p>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2026-2027 María Bañuls Ribes — <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es' target='_blank'>Licencia CC BY-NC-SA</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "header.autohide", "content.action.print"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
