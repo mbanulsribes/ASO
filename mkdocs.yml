@@ -26,15 +26,15 @@ theme:
     - content.code.copy
     - header.autohide
     - content.action.print
-    
+
 copyright: "2026-2027 María Bañuls Ribes — <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es' target='_blank'>Licencia CC BY-NC-SA</a>"
 extra_css:
-  - docs/assets/css/extra.css
+  - assets/css/extra.css
 
 plugins: []
 
 nav:
-  - Inicio: alumnado/Planificacion_ASO_Alumnos.md
+  - Inicio: index.md
   - Planificación:
     - Planificación 1eval: alumnado/index_eval1.md
 
