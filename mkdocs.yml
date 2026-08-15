@@ -1,23 +1,64 @@
-site_name: Administració de Sistemes Operatius
-site_description: Materials del mòdul d'Administració de Sistemes Operatius
+site_name: Administración de Sistemas Operativos
+site_description: Materiales del módulo de Administración de Sistemas Operativos
 site_author: María Bañuls
 
 theme:
   name: material
-  language: ca
-
+  language: es
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: cyan
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
   features:
-    - navigation.top
-    - content.code.copy
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - toc.integrate
     - search.suggest
     - search.highlight
+    - content.code.copy
+    - header.autohide
+    - content.action.print
+    
+copyright: "2026-2027 María Bañuls Ribes — <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es' target='_blank'>Licencia CC BY-NC-SA</a>"
+extra_css:
+  - assets/css/extra.css
+
+plugins: []
 
 nav:
-  - Inici: index.md
+  - Inicio: alumnado/Planificacion_ASO_Alumnos.md
+  - Planificación:
+    - Planificación 1eval: alumnado/index_eval1.md
 
 markdown_extensions:
+  - toc:
+      toc_depth: 3
   - admonition
-  - attr_list
+  - def_list
+  - footnotes
+  - meta
   - tables
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: "!!python/name:pymdownx.superfences.fence_code_format"
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.emoji

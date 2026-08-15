@@ -1,0 +1,73 @@
+site_name: ASO
+site_description: Materiales del módulo de Administración de Sistemas Operativos
+site_author: María Bañuls
+
+theme:
+  name: material
+  language: es
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: cyan
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - header.autohide
+    - content.action.print
+
+copyright: "2026-2027 María Bañuls Ribes — <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es' target='_blank'>Licencia CC BY-NC-SA</a>"
+extra_css:
+  - assets/css/extraprofe.css
+extra_javascript:
+  - assets/javascript/print.js  
+nav:
+  - Inicio: alumnado/Planificacion_ASO_Alumnos.md
+  - Planificación:
+    - Planificación 1eval: alumnado/index_eval1.md
+    - Planificación 2eval: alumnado/index_eval2.md
+    - Planificación profe 1: profesorado/index_profesora_eval1.md
+    - Planificación profe 2: profesorado/index_profesora_eval2.md
+  - Contenido:
+      - 1ª Evaluación:
+        - UT0 · Proxmox: alumnado/ut0_alumnado.md
+        - UT1 · Bash: alumnado/ut1_alumnado.md
+        - UT2 · PowerShell: alumnado/ut2_alumnado.md
+        - UT3 · SSH y SCP: alumnado/ut3_alumnado.md
+        - UT4 · Active Directory: alumnado/ut4_alumnado.md 
+      - 2ª Evaluación:
+        - UT4 P2 · GPO: alumnado/ut4p2_alumnado.md
+        - UT5 · Samba: alumnado/ut5_alumnado.md
+        - UT6-7 · Procesos y monitorización: alumnado/ut6_7_alumnado.md
+        - UT8 · Docker y Kubernetes: alumnado/ut8_alumnado.md
+  - Guía profesora:
+    - 1ª Evaluación:
+      - UT0: profesorado/ut0_profesora.md
+      - UT1: profesorado/ut1_profesora.md
+      - UT2: profesorado/ut2_profesora.md
+      - UT3: profesorado/ut3_profesora.md
+      - UT4: profesorado/ut4_profesora.md
+    - 2ª Evaluación:
+      - UT4 P2 · GPO: profesorado/ut4p2_profesora.md
+      - UT5 · Samba: profesorado/ut5_profesora.md
+      - UT6-7: profesorado/ut6_7_profesora.md
+      - UT8: profesorado/ut8_profesora.md
+  - Examenes:
+        - 1ª Evaluación:
+          - Examen alumnado: profesorado/examen_1evaluacion_alumnado.md
+          - Solucionario y rúbrica: profesorado/examen_1evaluacion_profesora.md
+        - 2ª Evaluación:
+          - Examen alumnado: profesorado/examen_2evaluacion_alumnado.md
+          - Solucionario y rúbrica: profesorado/examen_2evaluacion_profesora.md
+
