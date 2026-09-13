@@ -1,0 +1,30 @@
+= Fuentes y créditos
+:description: Procedencia de los materiales y criterios de adaptación del manual.
+
+== Material de partida
+
+La estructura se ha preparado a partir del archivo *ASO CEED.zip* facilitado por la docente. Contiene programación, guía didáctica, teoría, actividades, presentaciones y recursos de educación a distancia.
+
+En los documentos revisados figuran, entre otros, *Álvaro Maceda* y *Enrique Osca*. Varios materiales declaran licencia *Creative Commons Atribución–NoComercial–CompartirIgual*; algunos especifican la versión 4.0. Debe conservarse el aviso concreto de cada fuente al incorporar sus textos o imágenes.
+
+Esta edición reorganiza y redacta una síntesis inicial para el aula presencial del IES Font. Añade el recorrido de contenedores y los casos de Plan B. No reproduce los libros incluidos en el archivo ni publica sus solucionarios docentes.
+
+== Referencia curricular
+
+La docente ha indicado la https://dogv.gva.es/es/eli/es-vc/o/2012/06/22/36/dof/vci/html[Orden 36/2012, de 22 de junio]. Su texto publicado recoge 120 horas para ASO y una distribución de seis horas semanales en segundo curso. La planificación de esta aula parte del horario real comunicado: cuatro horas semanales.
+
+La orden no asigna semanas a cada unidad. Las semanas de la programación a distancia no se utilizan como calendario del grupo presencial. La adaptación de la programación del curso debe contemplar las disposiciones aplicables y el calendario del centro.
+
+== Documentación técnica
+
+* https://docs.docker.com/get-started/[Docker: introducción y conceptos].
+* https://docs.docker.com/compose/[Docker Compose].
+* https://www.gnu.org/software/bash/manual/[Manual de GNU Bash].
+* https://learn.microsoft.com/powershell/[Documentación de PowerShell].
+* https://docs.asciidoctor.org/asciidoctor.js/3.0/[Asciidoctor.js: generación del sitio].
+
+Los procedimientos se adaptarán a las versiones y permisos del laboratorio. Las direcciones, puertos y nombres simbólicos de los ejemplos no son datos reales del servidor del departamento.
+
+== Reutilización
+
+Las adaptaciones propias del material docente de esta edición se ofrecen bajo https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es[CC BY-NC-SA 4.0], conservando los créditos de las fuentes incorporadas. Esta indicación no cambia la licencia de obras de terceros ni la de las herramientas utilizadas.

@@ -1,0 +1,71 @@
+= Procesos y servicios
+:unit: 03
+:description: Entiende qué se está ejecutando, cómo consume recursos y por qué un servicio puede fallar.
+:period: Octubre · noviembre
+:ra: RA2
+
+== Un programa en ejecución
+
+Un programa es un conjunto de instrucciones almacenadas. Un *proceso* es una instancia en ejecución con estado, recursos e identificador. Un proceso puede contener varios *hilos*, que comparten recursos del proceso y mantienen su propio flujo de ejecución.
+
+El sistema reparte tiempo de procesador entre tareas preparadas. Un proceso puede estar ejecutándose, esperando un recurso o listo para recibir CPU. Esperar una operación de disco no es lo mismo que competir por tiempo de procesador.
+
+El PID identifica al proceso; el PPID permite reconocer a su padre. Una jerarquía de procesos ayuda a explicar cómo se inició un servicio y qué otros procesos dependen de él. Los identificadores pueden cambiar entre ejecuciones.
+
+== Observar antes de intervenir
+
+En Linux podemos consultar procesos y relacionarlos con usuarios y servicios:
+
+[source,bash]
+----
+ps -ef
+ps -u "$USER"
+----
+
+En Windows, el Administrador de tareas y PowerShell ofrecen vistas complementarias. Los valores no siempre miden lo mismo: un tiempo acumulado de CPU no es un porcentaje instantáneo de uso. Antes de comparar, identifica magnitud, unidad e intervalo de medida.
+
+No todo proceso desconocido es malicioso. Investiga su usuario, ejecutable, origen, padre y registros. Finalizar un proceso importante puede interrumpir un servicio y afectar a otras personas.
+
+== Servicios y arranque
+
+Un *servicio* proporciona una función que el sistema o los usuarios necesitan. Puede iniciar procesos y tener dependencias. En los sistemas Linux del laboratorio, systemd permite consultar unidades y gestionar servicios.
+
+Dos preguntas diferentes son: «¿está activo ahora?» y «¿está configurado para iniciarse cuando corresponda?». Un servicio puede estar habilitado y haber fallado; también puede estar activo porque se inició manualmente.
+
+Para diagnosticar, combina estado, registros y pruebas de funcionamiento. El orden útil es observar el error, localizar su contexto, formular una hipótesis, cambiar una sola condición y volver a comprobar.
+
+== Práctica A · Seguir un proceso propio
+
+En una sesión Bash del laboratorio, ejecuta un proceso de espera de tu usuario:
+
+[source,bash]
+----
+sleep 120 &
+pid=$!
+ps -p "$pid" -o pid,ppid,stat,comm
+kill "$pid"
+----
+
+Identifica su PID, padre y estado. Comprueba después que terminó. Solo se envía la señal al proceso que acabas de crear; no se elige un PID de otro usuario.
+
+Completa la práctica con el servicio de prueba indicado por la docente: consulta su estado, localiza un mensaje de registro y explica la diferencia entre proceso y servicio.
+
+*Entrega.* Secuencia observada, explicación de la señal y un diagnóstico del servicio basado en evidencias.
+
+[.plan-b]
+=== Plan B · Diagnosticar un servicio
+
+Un servicio está configurado para iniciarse, pero su estado indica `failed`. El registro del caso muestra: «No se puede leer /etc/servicio/config.conf: permiso denegado». El archivo existe y una persona había cambiado sus permisos antes del último reinicio.
+
+. Distingue hechos observados e hipótesis.
+. Indica qué identidad del servicio y qué permisos revisarías.
+. Explica por qué reiniciarlo repetidamente no resuelve necesariamente el problema.
+. Redacta las comprobaciones posteriores a una corrección autorizada.
+
+*Entrega B.* Informe con causa probable, datos que faltan y plan de verificación. No inventes una salida de éxito.
+
+== Comprueba lo que sabes
+
+* ¿Qué comparten dos hilos del mismo proceso?
+* ¿Por qué activo y habilitado no significan lo mismo?
+* ¿Qué debes averiguar antes de finalizar un proceso desconocido?

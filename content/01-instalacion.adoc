@@ -1,0 +1,89 @@
+= Instalación y virtualización
+:unit: 01
+:description: Prepara una máquina virtual, instala un sistema y comprueba que está listo para trabajar.
+:period: Hasta el 8 de octubre
+:ra: Preparación del laboratorio
+
+== Qué vas a aprender
+
+Instalar un servidor empieza antes de arrancar una ISO. Hay que decidir qué servicio prestará, qué recursos necesita, cómo se conectará y cómo comprobarás el resultado. El objetivo de esta unidad es que puedas explicar esas decisiones y realizar una instalación reproducible.
+
+Al terminar podrás distinguir un equipo físico, una máquina virtual y un sistema operativo; asignar recursos; describir las fases de instalación y documentar la configuración inicial.
+
+== Un laboratorio con máquinas virtuales
+
+Una *máquina virtual* presenta al sistema invitado una CPU, memoria, disco y adaptadores de red virtuales. El *hipervisor* administra esos recursos sobre un equipo físico. Varios sistemas invitados pueden compartir el mismo servidor, aunque cada uno tenga su configuración y sus usuarios.
+
+El ordenador del aula es nuestro cliente de trabajo. El servidor del departamento alojará el entorno que nos asigne la docente. Tener acceso a una VM no significa tener permiso para administrar el hipervisor ni las máquinas de otras personas.
+
+[cols="1,2",options="header"]
+|===
+|Elemento |Qué debes decidir
+|CPU y RAM |Recursos suficientes para el sistema y el servicio, dentro de la cuota asignada.
+|Disco |Capacidad, particiones y ubicación de los datos.
+|Red |Adaptador, dirección, puerta de enlace y resolución de nombres según el laboratorio.
+|ISO |Sistema, versión y procedencia de la imagen de instalación.
+|Cuenta |Usuario de trabajo y permisos administrativos dentro de la VM.
+|===
+
+No elegimos una dirección IP por intuición. Utilizamos los datos de red facilitados para la práctica. Tampoco cambiamos la red del ordenador LliureX para intentar llegar al servidor.
+
+== Las fases de la instalación
+
+. *Preparación.* Lee los requisitos, anota los recursos asignados y comprueba la imagen disponible.
+. *Creación de la VM.* Configura CPU, memoria, disco y adaptador de red. Monta la ISO.
+. *Instalación.* Selecciona idioma, teclado, zona horaria y almacenamiento. Revisa el disco de destino antes de confirmar el particionado.
+. *Identificación.* Establece nombre de equipo y usuario según la ficha de la práctica.
+. *Primer arranque.* Retira el medio de instalación cuando corresponda y comprueba que el sistema inicia desde su disco.
+. *Configuración y verificación.* Revisa red, fecha, cuentas y las actualizaciones indicadas por la docente.
+
+Una instalación de Linux y una de Windows Server comparten estas decisiones, aunque sus asistentes y herramientas sean diferentes. Aprender el motivo de cada paso permite trabajar con ambos sistemas.
+
+== Comprobar antes de dar por terminado
+
+Que aparezca una pantalla de inicio de sesión es solo una parte del resultado. Debes poder entrar con la cuenta prevista, reconocer el equipo y explicar la configuración de red y almacenamiento.
+
+En Linux, estas consultas ayudan a documentar la instalación:
+
+[source,bash]
+----
+hostname
+ip address
+df -h
+free -h
+----
+
+El nombre identifica el equipo; las interfaces muestran su configuración; las otras consultas describen espacio en los sistemas de archivos y memoria. Una dirección configurada no demuestra por sí sola que exista acceso a Internet o al servidor del departamento.
+
+Una *instantánea* permite volver a un estado de una VM en las condiciones que ofrezca la plataforma. No debe confundirse con una copia de seguridad independiente. En el laboratorio seguiremos el procedimiento de recuperación que indique la docente.
+
+== Práctica A · Tu primer servidor
+
+*Situación.* Debes preparar una VM Linux para las siguientes prácticas. La docente proporciona acceso, ISO, cuota de recursos y datos de red. Si se utiliza una consola web, esta práctica depende de que el aula pueda acceder a ella.
+
+. Completa la ficha de recursos antes de crear la máquina.
+. Instala el sistema y crea el usuario de trabajo.
+. Comprueba nombre, inicio de sesión, interfaces, disco y memoria.
+. Reinicia la VM y repite las comprobaciones esenciales.
+. Documenta una dificultad encontrada y cómo la resolviste.
+
+*Entrega.* Ficha de instalación, capturas identificadas y explicación de las comprobaciones. Se valoran la coherencia de los recursos, la instalación funcional y la capacidad de interpretar el resultado.
+
+[.plan-b]
+=== Plan B · Diseñar y revisar una instalación
+
+Sin acceso al servidor, resuelve este supuesto: una VM tiene asignados dos procesadores virtuales, 4 GB de RAM y 30 GB de disco. Su finalidad inicial es trabajar en terminal. No hay autorización para instalar software en los clientes del aula.
+
+. Dibuja la relación entre cliente, hipervisor y VM.
+. Prepara una ficha con los datos conocidos y marca los datos de red que aún debes solicitar.
+. Ordena las seis fases de instalación y escribe qué comprobarías en cada una.
+. Analiza estos incidentes: tras reiniciar vuelve a aparecer el instalador; la VM arranca pero no puede comunicarse con su puerta de enlace. Propón comprobaciones, sin afirmar una causa que todavía no hayas demostrado.
+
+*Entrega B.* Ficha y diagnóstico razonado. Esta actividad prepara la instalación; la creación y el arranque reales se comprobarán cuando vuelva el acceso.
+
+== Comprueba lo que sabes
+
+* ¿Qué recursos comparte una VM con otras máquinas y qué configuración mantiene propia?
+* ¿Por qué debes comprobar el disco antes de particionarlo?
+* ¿Qué diferencia hay entre tener una dirección IP y haber verificado la conectividad?
+* ¿Qué evidencias permitirían a otra persona repetir tu instalación?

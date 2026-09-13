@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Prepara una máquina virtual, instala un sistema y comprueba que está listo para trabajar."><title>Instalación y virtualización · ASO · IES Font</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23142138'/%3E%3Cpath d='m10 12 8 8-8 8m12 0h9' fill='none' stroke='%2382b9ff' stroke-width='3'/%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"><script src="assets/app.js" defer></script></head>
+<body><a class="skip" href="#main">Saltar al contenido</a>
+<header class="mobile-header"><a href="index.html">ASO <span>/ IES Font</span></a><button id="menu-toggle" aria-expanded="false" aria-controls="sidebar">Índice</button></header>
+<aside class="sidebar" id="sidebar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&gt;_</span><span>ASO<small>IES FONT · 2.º ASIR</small></span></a><div class="subject">Administración de<br>sistemas operativos</div><nav aria-label="Navegación del curso"><a class="home-link " href="index.html" >Vista del curso</a><p class="nav-label">TEMARIO</p><a class="nav-unit active" href="01-instalacion.html" aria-current="page"><span>01</span><span>Instalación y virtualización</span></a><a class="nav-unit " href="02-linux.html" ><span>02</span><span>Linux</span></a><a class="nav-unit " href="03-procesos.html" ><span>03</span><span>Procesos y servicios</span></a><a class="nav-unit " href="04-scripting.html" ><span>04</span><span>Scripting y automatización</span></a><a class="nav-unit " href="05-docker.html" ><span>05</span><span>Docker y despliegue</span></a><a class="nav-unit " href="06-contenedores.html" ><span>06</span><span>Gestión de contenedores</span></a><a class="nav-unit " href="07-directorio.html" ><span>07</span><span>Servicios de directorio</span></a><a class="nav-unit " href="08-remota.html" ><span>08</span><span>Administración remota</span></a><a class="nav-unit " href="09-impresion.html" ><span>09</span><span>Servidores de impresión</span></a><a class="nav-unit " href="10-integracion.html" ><span>10</span><span>Redes heterogéneas</span></a><div class="nav-end"><a href="guia.html" >Cómo trabajamos</a><a href="creditos.html" >Fuentes y créditos</a></div></nav><div class="sidebar-footer"><span>VALÈNCIA · PRESENCIAL</span><p>Lunes y martes<br>2 horas cada día</p></div></aside>
+<div class="workspace"><div class="topbar"><span>IES Font <span class="slash">/</span> 2.º ASIR <span class="slash">/</span> Unidad 01</span><span class="topbar-label">MANUAL DE AULA</span></div>
+<main id="main" tabindex="-1" class="lesson-main"><div class="reading"><header class="page-header"><div class="eyebrow">UNIDAD 01</div><h1>Instalación y virtualización</h1><p class="lead">Prepara una máquina virtual, instala un sistema y comprueba que está listo para trabajar.</p><div class="lesson-meta"><span>Hasta el 8 de octubre</span><span>Preparación del laboratorio</span><a href="fuentes/01-instalacion.adoc" download>Descargar AsciiDoc ↓</a></div></header><article class="document"><div class="sect1">
+<h2 id="qué-vas-a-aprender"><a class="anchor" href="#qué-vas-a-aprender"></a>Qué vas a aprender</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Instalar un servidor empieza antes de arrancar una ISO. Hay que decidir qué servicio prestará, qué recursos necesita, cómo se conectará y cómo comprobarás el resultado. El objetivo de esta unidad es que puedas explicar esas decisiones y realizar una instalación reproducible.</p>
+</div>
+<div class="paragraph">
+<p>Al terminar podrás distinguir un equipo físico, una máquina virtual y un sistema operativo; asignar recursos; describir las fases de instalación y documentar la configuración inicial.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="un-laboratorio-con-máquinas-virtuales"><a class="anchor" href="#un-laboratorio-con-máquinas-virtuales"></a>Un laboratorio con máquinas virtuales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Una <strong>máquina virtual</strong> presenta al sistema invitado una CPU, memoria, disco y adaptadores de red virtuales. El <strong>hipervisor</strong> administra esos recursos sobre un equipo físico. Varios sistemas invitados pueden compartir el mismo servidor, aunque cada uno tenga su configuración y sus usuarios.</p>
+</div>
+<div class="paragraph">
+<p>El ordenador del aula es nuestro cliente de trabajo. El servidor del departamento alojará el entorno que nos asigne la docente. Tener acceso a una VM no significa tener permiso para administrar el hipervisor ni las máquinas de otras personas.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Elemento</th>
+<th class="tableblock halign-left valign-top">Qué debes decidir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU y RAM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Recursos suficientes para el sistema y el servicio, dentro de la cuota asignada.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disco</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacidad, particiones y ubicación de los datos.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Red</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adaptador, dirección, puerta de enlace y resolución de nombres según el laboratorio.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ISO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sistema, versión y procedencia de la imagen de instalación.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cuenta</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Usuario de trabajo y permisos administrativos dentro de la VM.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>No elegimos una dirección IP por intuición. Utilizamos los datos de red facilitados para la práctica. Tampoco cambiamos la red del ordenador LliureX para intentar llegar al servidor.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="las-fases-de-la-instalación"><a class="anchor" href="#las-fases-de-la-instalación"></a>Las fases de la instalación</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Preparación.</strong> Lee los requisitos, anota los recursos asignados y comprueba la imagen disponible.</p>
+</li>
+<li>
+<p><strong>Creación de la VM.</strong> Configura CPU, memoria, disco y adaptador de red. Monta la ISO.</p>
+</li>
+<li>
+<p><strong>Instalación.</strong> Selecciona idioma, teclado, zona horaria y almacenamiento. Revisa el disco de destino antes de confirmar el particionado.</p>
+</li>
+<li>
+<p><strong>Identificación.</strong> Establece nombre de equipo y usuario según la ficha de la práctica.</p>
+</li>
+<li>
+<p><strong>Primer arranque.</strong> Retira el medio de instalación cuando corresponda y comprueba que el sistema inicia desde su disco.</p>
+</li>
+<li>
+<p><strong>Configuración y verificación.</strong> Revisa red, fecha, cuentas y las actualizaciones indicadas por la docente.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Una instalación de Linux y una de Windows Server comparten estas decisiones, aunque sus asistentes y herramientas sean diferentes. Aprender el motivo de cada paso permite trabajar con ambos sistemas.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="comprobar-antes-de-dar-por-terminado"><a class="anchor" href="#comprobar-antes-de-dar-por-terminado"></a>Comprobar antes de dar por terminado</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Que aparezca una pantalla de inicio de sesión es solo una parte del resultado. Debes poder entrar con la cuenta prevista, reconocer el equipo y explicar la configuración de red y almacenamiento.</p>
+</div>
+<div class="paragraph">
+<p>En Linux, estas consultas ayudan a documentar la instalación:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">hostname
+ip address
+df -h
+free -h</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>El nombre identifica el equipo; las interfaces muestran su configuración; las otras consultas describen espacio en los sistemas de archivos y memoria. Una dirección configurada no demuestra por sí sola que exista acceso a Internet o al servidor del departamento.</p>
+</div>
+<div class="paragraph">
+<p>Una <strong>instantánea</strong> permite volver a un estado de una VM en las condiciones que ofrezca la plataforma. No debe confundirse con una copia de seguridad independiente. En el laboratorio seguiremos el procedimiento de recuperación que indique la docente.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="práctica-a-tu-primer-servidor"><a class="anchor" href="#práctica-a-tu-primer-servidor"></a>Práctica A · Tu primer servidor</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Situación.</strong> Debes preparar una VM Linux para las siguientes prácticas. La docente proporciona acceso, ISO, cuota de recursos y datos de red. Si se utiliza una consola web, esta práctica depende de que el aula pueda acceder a ella.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Completa la ficha de recursos antes de crear la máquina.</p>
+</li>
+<li>
+<p>Instala el sistema y crea el usuario de trabajo.</p>
+</li>
+<li>
+<p>Comprueba nombre, inicio de sesión, interfaces, disco y memoria.</p>
+</li>
+<li>
+<p>Reinicia la VM y repite las comprobaciones esenciales.</p>
+</li>
+<li>
+<p>Documenta una dificultad encontrada y cómo la resolviste.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Entrega.</strong> Ficha de instalación, capturas identificadas y explicación de las comprobaciones. Se valoran la coherencia de los recursos, la instalación funcional y la capacidad de interpretar el resultado.</p>
+</div>
+<div class="sect2 plan-b">
+<h3 id="plan-b-diseñar-y-revisar-una-instalación"><a class="anchor" href="#plan-b-diseñar-y-revisar-una-instalación"></a>Plan B · Diseñar y revisar una instalación</h3>
+<div class="paragraph">
+<p>Sin acceso al servidor, resuelve este supuesto: una VM tiene asignados dos procesadores virtuales, 4 GB de RAM y 30 GB de disco. Su finalidad inicial es trabajar en terminal. No hay autorización para instalar software en los clientes del aula.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Dibuja la relación entre cliente, hipervisor y VM.</p>
+</li>
+<li>
+<p>Prepara una ficha con los datos conocidos y marca los datos de red que aún debes solicitar.</p>
+</li>
+<li>
+<p>Ordena las seis fases de instalación y escribe qué comprobarías en cada una.</p>
+</li>
+<li>
+<p>Analiza estos incidentes: tras reiniciar vuelve a aparecer el instalador; la VM arranca pero no puede comunicarse con su puerta de enlace. Propón comprobaciones, sin afirmar una causa que todavía no hayas demostrado.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Entrega B.</strong> Ficha y diagnóstico razonado. Esta actividad prepara la instalación; la creación y el arranque reales se comprobarán cuando vuelva el acceso.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="comprueba-lo-que-sabes"><a class="anchor" href="#comprueba-lo-que-sabes"></a>Comprueba lo que sabes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>¿Qué recursos comparte una VM con otras máquinas y qué configuración mantiene propia?</p>
+</li>
+<li>
+<p>¿Por qué debes comprobar el disco antes de particionarlo?</p>
+</li>
+<li>
+<p>¿Qué diferencia hay entre tener una dirección IP y haber verificado la conectividad?</p>
+</li>
+<li>
+<p>¿Qué evidencias permitirían a otra persona repetir tu instalación?</p>
+</li>
+</ul>
+</div>
+</div>
+</div></article><nav class="page-turn" aria-label="Entre unidades"><a href="index.html"><span>Volver a</span>Vista del curso</a><a href="02-linux.html"><span>Siguiente</span>Linux →</a></nav><footer class="page-footer"><span>ASO · IES Font</span><a href="creditos.html">Fuentes y créditos</a></footer></div><aside class="page-toc" aria-label="En esta página"><p>EN ESTA PÁGINA</p><a href="#qué-vas-a-aprender">Qué vas a aprender</a><a href="#un-laboratorio-con-máquinas-virtuales">Un laboratorio con máquinas virtuales</a><a href="#las-fases-de-la-instalación">Las fases de la instalación</a><a href="#comprobar-antes-de-dar-por-terminado">Comprobar antes de dar por terminado</a><a href="#práctica-a-tu-primer-servidor">Práctica A · Tu primer servidor</a><a href="#comprueba-lo-que-sabes">Comprueba lo que sabes</a><div class="toc-note"><strong>Aprender, comprobar, explicar.</strong><span>Cada práctica incluye una alternativa sin acceso al servidor.</span></div></aside></main></div></body></html>

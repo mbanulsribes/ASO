@@ -1,0 +1,60 @@
+= Redes heterogéneas
+:unit: 10
+:description: Comparte recursos entre Linux y Windows y verifica quién puede acceder a ellos.
+:period: Después del 22 de enero
+:ra: RA6
+
+== Sistemas diferentes, recursos comunes
+
+Una red heterogénea reúne sistemas con herramientas y modelos de administración distintos. El objetivo es que cooperen sin perder el control de identidades y permisos. En esta unidad relacionaremos conectividad, directorio, acceso remoto y recursos compartidos.
+
+El ZIP de referencia menciona esta unidad en la programación, pero no incluye una unidad desarrollada propia. Este capítulo ofrece el recorrido inicial para completarla con las prácticas del laboratorio.
+
+== Compartir archivos
+
+Estudiaremos SMB mediante Samba para compartir recursos con clientes Windows y Linux, y compararemos el enfoque con NFS. No elegimos un protocolo solo porque ambos equipos estén conectados: también importan identidades, permisos, clientes y requisitos del servicio.
+
+Compartir una carpeta no elimina los permisos del sistema de archivos. El resultado depende de la configuración del recurso y de la identidad con que se accede. Una cuenta local con el mismo nombre en dos equipos no demuestra que ambos reconozcan a la misma persona.
+
+== Diseñar pruebas de acceso
+
+Antes de configurar, construye una matriz: quién puede leer, quién puede escribir y quién no debe entrar. Después prueba cada caso desde los sistemas cliente previstos.
+
+[cols="1,1,1",options="header"]
+|===
+|Grupo |Materiales |Entregas propias
+|Alumnado |Lectura |Lectura y escritura
+|Profesorado |Lectura y escritura |Según la política del caso
+|Sin autorización |Sin acceso |Sin acceso
+|===
+
+La matriz es una especificación, no una configuración terminada. Para convertirla en permisos hay que decidir estructura de carpetas, grupos e identidades. La carpeta de entregas no debe permitir por accidente modificar el trabajo de otra persona.
+
+== Práctica A · Un recurso compartido
+
+. Dibuja el mapa de red del entorno asignado.
+. Define carpeta, grupos y matriz de acceso.
+. Configura el servicio siguiendo el procedimiento del laboratorio.
+. Prueba lectura y escritura desde un cliente Windows y otro Linux.
+. Realiza una prueba con una cuenta no autorizada.
+. Documenta configuración, resultados e incidencias.
+
+*Entrega.* Mapa, matriz, pruebas positivas y negativas. Que una cuenta administradora consiga entrar no demuestra que el diseño de permisos sea correcto para el alumnado.
+
+[.plan-b]
+=== Plan B · Revisar una compartición
+
+Un recurso llamado `materiales` debe permitir lectura al alumnado. En la prueba preparada, una cuenta de estudiante crea y elimina archivos. La conectividad funciona y se reconoce la cuenta.
+
+. Identifica qué requisito se incumple.
+. Explica qué permisos y pertenencias revisarías.
+. Diseña una estructura para que cada estudiante entregue archivos sin modificar los ajenos.
+. Redacta pruebas desde ambos sistemas y para una cuenta sin autorización.
+
+*Entrega B.* Matriz corregida, diseño y resultados esperados. La configuración y el acceso efectivos se verificarán en el laboratorio.
+
+== Comprueba lo que sabes
+
+* ¿Qué significa interoperar entre sistemas?
+* ¿Por qué necesitas pruebas con cuentas que no sean administradoras?
+* ¿Qué capas de permisos pueden intervenir en una carpeta compartida?

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Convierte operaciones repetidas en guiones comprobables y tareas programadas."><title>Scripting y automatización · ASO · IES Font</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23142138'/%3E%3Cpath d='m10 12 8 8-8 8m12 0h9' fill='none' stroke='%2382b9ff' stroke-width='3'/%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"><script src="assets/app.js" defer></script></head>
+<body><a class="skip" href="#main">Saltar al contenido</a>
+<header class="mobile-header"><a href="index.html">ASO <span>/ IES Font</span></a><button id="menu-toggle" aria-expanded="false" aria-controls="sidebar">Índice</button></header>
+<aside class="sidebar" id="sidebar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&gt;_</span><span>ASO<small>IES FONT · 2.º ASIR</small></span></a><div class="subject">Administración de<br>sistemas operativos</div><nav aria-label="Navegación del curso"><a class="home-link " href="index.html" >Vista del curso</a><p class="nav-label">TEMARIO</p><a class="nav-unit " href="01-instalacion.html" ><span>01</span><span>Instalación y virtualización</span></a><a class="nav-unit " href="02-linux.html" ><span>02</span><span>Linux</span></a><a class="nav-unit " href="03-procesos.html" ><span>03</span><span>Procesos y servicios</span></a><a class="nav-unit active" href="04-scripting.html" aria-current="page"><span>04</span><span>Scripting y automatización</span></a><a class="nav-unit " href="05-docker.html" ><span>05</span><span>Docker y despliegue</span></a><a class="nav-unit " href="06-contenedores.html" ><span>06</span><span>Gestión de contenedores</span></a><a class="nav-unit " href="07-directorio.html" ><span>07</span><span>Servicios de directorio</span></a><a class="nav-unit " href="08-remota.html" ><span>08</span><span>Administración remota</span></a><a class="nav-unit " href="09-impresion.html" ><span>09</span><span>Servidores de impresión</span></a><a class="nav-unit " href="10-integracion.html" ><span>10</span><span>Redes heterogéneas</span></a><div class="nav-end"><a href="guia.html" >Cómo trabajamos</a><a href="creditos.html" >Fuentes y créditos</a></div></nav><div class="sidebar-footer"><span>VALÈNCIA · PRESENCIAL</span><p>Lunes y martes<br>2 horas cada día</p></div></aside>
+<div class="workspace"><div class="topbar"><span>IES Font <span class="slash">/</span> 2.º ASIR <span class="slash">/</span> Unidad 04</span><span class="topbar-label">MANUAL DE AULA</span></div>
+<main id="main" tabindex="-1" class="lesson-main"><div class="reading"><header class="page-header"><div class="eyebrow">UNIDAD 04</div><h1>Scripting y automatización</h1><p class="lead">Convierte operaciones repetidas en guiones comprobables y tareas programadas.</p><div class="lesson-meta"><span>Noviembre</span><span>RA3 · RA7</span><a href="fuentes/04-scripting.adoc" download>Descargar AsciiDoc ↓</a></div></header><article class="document"><div class="sect1">
+<h2 id="de-una-orden-a-un-guion"><a class="anchor" href="#de-una-orden-a-un-guion"></a>De una orden a un guion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un script reúne instrucciones para repetir una operación. Su utilidad depende de que los datos de entrada estén claros, los errores se detecten y el resultado se pueda comprobar. Automatizar una operación incorrecta solo permite repetir el error más deprisa.</p>
+</div>
+<div class="paragraph">
+<p>En Bash trabajaremos variables, comillas, argumentos, condiciones, bucles y funciones. En PowerShell aprenderemos a tratar objetos, seleccionar propiedades y combinar cmdlets. Ambos permiten administrar, aunque su modelo de datos sea diferente.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="un-informe-sencillo-en-bash"><a class="anchor" href="#un-informe-sencillo-en-bash"></a>Un informe sencillo en Bash</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este script recibe como primer argumento el archivo donde guardará un informe. Si no lo recibe, utiliza <code>informe.txt</code> en el directorio actual. No requiere privilegios administrativos.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">#!/usr/bin/env bash
+destino="${1:-informe.txt}"
+if {
+  date
+  hostname
+  df -h
+} &gt; "$destino"; then
+  printf 'Informe guardado en %s\n' "$destino"
+else
+  printf 'No se pudo generar el informe\n' &gt;&amp;2
+  exit 1
+fi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Las comillas conservan el argumento aunque contenga espacios. La redirección reemplaza el archivo de destino. Debes elegir una ruta propia de prácticas y comprobar el resultado. Este ejemplo inicial comprueba el estado final del grupo; un guion más exigente debe comprobar cada operación cuya ejecución correcta sea necesaria.</p>
+</div>
+<div class="paragraph">
+<p>La depuración combina lectura, datos de prueba y observación. Prueba un caso normal, una ruta con espacios y un destino sin permisos de escritura. Documenta lo que esperabas y lo que ocurrió.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="objetos-en-powershell"><a class="anchor" href="#objetos-en-powershell"></a>Objetos en PowerShell</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>En PowerShell una canalización puede transportar objetos con propiedades. Por ejemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-powershell" data-lang="powershell">Get-Process | Select-Object -First 5 Name, Id</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>El objetivo es seleccionar cinco procesos y mostrar su nombre e identificador. No los ordena por consumo. Para construir un informe útil hay que escoger qué propiedades medir y qué pregunta se quiere responder.</p>
+</div>
+<div class="paragraph">
+<p>Los scripts de gestión de cuentas y directorio se retomarán cuando conozcamos esos servicios. Crear usuarios mediante un script exige el mismo cuidado con permisos y datos que hacerlo de forma manual.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="programar-una-tarea"><a class="anchor" href="#programar-una-tarea"></a>Programar una tarea</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Una tarea programada necesita una acción, una identidad, un calendario y un registro del resultado. También necesita rutas y un entorno definidos: una orden que funciona en tu terminal puede fallar al ejecutarse sin tu sesión.</p>
+</div>
+<div class="paragraph">
+<p>En una entrada de cron de usuario, <code>30 8 * * 1</code> representa una ejecución los lunes a las 08:30, según la zona horaria aplicable. Después se escribe la orden. En Windows utilizaremos el Programador de tareas para comparar desencadenadores, acciones y condiciones.</p>
+</div>
+<div class="paragraph">
+<p>Programar no equivale a verificar. Revisa la ejecución, sus errores y el archivo generado; comprueba también qué sucede si el sistema estaba apagado o la operación anterior aún no había terminado.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="práctica-a-generar-y-revisar-un-informe"><a class="anchor" href="#práctica-a-generar-y-revisar-un-informe"></a>Práctica A · Generar y revisar un informe</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Guarda el script en un archivo de tu espacio de prácticas.</p>
+</li>
+<li>
+<p>Ejecútalo mediante Bash con un destino propio.</p>
+</li>
+<li>
+<p>Comprueba el contenido y repite los tres casos de prueba.</p>
+</li>
+<li>
+<p>Diseña una tarea periódica; actívala en el entorno asignado cuando lo indique la docente.</p>
+</li>
+<li>
+<p>Registra una ejecución y distingue el resultado del script del estado del planificador.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Entrega.</strong> Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.</p>
+</div>
+<div class="sect2 plan-b">
+<h3 id="plan-b-revisar-antes-de-ejecutar"><a class="anchor" href="#plan-b-revisar-antes-de-ejecutar"></a>Plan B · Revisar antes de ejecutar</h3>
+<div class="paragraph">
+<p>Traza el script con dos destinos: <code>informe.txt</code> y <code>mis informes/lunes.txt</code>. Supón que el segundo directorio no existe. Explica qué debería observarse y por qué.</p>
+</div>
+<div class="paragraph">
+<p>Diseña una ejecución semanal y enumera las condiciones que deben cumplirse. Revisa este requisito: «generar un informe a las 08:30 y conservar los informes anteriores». Detecta qué parte del script tendrías que adaptar para evitar sobrescrituras.</p>
+</div>
+<div class="paragraph">
+<p><strong>Entrega B.</strong> Script propuesto, trazas y calendario interpretado. La prueba con el planificador real queda pendiente.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="comprueba-lo-que-sabes"><a class="anchor" href="#comprueba-lo-que-sabes"></a>Comprueba lo que sabes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>¿Para qué sirven los argumentos de un script?</p>
+</li>
+<li>
+<p>¿Qué ocurre si el directorio de trabajo de una tarea cambia?</p>
+</li>
+<li>
+<p>¿Cómo demostrarías que una tarea se ejecutó correctamente?</p>
+</li>
+</ul>
+</div>
+</div>
+</div></article><nav class="page-turn" aria-label="Entre unidades"><a href="03-procesos.html"><span>Anterior</span>Procesos y servicios</a><a href="05-docker.html"><span>Siguiente</span>Docker y despliegue →</a></nav><footer class="page-footer"><span>ASO · IES Font</span><a href="creditos.html">Fuentes y créditos</a></footer></div><aside class="page-toc" aria-label="En esta página"><p>EN ESTA PÁGINA</p><a href="#de-una-orden-a-un-guion">De una orden a un guion</a><a href="#un-informe-sencillo-en-bash">Un informe sencillo en Bash</a><a href="#objetos-en-powershell">Objetos en PowerShell</a><a href="#programar-una-tarea">Programar una tarea</a><a href="#práctica-a-generar-y-revisar-un-informe">Práctica A · Generar y revisar un informe</a><a href="#comprueba-lo-que-sabes">Comprueba lo que sabes</a><div class="toc-note"><strong>Aprender, comprobar, explicar.</strong><span>Cada práctica incluye una alternativa sin acceso al servidor.</span></div></aside></main></div></body></html>

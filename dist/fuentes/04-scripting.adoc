@@ -1,0 +1,81 @@
+= Scripting y automatización
+:unit: 04
+:description: Convierte operaciones repetidas en guiones comprobables y tareas programadas.
+:period: Noviembre
+:ra: RA3 · RA7
+
+== De una orden a un guion
+
+Un script reúne instrucciones para repetir una operación. Su utilidad depende de que los datos de entrada estén claros, los errores se detecten y el resultado se pueda comprobar. Automatizar una operación incorrecta solo permite repetir el error más deprisa.
+
+En Bash trabajaremos variables, comillas, argumentos, condiciones, bucles y funciones. En PowerShell aprenderemos a tratar objetos, seleccionar propiedades y combinar cmdlets. Ambos permiten administrar, aunque su modelo de datos sea diferente.
+
+== Un informe sencillo en Bash
+
+Este script recibe como primer argumento el archivo donde guardará un informe. Si no lo recibe, utiliza `informe.txt` en el directorio actual. No requiere privilegios administrativos.
+
+[source,bash]
+----
+#!/usr/bin/env bash
+destino="${1:-informe.txt}"
+if {
+  date
+  hostname
+  df -h
+} > "$destino"; then
+  printf 'Informe guardado en %s\n' "$destino"
+else
+  printf 'No se pudo generar el informe\n' >&2
+  exit 1
+fi
+----
+
+Las comillas conservan el argumento aunque contenga espacios. La redirección reemplaza el archivo de destino. Debes elegir una ruta propia de prácticas y comprobar el resultado. Este ejemplo inicial comprueba el estado final del grupo; un guion más exigente debe comprobar cada operación cuya ejecución correcta sea necesaria.
+
+La depuración combina lectura, datos de prueba y observación. Prueba un caso normal, una ruta con espacios y un destino sin permisos de escritura. Documenta lo que esperabas y lo que ocurrió.
+
+== Objetos en PowerShell
+
+En PowerShell una canalización puede transportar objetos con propiedades. Por ejemplo:
+
+[source,powershell]
+----
+Get-Process | Select-Object -First 5 Name, Id
+----
+
+El objetivo es seleccionar cinco procesos y mostrar su nombre e identificador. No los ordena por consumo. Para construir un informe útil hay que escoger qué propiedades medir y qué pregunta se quiere responder.
+
+Los scripts de gestión de cuentas y directorio se retomarán cuando conozcamos esos servicios. Crear usuarios mediante un script exige el mismo cuidado con permisos y datos que hacerlo de forma manual.
+
+== Programar una tarea
+
+Una tarea programada necesita una acción, una identidad, un calendario y un registro del resultado. También necesita rutas y un entorno definidos: una orden que funciona en tu terminal puede fallar al ejecutarse sin tu sesión.
+
+En una entrada de cron de usuario, `30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria aplicable. Después se escribe la orden. En Windows utilizaremos el Programador de tareas para comparar desencadenadores, acciones y condiciones.
+
+Programar no equivale a verificar. Revisa la ejecución, sus errores y el archivo generado; comprueba también qué sucede si el sistema estaba apagado o la operación anterior aún no había terminado.
+
+== Práctica A · Generar y revisar un informe
+
+. Guarda el script en un archivo de tu espacio de prácticas.
+. Ejecútalo mediante Bash con un destino propio.
+. Comprueba el contenido y repite los tres casos de prueba.
+. Diseña una tarea periódica; actívala en el entorno asignado cuando lo indique la docente.
+. Registra una ejecución y distingue el resultado del script del estado del planificador.
+
+*Entrega.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
+
+[.plan-b]
+=== Plan B · Revisar antes de ejecutar
+
+Traza el script con dos destinos: `informe.txt` y `mis informes/lunes.txt`. Supón que el segundo directorio no existe. Explica qué debería observarse y por qué.
+
+Diseña una ejecución semanal y enumera las condiciones que deben cumplirse. Revisa este requisito: «generar un informe a las 08:30 y conservar los informes anteriores». Detecta qué parte del script tendrías que adaptar para evitar sobrescrituras.
+
+*Entrega B.* Script propuesto, trazas y calendario interpretado. La prueba con el planificador real queda pendiente.
+
+== Comprueba lo que sabes
+
+* ¿Para qué sirven los argumentos de un script?
+* ¿Qué ocurre si el directorio de trabajo de una tarea cambia?
+* ¿Cómo demostrarías que una tarea se ejecutó correctamente?

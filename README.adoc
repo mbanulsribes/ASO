@@ -1,0 +1,29 @@
+= Web de ASO del IES Font
+
+Los contenidos del alumnado se editan en `content/*.adoc`. La web se genera con Asciidoctor.js; `dist/` contiene HTML y recursos estáticos, que se pueden abrir localmente o alojar en un servidor web. No hay dependencias de CDN ni conversión en el navegador.
+
+== Preparar y generar
+
+Con Node.js y pnpm disponibles:
+
+[source,shell]
+----
+pnpm install --frozen-lockfile
+pnpm build
+pnpm check
+pnpm preview
+----
+
+La vista local se sirve en http://127.0.0.1:4173. También se puede abrir `dist/index.html` directamente: la navegación usa enlaces relativos y no depende de peticiones JavaScript.
+
+== Editar una unidad
+
+El título y los atributos `unit`, `description`, `period` y `ra` definen sus datos de navegación. El texto que sigue es AsciiDoc normal. Cada unidad contiene la teoría inicial, una práctica y su Plan B inmediato. Tras editar, vuelve a generar la web.
+
+* `content/`: fuentes didácticas, sin solucionarios.
+* `assets/`: diseño y navegación móvil.
+* `scripts/build.mjs`: conversión y plantilla común.
+* `scripts/check.mjs`: enlaces internos y comprobaciones básicas de estructura.
+* `dist/fuentes/`: copia descargable de los AsciiDoc del alumnado.
+
+Los documentos originales del ZIP y las notas de revisión no forman parte del sitio publicado. Esta primera edición es una base navegable; la conversión exhaustiva del material CEED y los exámenes son trabajo posterior.
