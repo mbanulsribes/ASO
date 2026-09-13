@@ -7,23 +7,42 @@ const out = path.join(root, 'dist');
 const processor = Asciidoctor();
 const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const files = fs.readdirSync(path.join(root, 'content')).filter(f => f.endsWith('.adoc')).sort();
-const pages = files.map(file => {
+const publication = JSON.parse(fs.readFileSync(path.join(root, 'curso.json'), 'utf8'));
+if(!Array.isArray(publication.unidadesPublicadas) || !publication.unidadesPublicadas.length || publication.unidadesPublicadas.some(id => typeof id !== 'string')) {
+  throw new Error('curso.json debe indicar al menos una unidad en unidadesPublicadas.');
+}
+const published = new Set(publication.unidadesPublicadas);
+const allPages = files.map(file => {
   const source = fs.readFileSync(path.join(root, 'content', file), 'utf8');
   const doc = processor.load(source, {safe: 'safe', base_dir: path.join(root, 'content'), attributes: { 'sectanchors': '', 'idprefix': '', 'idseparator': '-', 'outfilesuffix': '.html', 'lang': 'es' }});
   return {file, source, doc, url:file.replace('.adoc','.html'), title:doc.getDocumentTitle(), number:doc.getAttribute('unit'), summary:doc.getAttribute('description') || '', period:doc.getAttribute('period') || '', ra:doc.getAttribute('ra') || ''};
 });
+for(const id of published) {
+  if(!allPages.some(p => p.number && p.file === `${id}.adoc`)) throw new Error(`Unidad desconocida en curso.json: ${id}`);
+}
+const pages = allPages.filter(p => !p.number || published.has(p.file.replace('.adoc', '')));
 const units = pages.filter(p => p.number);
 fs.mkdirSync(out, {recursive:true});
 fs.mkdirSync(path.join(out,'fuentes'), {recursive:true});
+// Retirar también las versiones generadas en publicaciones anteriores.
+for(const [directory, extension] of [['', '.html'], ['fuentes', '.adoc'], ['pdf', '.pdf']]) {
+  const folder = path.join(out, directory);
+  if(!fs.existsSync(folder)) continue;
+  for(const entry of fs.readdirSync(folder, {withFileTypes:true})) {
+    if(entry.isFile() && /^\d\d-/.test(entry.name) && entry.name.endsWith(extension) && !published.has(entry.name.slice(0, -extension.length))) {
+      fs.unlinkSync(path.join(folder, entry.name));
+    }
+  }
+}
 fs.cpSync(path.join(root, 'assets'), path.join(out, 'assets'), {recursive:true});
 const nav = current => `<a class="home-link ${current.url === 'index.html'?'active':''}" href="index.html" ${current.url==='index.html'?'aria-current="page"':''}>Vista del curso</a><p class="nav-label">TEMARIO</p>${units.map(p => `<a class="nav-unit ${p.url===current.url?'active':''}" href="${p.url}" ${p.url===current.url?'aria-current="page"':''}><span>${escape(p.number)}</span><span>${escape(p.title)}</span></a>`).join('')}<div class="nav-end"><a href="guia.html" ${current.url==='guia.html'?'aria-current="page"':''}>Cómo trabajamos</a><a href="creditos.html" ${current.url==='creditos.html'?'aria-current="page"':''}>Fuentes y créditos</a></div>`;
 for(const p of pages){
   const home = p.url==='index.html';
   const i = units.indexOf(p);
   const toc = p.doc.getSections().map(s=>`<a href="#${escape(s.getId())}">${escape(s.getTitle())}</a>`).join('');
-  const cards = home ? `<section class="course-index" aria-labelledby="course-title"><div class="section-head"><h2 id="course-title">El recorrido del curso</h2><span>10 unidades</span></div>${units.map(u=>`<a class="course-row" href="${u.url}"><span class="row-number">${escape(u.number)}</span><div><h3>${escape(u.title)}</h3><p>${escape(u.summary)}</p></div><span class="row-period">${escape(u.period)}</span><span class="row-arrow" aria-hidden="true">↗</span></a>`).join('')}</section>` : '';
+  const cards = home ? `<section class="course-index" aria-labelledby="course-title"><div class="section-head"><h2 id="course-title">Unidades disponibles</h2><span>${units.length} ${units.length===1?'unidad':'unidades'}</span></div>${units.map(u=>`<a class="course-row" href="${u.url}"><span class="row-number">${escape(u.number)}</span><div><h3>${escape(u.title)}</h3><p>${escape(u.summary)}</p></div><span class="row-period">${escape(u.period)}</span><span class="row-arrow" aria-hidden="true">↗</span></a>`).join('')}</section>` : '';
   const milestones = `<div class="milestones"><div><span>08 OCT</span><strong>Instalar un sistema</strong><p>Del diseño a la primera puesta en marcha.</p></div><div><span>21 DIC</span><strong>Desplegar un servicio</strong><p>Una aplicación dentro de un contenedor.</p></div><div><span>22 ENE</span><strong>Gestionar contenedores</strong><p>Mantener, diagnosticar y recuperar.</p></div></div>`;
-  const pagination = i>=0?`<nav class="page-turn" aria-label="Entre unidades">${i>0?`<a href="${units[i-1].url}"><span>Anterior</span>${escape(units[i-1].title)}</a>`:'<a href="index.html"><span>Volver a</span>Vista del curso</a>'}${i<units.length-1?`<a href="${units[i+1].url}"><span>Siguiente</span>${escape(units[i+1].title)} →</a>`:'<a href="index.html"><span>Volver a</span>Vista del curso</a>'}</nav>`:'';
+  const pagination = i>=0?`<nav class="page-turn" aria-label="Entre unidades">${i>0?`<a href="${units[i-1].url}"><span>Anterior</span>${escape(units[i-1].title)}</a>`:'<a href="index.html"><span>Volver a</span>Vista del curso</a>'}${i<units.length-1?`<a href="${units[i+1].url}"><span>Siguiente</span>${escape(units[i+1].title)} →</a>`:''}</nav>`:'';
   const html = `<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${escape(p.summary||'Manual de aula de Administración de Sistemas Operativos. IES Font, 2.º ASIR.')}"><title>${escape(p.title)} · ASO · IES Font</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23142138'/%3E%3Cpath d='m10 12 8 8-8 8m12 0h9' fill='none' stroke='%2382b9ff' stroke-width='3'/%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"><script src="assets/app.js" defer></script></head>
 <body><a class="skip" href="#main">Saltar al contenido</a>

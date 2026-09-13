@@ -18,7 +18,27 @@ pnpm preview
 
 La vista local se sirve en http://127.0.0.1:4173. También se puede abrir `dist/index.html` directamente: la navegación usa enlaces relativos y no depende de peticiones JavaScript.
 
-== Editar una unidad
+== Activar unidades poco a poco
+
+`curso.json` indica qué unidades se publican. Inicialmente solo está activa `01-instalacion`. Para publicar también Linux, deja esta lista:
+
+[source,json]
+----
+{
+  "unidadesPublicadas": [
+    "01-instalacion",
+    "02-linux"
+  ]
+}
+----
+
+Usa el nombre del archivo de `content/` sin `.adoc`. Mantén al menos una unidad en la lista. El orden del temario sigue la numeración de las unidades.
+
+Al generar, solo aparecen las unidades activas en el índice, el menú y los enlaces anterior/siguiente. También se retiran de `dist/` las páginas, los AsciiDoc descargables y los PDF de las unidades ocultas. Sus originales permanecen en `content/`.
+
+Sube el cambio a `main` para que GitHub Actions regenere la web y los PDF y lo publique en Pages. Para probarlo localmente, ejecuta `pnpm build`, `pnpm pdf` y `pnpm check`.
+
+== Editar el contenido
 
 El título y los atributos `unit`, `description`, `period` y `ra` definen sus datos de navegación. El texto que sigue es AsciiDoc normal. Cada unidad contiene la teoría inicial, una práctica y su Plan B inmediato. Tras editar, vuelve a generar la web y los PDF con `pnpm build` y `pnpm pdf`. En GitHub Actions ambos pasos se ejecutan automáticamente antes de publicar.
 

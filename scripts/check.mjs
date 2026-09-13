@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 const root=path.resolve(import.meta.dirname,'../dist');
+const published=new Set(JSON.parse(fs.readFileSync(path.join(root,'../curso.json'),'utf8')).unidadesPublicadas);
 const files=fs.readdirSync(root).filter(f=>f.endsWith('.html'));
 let errors=[];
 for(const file of files){
@@ -20,6 +21,17 @@ for(const file of files){
  if(/^\d\d-/.test(file) && !html.includes('Plan B'))errors.push(`${file}: falta Plan B`);
  if(html.includes('Unresolved directive'))errors.push(`${file}: directiva sin resolver`);
 }
-if(files.filter(f=>/^\d\d-/.test(f)).length!==10)errors.push('Se esperan diez unidades');
+for(const id of published){
+ for(const relative of [`${id}.html`, `fuentes/${id}.adoc`, `pdf/${id}.pdf`]){
+  if(!fs.existsSync(path.join(root,relative)))errors.push(`Falta un archivo de la unidad publicada: ${relative}`);
+ }
+}
+for(const [directory,extension] of [['','.html'],['fuentes','.adoc'],['pdf','.pdf']]){
+ const folder=path.join(root,directory);
+ if(!fs.existsSync(folder))continue;
+ for(const file of fs.readdirSync(folder)){
+  if(/^\d\d-/.test(file) && file.endsWith(extension) && !published.has(file.slice(0,-extension.length)))errors.push(`Archivo de una unidad oculta en dist: ${path.join(directory,file)}`);
+ }
+}
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
-console.log(`${files.length} páginas verificadas: enlaces, anclas, idioma y Plan B en las diez unidades.`);
+console.log(`${files.length} páginas verificadas: enlaces, anclas, idioma y Plan B en ${published.size} unidad(es) publicada(s). Sin archivos de unidades ocultas.`);
