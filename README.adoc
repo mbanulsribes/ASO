@@ -10,6 +10,8 @@ Con Node.js y pnpm disponibles:
 ----
 pnpm install --frozen-lockfile
 pnpm build
+pnpm exec playwright install chromium
+pnpm pdf
 pnpm check
 pnpm preview
 ----
@@ -18,7 +20,7 @@ La vista local se sirve en http://127.0.0.1:4173. También se puede abrir `dist/
 
 == Editar una unidad
 
-El título y los atributos `unit`, `description`, `period` y `ra` definen sus datos de navegación. El texto que sigue es AsciiDoc normal. Cada unidad contiene la teoría inicial, una práctica y su Plan B inmediato. Tras editar, vuelve a generar la web.
+El título y los atributos `unit`, `description`, `period` y `ra` definen sus datos de navegación. El texto que sigue es AsciiDoc normal. Cada unidad contiene la teoría inicial, una práctica y su Plan B inmediato. Tras editar, vuelve a generar la web y los PDF con `pnpm build` y `pnpm pdf`. En GitHub Actions ambos pasos se ejecutan automáticamente antes de publicar.
 
 * `content/`: fuentes didácticas, sin solucionarios.
 * `assets/`: diseño y navegación móvil.
@@ -27,3 +29,7 @@ El título y los atributos `unit`, `description`, `period` y `ra` definen sus da
 * `dist/fuentes/`: copia descargable de los AsciiDoc del alumnado.
 
 Los documentos originales del ZIP y las notas de revisión no forman parte del sitio publicado. Esta primera edición es una base navegable; la conversión exhaustiva del material CEED y los exámenes son trabajo posterior.
+
+== PDF de las unidades
+
+Cada unidad ofrece «Descargar PDF». Los archivos se generan en `dist/pdf/` a partir del mismo contenido AsciiDoc de la web. Para generarlos localmente, instala Chromium una vez con `pnpm exec playwright install chromium`. En Windows también puedes utilizar Microsoft Edge instalado mediante `pnpm pdf --channel msedge`. El contenido editable sigue en `content/`; el botón del alumnado descarga el PDF.

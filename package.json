@@ -5,7 +5,13 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "pdf": "node scripts/build-pdf.mjs"
   },
-  "dependencies": { "@asciidoctor/core": "3.0.4" }
+  "dependencies": {
+    "@asciidoctor/core": "3.0.4"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
 }

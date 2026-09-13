@@ -33,6 +33,10 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Generar la web desde los archivos adoc
         run: pnpm build
+      - name: Preparar el navegador para los PDF
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Generar los PDF de las unidades
+        run: pnpm pdf
       - name: Comprobar enlaces y Planes B
         run: pnpm check
       - name: Preparar GitHub Pages
