@@ -3,9 +3,7 @@
 
 == Dos sesiones por semana
 
-Tenemos clase los lunes y martes, dos horas cada día, en València capital. El calendario concreto debe descontar festivos, vacaciones y días no lectivos del centro. Las fechas de los hitos orientan el trabajo, pero no representan una sesión adicional.
-
-La secuencia empieza por instalación, Linux, procesos, automatización y Docker. Después del 22 de enero se completan directorio, administración remota, impresión e integración, junto a los criterios pendientes de los bloques anteriores.
+Tenemos clase los lunes y martes, dos horas cada día.
 
 == Qué contiene cada unidad
 
@@ -13,8 +11,6 @@ La secuencia empieza por instalación, Linux, procesos, automatización y Docker
 * *Práctica A:* trabajo en el entorno asignado y comprobación de resultados.
 * *Plan B:* un supuesto que puede resolverse sin acceder al servidor.
 * *Preguntas de repaso:* para comprobar si puedes explicar lo que has aprendido.
-
-Esta primera edición contiene una base de teoría y una práctica por unidad. Se ampliará con los procedimientos detallados y ejercicios seleccionados del material CEED. No supone que todos los criterios de evaluación estén ya desarrollados con igual profundidad.
 
 == Qué entregar
 
@@ -46,4 +42,3 @@ El Plan B permite avanzar en comprensión y diseño. Cuando vuelva la conexión 
 |RA7 |Lenguajes de guiones aplicados a la administración.
 |===
 
-Docker proporciona un contexto para aplicar varias capacidades. No sustituye por sí solo el trabajo de directorio, impresión o integración. Los instrumentos y porcentajes de calificación se comunicarán en la programación del centro; no se trasladan automáticamente los del CEED.
