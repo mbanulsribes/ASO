@@ -1,14 +1,16 @@
 = Linux
 :unit: 02
-:description: Muévete por el sistema, interpreta permisos y consulta los recursos del servidor.
+:description: Conéctate al servidor de tu grupo, crea tu cuenta, interpreta permisos y consulta los recursos del sistema.
 :period: Octubre
 :ra: Base para RA2, RA3 y RA7
+:note-caption: Nota
+:tip-caption: Consejo
 
 == El sistema desde la terminal
 
 La terminal permite expresar operaciones de administración con precisión y repetirlas. El intérprete de órdenes recibe una línea, interpreta sus elementos y ejecuta el programa correspondiente. En el curso utilizaremos Bash para aprender a combinar comandos y, después, automatizarlos.
 
-Antes de modificar nada, identifica *dónde estás y con qué usuario trabajas*. Una terminal local de LliureX y una sesión en una VM pueden parecer iguales, pero sus acciones afectan a equipos distintos.
+Antes de modificar nada, identifica *dónde estás y con qué usuario trabajas*. Una terminal de tu equipo del aula y una sesión SSH en el servidor de tu grupo pueden parecer iguales, pero sus acciones afectan a máquinas distintas.
 
 [source,bash]
 ----
@@ -20,9 +22,72 @@ ls -la
 
 Estas consultas muestran el usuario, el equipo, el directorio actual y su contenido. En una ruta absoluta el punto de partida es `/`; una ruta relativa se interpreta desde el directorio actual.
 
+=== El aula y los servidores
+
+Cada grupo tiene un servidor Ubuntu Server 24.04 en una red interna propia. Un router MikroTik separa esa red de la red del aula: tiene una dirección en la red del aula (`10.113.129.x`) y otra en la red del grupo (`.1`). El router redirige su puerto 22 al puerto 22 del servidor, así que desde tu equipo te conectas a la IP del router y la conexión llega al servidor.
+
+image::assets/img/aula-red.svg[Esquema de la red del aula: equipos del alumnado, red 10.113.129.0, cuatro routers MikroTik y un servidor Ubuntu por grupo]
+
+[cols="1,2,2",options="header"]
+|===
+|Grupo |Red interna |Servidor
+|G1 |`192.168.101.0/24` |`192.168.101.2`
+|G2 |`192.168.102.0/24` |`192.168.102.2`
+|G3 |`192.168.103.0/24` |`192.168.103.2`
+|G4 |`192.168.104.0/24` |`192.168.104.2`
+|===
+
+La dirección `10.113.129.x` del router de cada grupo la indica el profesorado. Para conectarte:
+
+[source,bash]
+----
+ssh usuario@10.113.129.x
+----
+
+La primera vez, SSH muestra la huella del servidor y pregunta si confías en él. Al aceptar, la guarda en `~/.ssh/known_hosts` de tu equipo. Una vez dentro, el indicador del intérprete pasa a mostrar `usuario@servidor`: es la forma más rápida de saber en qué máquina estás.
+
+El servidor es compartido con el Proyecto Intermodular. Lo que borres, llenes o rompas lo sufre todo el grupo, también en el proyecto.
+
+NOTE: El curso se trabaja sobre Ubuntu Server 24.04. Si tu grupo usa otra versión, algunos comandos o salidas pueden cambiar: localiza la diferencia y documenta la alternativa.
+
+== Usuarios y grupos
+
+Cada proceso se ejecuta en nombre de un usuario, y cada archivo pertenece a un usuario y a un grupo. El sistema identifica a ambos por números: el *UID* y el *GID*. Los nombres son solo una forma cómoda de referirse a ellos.
+
+Las cuentas locales se describen en `/etc/passwd`, una línea por usuario y campos separados por `:`. Las contraseñas cifradas no están ahí, sino en `/etc/shadow`, que solo puede leer el administrador. Los grupos y sus miembros se describen en `/etc/group`.
+
+[source,text]
+----
+ana:x:1001:1001:Ana López:/home/ana:/bin/bash
+----
+
+Los campos son: nombre, marca de contraseña (`x`, guardada en `shadow`), UID, GID del grupo principal, descripción, directorio personal e intérprete de órdenes.
+
+Para consultar usuarios y grupos no hace falta abrir esos archivos:
+
+[source,bash]
+----
+id
+id ana
+getent passwd ana
+getent group asir
+----
+
+Crear, modificar o eliminar cuentas exige privilegios de administración. En Ubuntu se obtienen con `sudo`, que ejecuta un comando como `root` si tu usuario pertenece al grupo `sudo`. Cada uso queda registrado, y un error con `sudo` puede afectar a todo el sistema: lee el comando completo antes de pulsar Intro.
+
+[source,bash]
+----
+sudo groupadd asir
+sudo useradd -m -s /bin/bash -G asir -c "Ana López" ana
+sudo passwd ana
+sudo chage -d 0 ana
+----
+
+`useradd -m` crea el directorio personal; `-s` fija el intérprete; `-G` añade grupos secundarios, y `-c` guarda la descripción. `passwd` asigna la contraseña inicial y `chage -d 0` obliga a cambiarla en el primer acceso. En Ubuntu 24.04 los directorios personales nuevos se crean con permisos `750`: compruébalo con `ls -ld /home/*`.
+
 == Archivos, directorios y permisos
 
-Linux organiza los archivos en un único árbol. `/home` suele albergar directorios personales; `/etc`, configuración; `/var`, datos variables y registros; `/usr`, programas y otros recursos del sistema. `/proc` y `/sys` permiten consultar información del sistema mediante interfaces que se presentan como archivos.
+Linux organiza los archivos en un único árbol. `/home` suele albergar directorios personales; `/etc`, configuración; `/var`, datos variables y registros; `/usr`, programas y otros recursos del sistema; `/srv`, datos de los servicios que ofrece el equipo. `/proc` y `/sys` permiten consultar información del sistema mediante interfaces que se presentan como archivos.
 
 Los permisos tradicionales distinguen *propietario, grupo y otros*. Para cada clase se indican lectura, escritura y ejecución. En un directorio, poder atravesarlo y poder listar sus nombres son operaciones diferentes; escribir permite modificar sus entradas cuando se reúnen los permisos necesarios.
 
@@ -32,6 +97,20 @@ Los permisos tradicionales distinguen *propietario, grupo y otros*. Para cada cl
 ----
 
 En este ejemplo, Ana puede leer y modificar el archivo, el grupo `asir` puede leerlo y los demás no tienen permisos sobre él. Para acceder también deben cumplirse los permisos de los directorios de la ruta. Las ACL y otros mecanismos pueden añadir condiciones, por lo que un listado simple no siempre cuenta toda la historia.
+
+Los permisos también se expresan en octal: lectura vale 4, escritura 2 y ejecución 1, y se suma cada clase. `rw-r-----` es `640` y `rwxr-x---` es `750`. Se cambian con `chmod`, y el propietario y el grupo con `chown`.
+
+Un directorio compartido por un equipo suele combinar tres cosas: pertenecer al grupo del equipo, dar permisos solo a ese grupo y activar el bit *setgid*, que hace que lo que se cree dentro herede el grupo del directorio.
+
+[source,bash]
+----
+sudo mkdir -p /srv/equipo
+sudo chown root:asir /srv/equipo
+sudo chmod 2770 /srv/equipo
+ls -ld /srv/equipo
+----
+
+El `2` inicial es el setgid. En el listado aparece como una `s` en la posición de ejecución del grupo: `drwxrws---`.
 
 == Combinar comandos
 
@@ -52,17 +131,40 @@ El resultado agrupa líneas iguales y cuenta sus apariciones. Antes de utilizar 
 
 Administrar requiere observar. `df -h` informa del espacio de los sistemas de archivos montados; `free -h`, del uso de memoria. Sus cifras deben interpretarse en contexto: memoria usada como caché no equivale automáticamente a falta de memoria.
 
-En el laboratorio diferenciaremos *consultar software instalado* de *instalar o eliminar paquetes*. Estas últimas acciones se realizarán solo dentro de la VM asignada y con los permisos previstos. El ordenador del aula no es el destino de las instalaciones de prácticas.
+En el laboratorio diferenciaremos *consultar software instalado* de *instalar o eliminar paquetes*. Estas últimas acciones se realizarán solo en el servidor del grupo, cuando la práctica lo indique y después de acordarlas con el equipo, porque afectan también al Proyecto Intermodular. El ordenador del aula no es el destino de las instalaciones de prácticas.
 
-== Práctica A · Un espacio de trabajo ordenado
+== Práctica A · Tu cuenta en el servidor del grupo
 
-. Identifica la cuenta y el equipo remoto.
+El usuario con el que trabajáis en el Proyecto Intermodular se queda para el proyecto. Para ASO, cada persona tendrá su propia cuenta, sin privilegios de administración, y el equipo compartirá un grupo y un directorio. Así los permisos se comprueban con usuarios reales: un compañero es _grupo_ y el usuario del proyecto es _otros_.
+
+*Regla de nombres.* Inicial del nombre y primer apellido, en minúsculas, sin tildes y con `n` en lugar de `ñ`. Ana López Núñez es `alopez`. Si dos nombres coinciden, añade la inicial del segundo apellido: `alopezn`.
+
+=== Parte 1 · En equipo, con el usuario del proyecto
+
+Conectaos por SSH con el usuario del proyecto. Una persona escribe los comandos y el resto revisa cada línea antes de ejecutarla.
+
+. Crea el grupo `aso`.
+. Crea una cuenta por cada miembro del equipo, siguiendo la regla de nombres, con directorio personal, Bash como intérprete, `aso` como grupo secundario y el nombre completo como descripción.
+. Asigna a cada cuenta una contraseña inicial y obliga a cambiarla en el primer acceso.
+. Crea `/srv/aso`, del usuario `root` y del grupo `aso`, con permisos `2770`.
+. Comprueba que el directorio personal del usuario del proyecto no da permisos a _otros_. Si los tiene, ciérralo con `chmod 750`.
+. Verifica el resultado con `getent group aso`, `id` sobre cada cuenta y `ls -ld /home/* /srv/aso`.
+
+No añadáis las cuentas de ASO al grupo `sudo`.
+
+=== Parte 2 · Individual, con tu cuenta de ASO
+
+. Desde tu equipo, conéctate con tu cuenta y cambia la contraseña inicial. Comprueba con `whoami` y `hostname` que estás en el servidor correcto.
 . Crea en tu directorio personal `aso-lab/documentos` y `aso-lab/informes`.
 . Crea un archivo de texto y consulta sus permisos.
 . Explica qué acceso tienen propietario, grupo y otros antes de cambiar nada.
-. Documenta el espacio disponible y la memoria de la VM.
+. Intenta listar el directorio personal de un compañero y el del usuario del proyecto. Explica cada resultado a partir de los permisos.
+. Crea un archivo en `/srv/aso` y comprueba con `ls -l` a qué grupo pertenece y por qué.
+. Documenta el espacio disponible y la memoria del servidor.
 
-*Entrega.* Comandos utilizados, sus salidas y una explicación breve. Se valoran las rutas correctas y la interpretación, no el número de capturas.
+*Entrega.* Comandos utilizados, sus salidas y una explicación breve. La parte 1 se entrega una vez por equipo y la parte 2, individualmente. Se valoran las rutas correctas y la interpretación, no el número de capturas.
+
+TIP: Si SSH rechaza la contraseña de una cuenta recién creada, comprueba primero que el nombre está bien escrito. Después revisa si el servidor admite contraseñas: `sudo sshd -T | grep -i passwordauthentication`.
 
 [.plan-b]
 === Plan B · Leer un sistema sin conectarse
@@ -71,13 +173,18 @@ Resuelve este caso con permisos tradicionales y sin ACL adicionales: `/home/ana/
 
 . Explica qué puede hacer Ana y qué puede hacer Luis, miembro de `asir`.
 . Determina si una persona ajena a ese grupo puede leer el archivo.
+. Interpreta esta línea de `/etc/passwd`: `luis:x:1002:1002:Luis Martí:/home/luis:/bin/bash`.
+. Escribe los comandos para crear la cuenta de Luis con el grupo secundario `asir` y obligarle a cambiar la contraseña en el primer acceso.
 . Escribe cómo guardarías una lista ordenada de nombres sin sobrescribir el archivo original.
 . Interpreta un disco con 20 GB de capacidad y 18 GB usados: indica qué investigarías antes de borrar datos.
 
-*Entrega B.* Tabla de accesos y comandos razonados. Las comprobaciones en la VM quedan pendientes; si Bash local está disponible, puedes practicar únicamente con archivos propios.
+*Entrega B.* Tabla de accesos y comandos razonados. Las comprobaciones en el servidor quedan pendientes; si Bash local está disponible, puedes practicar únicamente con archivos propios.
 
 == Comprueba lo que sabes
 
-* ¿Cómo evitas confundir la terminal local y la remota?
+* ¿Cómo evitas confundir la terminal de tu equipo y la del servidor?
+* ¿Por qué te conectas a la IP del router y no a la del servidor?
+* ¿Dónde se guardan las cuentas, las contraseñas y los grupos?
 * ¿Por qué tener permiso de lectura en un archivo puede no ser suficiente?
+* ¿Qué efecto tiene el setgid en un directorio compartido?
 * ¿Qué diferencia hay entre una tubería y una redirección?
