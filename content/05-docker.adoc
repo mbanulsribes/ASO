@@ -3,28 +3,106 @@
 :description: Despliega un servicio y entiende la relación entre imágenes, puertos y datos.
 :period: Hasta el 21 de diciembre
 :ra: Aplicación de RA2 · RA4
+:note-caption: Nota
+:important-caption: Importante
+:warning-caption: Atención
+
+== Preparación del servidor
+
+Esta unidad necesita tres cambios: Docker instalado en el servidor del grupo, permiso para que las cuentas de ASO lo usen y una regla nueva en el router para llegar a los contenedores desde el aula. Hacedlos en equipo, en este orden.
+
+[WARNING]
+====
+*Copia de seguridad antes de empezar.* Instalar Docker añade reglas de red al servidor y la regla nueva cambia el router. Si el Proyecto Intermodular ya funciona en el servidor, cualquier error puede afectarle.
+
+* En el router, guardad la configuración actual: `/export file=antes-u05`. Descargad el archivo `antes-u05.rsc` desde *Files* en Winbox o WebFig.
+* En el servidor, copiad la configuración del sistema y comprobad que la copia se puede leer:
++
+[source,bash]
+----
+sudo tar czf /root/etc-antes-u05.tar.gz /etc
+sudo tar tzf /root/etc-antes-u05.tar.gz | head
+----
+* Si el proyecto tiene datos propios (una base de datos, archivos subidos), copiadlos también según su procedimiento.
+====
+
+=== 1. Instalar Docker
+
+Primero comprobad si el proyecto ya lo utiliza. Si `docker --version` responde, Docker ya está instalado: no lo instaléis de nuevo y pasad al paso 2.
+
+[source,bash]
+----
+docker --version
+sudo apt update
+sudo apt install docker.io docker-compose-v2
+systemctl status docker
+----
+
+Usamos los paquetes de los repositorios de Ubuntu 24.04. Con ellos, la orden para Compose es `docker compose`.
+
+=== 2. Dar acceso a las cuentas de ASO
+
+[source,bash]
+----
+sudo usermod -aG docker usuario
+----
+
+Repetidlo para cada cuenta de ASO del equipo. Cada persona debe cerrar la sesión y volver a entrar; después, `docker ps` debe funcionar sin `sudo`.
+
+IMPORTANT: Pertenecer al grupo `docker` equivale en la práctica a ser administrador: quien puede lanzar contenedores puede montar cualquier directorio del servidor dentro de uno. Solo se añaden las cuentas del propio equipo, y con la misma prudencia que si tuvieran `sudo`.
+
+=== 3. Abrir los puertos en el router
+
+Cada persona usará un puerto propio para no chocar con sus compañeros ni con el proyecto. Numerad al equipo en orden de lista:
+
+[cols="1,1",options="header"]
+|===
+|Persona |Puerto
+|1 |8081
+|2 |8082
+|3 |8083
+|4 |8084
+|5 |8085
+|6 |8086
+|===
+
+Comprobad que el proyecto no usa ya alguno de esos puertos con `ss -tln`. Después, en el router, consultad la regla del puerto 22 y cread una equivalente para el rango 8081-8086. Sustituid la dirección del router en el aula y el número del grupo. La barra invertida `\` al final de línea permite partir una orden larga:
+
+[source,text]
+----
+/ip firewall nat print where dst-port=22
+/ip firewall nat add chain=dstnat dst-address=10.113.136.25x protocol=tcp \
+    dst-port=8081-8086 action=dst-nat to-addresses=192.168.10X.2 \
+    comment="ASO contenedores"
+/ip firewall nat print
+----
+
+Si vuestra regla del 22 usa una interfaz (`in-interface`) en lugar de `dst-address`, copiad ese criterio. Al no indicar `to-ports`, cada puerto se reenvía al mismo número en el servidor.
+
+NOTE: Docker publica los puertos por su cuenta y no respeta las reglas de `ufw`. Si el proyecto usa `ufw` como cortafuegos, un puerto publicado por Docker quedará accesible aunque `ufw` no lo permita.
 
 == Imágenes y contenedores
 
 Una *imagen* contiene los elementos necesarios para ejecutar una aplicación. Un *contenedor* es una instancia creada a partir de una imagen, con configuración y estado propios. Crear dos contenedores de una imagen no significa que compartan automáticamente sus datos.
 
-Un contenedor no es una VM completa. La separación de procesos y recursos utiliza mecanismos del sistema anfitrión. Por eso debemos distinguir el sistema que aloja Docker, la imagen de la aplicación y el cliente desde el que administramos.
+Un contenedor no es una VM completa. La separación de procesos y recursos utiliza mecanismos del sistema anfitrión. Por eso debemos distinguir el servidor que aloja Docker, la imagen de la aplicación y el cliente desde el que administramos.
 
-En el aula, Docker se utilizará en el entorno asignado del departamento. El acceso a su administración debe estar preparado por la docente; no instalaremos Docker en los equipos LliureX ni asumiremos que cualquier cuenta puede administrarlo.
+En el aula, Docker se utiliza en el servidor del grupo, compartido con el Proyecto Intermodular. No instalamos Docker en los equipos LliureX, y antes de parar o borrar un contenedor comprobamos que es nuestro.
 
 == El recorrido de una petición
 
-Cuando visitas un servicio web, tu navegador conecta con una dirección y un puerto. Docker puede publicar un puerto del contenedor en el servidor anfitrión. La aplicación debe escuchar en el puerto esperado y la red debe permitir la comunicación.
+Cuando visitas un servicio web, tu navegador conecta con una dirección y un puerto. En el aula, la petición atraviesa el router antes de llegar al servidor, y Docker la entrega al contenedor:
 
 [source,text]
 ----
 Navegador del aula
-    → dirección del servidor : puerto asignado
-        → puerto del contenedor
-            → aplicación
+    → router 10.113.136.25x : 8081
+        → servidor 192.168.10X.2 : 8081
+            → contenedor : 80
+                → aplicación
 ----
 
-El puerto de acceso SSH, el de una consola de administración y el de una aplicación web cumplen funciones distintas. Que SSH funcione no demuestra que el navegador pueda llegar al servicio publicado.
+Cada salto puede fallar por separado: la regla del router, la publicación del puerto en Docker o la aplicación dentro del contenedor. El puerto de SSH y el de una aplicación web cumplen funciones distintas: que SSH funcione no demuestra que el navegador pueda llegar al servicio publicado.
 
 == Configuración y persistencia
 
@@ -36,30 +114,32 @@ Un *Dockerfile* describe cómo construir una imagen. En esta primera fase distin
 
 == Práctica A · Publicar un servicio web
 
-La docente facilita una imagen aprobada, una etiqueta y un puerto exclusivo para tu entorno. Sustituye los valores del ejemplo por los asignados; no lo ejecutes sobre un servidor compartido sin esa asignación.
+Trabaja con tu cuenta de ASO y tu puerto asignado. El nombre del contenedor incluye tu usuario para distinguirlo de los de tus compañeros y del proyecto. La docente indicará la etiqueta de la imagen.
 
 [source,bash]
 ----
-docker run -d --name web-alumno -p PUERTO_ASIGNADO:80 IMAGEN:ETIQUETA
+docker run -d --name web-$USER -p PUERTO:80 nginx:ETIQUETA
 docker ps
-docker logs web-alumno
+docker logs web-$USER
+curl -I http://localhost:PUERTO
 ----
 
 . Explica cada dato antes de ejecutar la orden.
 . Comprueba que el contenedor está en ejecución y revisa sus registros.
-. Accede desde el cliente a la dirección y al puerto autorizados.
-. Documenta la respuesta del servicio y cualquier incidencia.
+. Comprueba la respuesta desde el propio servidor con `curl`.
+. Accede desde el navegador del aula a `http://10.113.136.25x:PUERTO`.
+. Documenta la respuesta del servicio y cualquier incidencia, indicando en qué salto del recorrido se produjo.
 
-*Entrega.* Ficha del despliegue, orden adaptada y comprobación desde el cliente. El objetivo del 21 de diciembre es desplegar un servicio, no únicamente crear un contenedor.
+*Entrega.* Ficha del despliegue, orden adaptada y comprobación desde el servidor y desde el cliente. El objetivo del 21 de diciembre es desplegar un servicio, no únicamente crear un contenedor.
 
 [.plan-b]
 === Plan B · Seguir la petición web
 
-Supuesto: la aplicación escucha en el puerto 80 del contenedor; se ha asignado el 8085 del servidor. El registro indica que la aplicación arrancó, pero el navegador del aula no obtiene respuesta.
+Supuesto: la aplicación escucha en el puerto 80 del contenedor y se ha publicado en el 8085 del servidor. El registro indica que la aplicación arrancó y `curl` desde el servidor obtiene respuesta, pero el navegador del aula no.
 
-. Dibuja el recorrido de la petición y escribe la URL usando `SERVIDOR` como nombre simbólico.
-. Distingue comprobaciones del contenedor, publicación de puertos y conectividad del aula.
-. Explica por qué el registro de arranque no demuestra acceso desde el cliente.
+. Dibuja el recorrido de la petición y escribe la URL usando `ROUTER` como nombre simbólico.
+. Distingue comprobaciones del contenedor, publicación de puertos, regla del router y conectividad del aula.
+. Explica por qué la respuesta desde el servidor no demuestra acceso desde el cliente.
 . Describe qué datos necesitarían persistencia si el servicio permitiera subir archivos.
 
 *Entrega B.* Esquema, ficha de despliegue y pruebas propuestas. La respuesta web real se comprobará al recuperar la conexión.
@@ -68,6 +148,7 @@ Supuesto: la aplicación escucha en el puerto 80 del contenedor; se ha asignado 
 
 * ¿Qué diferencia hay entre imagen y contenedor?
 * ¿Qué puerto utiliza el navegador y cuál utiliza la aplicación?
+* ¿Por qué el grupo `docker` debe tratarse como un privilegio de administración?
 * ¿Dónde guardarías datos que deben sobrevivir a una recreación?
 
 == Referencia técnica

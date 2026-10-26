@@ -1,0 +1,103 @@
+= Proyecto Intermodular
+:description: Qué entrega ASO en cada hito del proyecto y quién se encarga de hacerlo.
+:important-caption: Importante
+:table-caption!:
+
+En cada hito del proyecto, el delegado o delegada de ASO sube a la carpeta de ASO en OneDrive lo que el grupo ha hecho en el servidor. La docente lo revisa en esas fechas.
+
+== Quién hace qué
+
+[cols="1,3",options="header"]
+|===
+|Quién |Qué hace
+|Delegado o delegada de ASO |Reúne lo que pide cada hito y lo sube a la carpeta de ASO en OneDrive. Avisa a los otros delegados antes de un cambio en el servidor que les afecte.
+|Resto del grupo |Hace los cambios en el servidor y pasa las evidencias al delegado.
+|Docente |Publica en Aules lo que hay que hacer y revisa las carpetas en cada hito.
+|===
+
+== Aules y OneDrive
+
+[cols="1,2,2",options="header"]
+|===
+| |Aules |OneDrive · carpeta de ASO
+|Quién escribe |La docente |El delegado de ASO
+|Qué contiene |Enlace al libro, avisos de cada unidad, fechas y tareas evaluables |Lo que pide cada hito
+|===
+
+IMPORTANT: Nunca se suben contraseñas ni claves privadas a OneDrive.
+
+== En cada hito
+
+. *Reunir.* Antes de la fecha, el grupo reúne lo que pide el hito.
+. *Subir.* El delegado de ASO lo sube a la carpeta de ASO en OneDrive.
+. *Corregir.* Tras la revisión, el grupo corrige lo que la docente haya comentado.
+
+[.hito.hito-1]
+== Hito 1 · 8 de octubre · Instalar un sistema
+
+[.hito-meta]
+Unidad link:01-instalacion.html[01] · Documento: *Ficha de instalación del servidor*
+
+* *Hardware:* procesador, memoria y disco.
+* *Sistema:* Ubuntu Server y su versión, nombre del equipo y usuario de trabajo (sin contraseña).
+* *Red del servidor:* dirección `192.168.10X.2/24`, puerta de enlace `192.168.10X.1`.
+* *Comprobaciones*, con la salida de cada orden y una frase que la explique: `hostname`, `ip address`, `ip route`, `df -h`, `free -h`.
+* *Una dificultad* encontrada durante la instalación y cómo se resolvió.
+
+[.hito.hito-2]
+== Hito 2 · 21 de diciembre · Desplegar un servicio
+
+[.hito-meta]
+Unidades 02 a 05 · Por cada unidad: lo que se hizo, las órdenes con su salida y una explicación breve.
+
+[cols="1,6",options="header"]
+|===
+|Unidad |Qué subir
+|link:02-linux.html[02] |Tablas de cuentas, grupos y directorios (ver abajo)
+|03 |Procesos y servicio SSH
+|04 |Script y tarea programada
+|05 |Servicio web en un contenedor
+|===
+
+=== Unidad 02 · Tablas con los datos reales del servidor
+
+Recogen el usuario del proyecto y las cuentas de ASO de todo el equipo. Sustituid `proyecto` y `alopez` por los nombres reales.
+
+.Cuentas
+[cols="2,3,3,2",options="header"]
+|===
+|Cuenta |Para qué se usa |Grupos |¿Administra?
+|`proyecto` |Proyecto Intermodular y preparar el servidor |`proyecto`, `sudo`, `adm`… |Sí, con `sudo`
+|`alopez` (una por alumno) |Prácticas de ASO |`alopez`, `aso` |No
+|`root` |Administrador del sistema |`root` |Sí, a través de `sudo`
+|===
+
+.Grupos
+[cols="1,2,2",options="header"]
+|===
+|Grupo |Quién está |Para qué
+|Uno por cuenta |Solo esa cuenta |Grupo personal
+|`aso` |Cuentas de ASO del equipo |Compartir `/srv/aso`
+|`sudo` |Solo el usuario del proyecto |Administrar
+|===
+
+.Directorios y permisos
+[cols="2,2,2,2",options="header"]
+|===
+|Directorio |Propietario y grupo |Permisos |Quién entra
+|`/home/proyecto` |`proyecto` · `proyecto` |`drwxr-x---` (750) |Solo el usuario del proyecto
+|`/home/alopez` (uno por alumno) |`alopez` · `alopez` |`drwxr-x---` (750) |Solo esa cuenta
+|`/srv/aso` |`root` · `aso` |`drwxrws---` (2770) |Todo el grupo `aso`
+|===
+
+Cada tabla va acompañada de las órdenes que la demuestran y su salida: `id` de cada cuenta, `getent group aso`, `getent group sudo` y `ls -ld /home/* /srv/aso`.
+
+[.hito.hito-3]
+== Hito 3 · 22 de enero · Gestionar contenedores
+
+[.hito-meta]
+Unidad 06 · Lo que se hizo, las órdenes con su salida y una explicación breve.
+
+* Despliegue descrito con *Compose*.
+* *Copia de seguridad* de los datos del servicio.
+* *Recuperación probada* a partir de esa copia.

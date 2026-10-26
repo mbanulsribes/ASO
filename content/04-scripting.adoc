@@ -3,6 +3,23 @@
 :description: Convierte operaciones repetidas en guiones comprobables y tareas programadas.
 :period: Noviembre
 :ra: RA3 · RA7
+:note-caption: Nota
+
+== Preparación del servidor
+
+Los scripts de Bash y las tareas de `cron` se trabajan con tu cuenta de ASO, sin privilegios: no hay que cambiar nada en el servidor.
+
+Para la parte de PowerShell, como no trabajamos con equipos Windows, instalaremos PowerShell en el servidor del grupo. Hacedlo una vez, desde el usuario del proyecto:
+
+[source,bash]
+----
+sudo snap install powershell --classic
+pwsh --version
+----
+
+Después, cualquier cuenta puede abrirlo con `pwsh` y salir con `exit`.
+
+NOTE: Instalar PowerShell añade un programa independiente y no modifica servicios ni datos, así que no hace falta copia de seguridad.
 
 == De una orden a un guion
 
@@ -30,9 +47,9 @@ else
 fi
 ----
 
-Las comillas conservan el argumento aunque contenga espacios. La redirección reemplaza el archivo de destino. Debes elegir una ruta propia de prácticas y comprobar el resultado. Este ejemplo inicial comprueba el estado final del grupo; un guion más exigente debe comprobar cada operación cuya ejecución correcta sea necesaria.
+Las comillas conservan el argumento aunque contenga espacios. La redirección reemplaza el archivo de destino. Debes elegir una ruta propia de prácticas, dentro de `~/aso-lab`, y comprobar el resultado. Este ejemplo inicial comprueba el estado final del grupo; un guion más exigente debe comprobar cada operación cuya ejecución correcta sea necesaria.
 
-La depuración combina lectura, datos de prueba y observación. Prueba un caso normal, una ruta con espacios y un destino sin permisos de escritura. Documenta lo que esperabas y lo que ocurrió.
+La depuración combina lectura, datos de prueba y observación. Prueba un caso normal, una ruta con espacios y un destino sin permisos de escritura, por ejemplo el directorio personal de un compañero. Documenta lo que esperabas y lo que ocurrió.
 
 == Objetos en PowerShell
 
@@ -45,23 +62,28 @@ Get-Process | Select-Object -First 5 Name, Id
 
 El objetivo es seleccionar cinco procesos y mostrar su nombre e identificador. No los ordena por consumo. Para construir un informe útil hay que escoger qué propiedades medir y qué pregunta se quiere responder.
 
+PowerShell en Linux no incluye todos los cmdlets de Windows: los que gestionan servicios, registro o cuentas de Windows no están disponibles. Para aprender el modelo de objetos y las canalizaciones es suficiente.
+
 Los scripts de gestión de cuentas y directorio se retomarán cuando conozcamos esos servicios. Crear usuarios mediante un script exige el mismo cuidado con permisos y datos que hacerlo de forma manual.
 
 == Programar una tarea
 
 Una tarea programada necesita una acción, una identidad, un calendario y un registro del resultado. También necesita rutas y un entorno definidos: una orden que funciona en tu terminal puede fallar al ejecutarse sin tu sesión.
 
-En una entrada de cron de usuario, `30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria aplicable. Después se escribe la orden. En Windows utilizaremos el Programador de tareas para comparar desencadenadores, acciones y condiciones.
+Cada cuenta tiene su propia tabla de tareas, que se edita con `crontab -e` y se consulta con `crontab -l`. En una entrada de cron de usuario, `30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria del servidor. Después se escribe la orden, con rutas absolutas. Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
 
 Programar no equivale a verificar. Revisa la ejecución, sus errores y el archivo generado; comprueba también qué sucede si el sistema estaba apagado o la operación anterior aún no había terminado.
 
 == Práctica A · Generar y revisar un informe
 
+Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`.
+
 . Guarda el script en un archivo de tu espacio de prácticas.
 . Ejecútalo mediante Bash con un destino propio.
 . Comprueba el contenido y repite los tres casos de prueba.
-. Diseña una tarea periódica; actívala en el entorno asignado cuando lo indique la docente.
+. Programa la tarea en tu `crontab` con un calendario cercano para poder comprobarla, y retírala después.
 . Registra una ejecución y distingue el resultado del script del estado del planificador.
+. Obtén con PowerShell los cinco procesos que más memoria usan y explica qué propiedad has utilizado.
 
 *Entrega.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
 

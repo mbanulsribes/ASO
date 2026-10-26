@@ -7,15 +7,22 @@ Tenemos clase los lunes y martes, dos horas cada día.
 
 == Qué contiene cada unidad
 
+* *Preparación del servidor:* cambios que el equipo hace antes de la práctica en el servidor o en el router, como instalar un paquete, añadir una cuenta a un grupo o abrir un puerto.
 * *Teoría inicial:* conceptos necesarios para comprender las operaciones.
-* *Práctica A:* trabajo en el entorno asignado y comprobación de resultados.
+* *Práctica A:* trabajo en el servidor del grupo y comprobación de resultados.
 * *Plan B:* un supuesto que puede resolverse sin acceder al servidor.
 * *Preguntas de repaso:* para comprobar si puedes explicar lo que has aprendido.
+
+== El servidor es compartido
+
+Cada grupo trabaja en su servidor físico, que también aloja el Proyecto Intermodular. Para ASO se usa la cuenta personal de ASO; el usuario del proyecto solo se usa en la preparación del servidor, cuando la unidad lo indica.
+
+Antes de un cambio que pueda romper algo, la unidad avisa con un recuadro de *copia de seguridad*. Haced la copia, comprobad que se puede leer y solo entonces continuad. Un servidor físico no tiene instantáneas: si no hay copia, no hay vuelta atrás.
 
 == Qué entregar
 
 . *Objetivo.* Qué querías conseguir.
-. *Entorno.* Equipo, cuenta, servicio y datos relevantes, sin contraseñas ni claves privadas.
+. *Entorno.* Grupo, servidor, cuenta utilizada (de ASO o del proyecto), servicio y datos relevantes, sin contraseñas ni claves privadas.
 . *Procedimiento.* Acciones ordenadas y decisiones justificadas.
 . *Comprobación.* Resultado observado y evidencia que lo demuestra.
 . *Incidencias.* Qué falló, qué investigaste y cómo comprobaste la corrección.

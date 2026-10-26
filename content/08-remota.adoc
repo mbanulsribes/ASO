@@ -1,8 +1,25 @@
 = Administración remota
 :unit: 08
-:description: Elige un método de acceso, interpreta errores y documenta el estado del sistema.
+:description: Accede con claves, diagnostica conexiones a través del router y documenta el estado del sistema.
 :period: Después del 22 de enero
 :ra: RA4 · aplicación de RA3
+:note-caption: Nota
+:warning-caption: Atención
+
+== Preparación del servidor
+
+Desde la unidad 02 administras el servidor por SSH con contraseña. En esta unidad pasarás a usar claves, que se configuran con tu propia cuenta: no hay que cambiar nada en el servidor ni en el router.
+
+[WARNING]
+====
+*Si el grupo decide modificar la configuración de SSH del servidor* (por ejemplo, desactivar las contraseñas), antes:
+
+* Copiad la configuración: `sudo cp -a /etc/ssh /root/ssh-antes-u08`.
+* Comprobad que *todas* las cuentas que se usan, incluida la del proyecto, entran con clave.
+* Mantened una sesión abierta mientras probáis los cambios desde una segunda conexión. Si la segunda falla, la primera os permite deshacerlos.
+
+Un error en `sshd_config` deja sin acceso a todo el grupo y al Proyecto Intermodular, y el único remedio sería trabajar delante del servidor.
+====
 
 == Administrar a través de la red
 
@@ -10,35 +27,72 @@ Administrar remotamente permite trabajar sobre un sistema desde otro equipo. La 
 
 Distinguiremos sesiones de terminal, escritorios remotos y herramientas que ejecutan operaciones sin mantener un escritorio interactivo. SSH, RDP y PowerShell Remoting cubren necesidades distintas. La elección depende de la tarea y del entorno autorizado.
 
+== Acceso con claves
+
+Una *clave SSH* es un par: la clave privada se queda en tu equipo y la pública se copia al servidor. Al conectar, el servidor comprueba que tienes la privada sin que esta viaje por la red. Bien protegida con una frase de paso, es más segura que una contraseña y más cómoda.
+
+Desde tu equipo del aula:
+
+[source,bash]
+----
+ssh-keygen -t ed25519 -C "usuario@aso"
+ssh-copy-id usuario@10.113.136.25x
+ssh usuario@10.113.136.25x
+----
+
+`ssh-keygen` crea el par en `~/.ssh/`. `ssh-copy-id` añade la clave pública al archivo `~/.ssh/authorized_keys` de tu cuenta en el servidor, a través de la misma redirección del puerto 22 que ya usas. La clave privada (`id_ed25519`) no se copia, no se comparte y no aparece en ninguna entrega.
+
+Para no escribir la dirección cada vez, puedes definir un alias en `~/.ssh/config` de tu equipo:
+
+[source,text]
+----
+Host aso
+    HostName 10.113.136.25x
+    User usuario
+----
+
+Después basta con `ssh aso`.
+
 == Una conexión tiene varias condiciones
 
-Para acceder deben funcionar la conectividad, el servicio y la autenticación; después la cuenta debe tener autorización para la operación. Un error de conexión no demuestra una contraseña incorrecta, y una contraseña correcta no abre un puerto bloqueado.
+Para acceder deben funcionar la conectividad, el router, el servicio y la autenticación; después la cuenta debe tener autorización para la operación. Un error de conexión no demuestra una contraseña incorrecta, y una contraseña correcta no abre un puerto bloqueado.
 
 [cols="1,2",options="header"]
 |===
 |Síntoma |Qué investigar
-|No hay respuesta |Destino, ruta, filtrado y disponibilidad del equipo.
-|Conexión rechazada |Servicio, puerto y política de rechazo.
-|Fallo de autenticación |Cuenta, método de acceso y credenciales.
+|No hay respuesta |Destino, ruta, filtrado y disponibilidad del router y del servidor.
+|Conexión rechazada |Regla de redirección del router, servicio y puerto en el servidor.
+|Fallo de autenticación |Cuenta, método de acceso, clave o contraseña.
 |Acceso sin permiso para una operación |Privilegios y autorización de esa cuenta.
 |===
 
-El cifrado protege la comunicación, pero también debemos verificar la identidad del destino y cuidar las credenciales. No se publican contraseñas ni claves privadas en las entregas.
+En el aula hay un salto más que en una red plana: si el router no redirige el puerto, el servidor ni siquiera recibe la conexión. Por eso, desde dentro del servidor un servicio puede responder y desde el aula no.
+
+Cuando un servicio no tiene puerto abierto en el router, SSH puede llevar la conexión por un *túnel*. Esta orden hace que el puerto 8080 de tu equipo llegue al 8081 del servidor a través de la sesión SSH:
+
+[source,bash]
+----
+ssh -L 8080:localhost:8081 aso
+----
+
+Mientras la sesión esté abierta, `http://localhost:8080` en tu navegador muestra el servicio.
+
+El cifrado protege la comunicación, pero también debemos verificar la identidad del destino y cuidar las credenciales. La primera vez que conectas, SSH muestra la huella del servidor; si un día cambia sin motivo conocido, no aceptes la conexión. No se publican contraseñas ni claves privadas en las entregas.
 
 == Monitorizar para decidir
 
 Un informe útil no es una colección de cifras. Debe responder qué se mide, con qué herramienta, durante cuánto tiempo, qué significa el resultado y qué acción se propone.
 
-Relacionaremos CPU, memoria, disco y registros con el servicio observado. Una medida aislada puede representar un pico normal. Comparar intervalos y síntomas ayuda a evitar cambios innecesarios.
+Relacionaremos CPU, memoria, disco y registros con el servicio observado. Una medida aislada puede representar un pico normal. Comparar intervalos y síntomas ayuda a evitar cambios innecesarios. En un servidor compartido, una subida de consumo puede venir del Proyecto Intermodular: identifica a qué usuario y proceso corresponde antes de sacar conclusiones.
 
 Recuperaremos el informe de información del sistema del material CEED: objetivo, protocolo, análisis, reacción y periodicidad. Cuando la recogida se automatice, se documentarán también su tarea programada y sus errores.
 
 == Práctica A · Acceso y diagnóstico
 
-. Accede por el método autorizado y comprueba usuario y nombre de equipo.
-. Consulta el estado del servicio indicado sin modificar el acceso que estás utilizando.
-. Recoge una muestra de recursos y un registro relevante.
-. Compara el resultado con la prueba del cliente.
+. Crea tu par de claves, cópialo a tu cuenta de ASO y comprueba que entras sin contraseña.
+. Define el alias `aso` y comprueba usuario y nombre de equipo al conectar.
+. Accede a tu servicio web de la unidad 05 mediante un túnel y explica el recorrido de la conexión.
+. Recoge una muestra de recursos del servidor y un registro relevante, e identifica a qué usuarios y procesos corresponde el consumo.
 . Documenta cómo realizarías una operación equivalente desde otro sistema operativo.
 
 *Entrega.* Ficha de conexión, informe y pruebas. Se evalúan la elección del método, la interpretación y las medidas de protección de la información.
@@ -46,7 +100,7 @@ Recuperaremos el informe de información del sistema del material CEED: objetivo
 [.plan-b]
 === Plan B · Localizar el punto del fallo
 
-Caso A: desde el aula no se establece la conexión; desde una red autorizada del departamento el servicio responde. Caso B: la conexión se establece, pero se rechaza al usuario. Caso C: el usuario entra y puede leer el informe, pero no modificarlo.
+Caso A: desde el aula no se establece la conexión; desde el propio servidor, `ssh localhost` responde. Caso B: la conexión se establece, pero se rechaza al usuario. Caso C: el usuario entra y puede leer el informe, pero no modificarlo.
 
 Para cada caso, indica qué capa investigarías, qué datos pedirías y qué conclusión todavía no puedes afirmar. Redacta después un informe de monitorización para un disco que crece de 60 % a 90 % durante una semana.
 
@@ -55,5 +109,6 @@ Para cada caso, indica qué capa investigarías, qué datos pedirías y qué con
 == Comprueba lo que sabes
 
 * ¿Por qué conectividad, autenticación y autorización son comprobaciones diferentes?
-* ¿Qué datos necesitas antes de atribuir un problema a la VLAN?
+* ¿Qué parte de un par de claves se copia al servidor y por qué?
+* ¿Qué datos necesitas antes de atribuir un problema a la regla del router?
 * ¿Qué aporta medir durante un intervalo frente a tomar una única captura?

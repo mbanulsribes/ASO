@@ -3,6 +3,22 @@
 :description: Entiende qué se está ejecutando, cómo consume recursos y por qué un servicio puede fallar.
 :period: Octubre · noviembre
 :ra: RA2
+:note-caption: Nota
+:important-caption: Importante
+
+== Preparación del servidor
+
+Para leer los registros del sistema sin ser administrador, tu cuenta de ASO necesita pertenecer al grupo `adm`. Hacedlo en equipo, desde el usuario del proyecto, para cada cuenta de ASO:
+
+[source,bash]
+----
+sudo usermod -aG adm usuario
+getent group adm
+----
+
+`-aG` *añade* el grupo a los que ya tiene la cuenta; sin la `a`, `usermod` sustituiría sus grupos secundarios y la cuenta perdería `aso`. El cambio se aplica en la siguiente sesión: sal y vuelve a entrar, y compruébalo con `id`.
+
+NOTE: Este paso no modifica servicios ni datos, así que no hace falta copia de seguridad.
 
 == Un programa en ejecución
 
@@ -12,6 +28,16 @@ El sistema reparte tiempo de procesador entre tareas preparadas. Un proceso pued
 
 El PID identifica al proceso; el PPID permite reconocer a su padre. Una jerarquía de procesos ayuda a explicar cómo se inició un servicio y qué otros procesos dependen de él. Los identificadores pueden cambiar entre ejecuciones.
 
+Tu propia sesión es un buen ejemplo. Cuando te conectas por SSH, el servicio `sshd` crea un proceso para tu conexión y este inicia tu intérprete Bash. `$$` es el PID del intérprete actual:
+
+[source,bash]
+----
+echo $$
+pstree -sp $$
+----
+
+`pstree -s` muestra los antecesores del proceso: de `systemd` a `sshd` y de ahí a tu `bash`.
+
 == Observar antes de intervenir
 
 En Linux podemos consultar procesos y relacionarlos con usuarios y servicios:
@@ -20,35 +46,53 @@ En Linux podemos consultar procesos y relacionarlos con usuarios y servicios:
 ----
 ps -ef
 ps -u "$USER"
+ps -ef --forest
 ----
 
 En Windows, el Administrador de tareas y PowerShell ofrecen vistas complementarias. Los valores no siempre miden lo mismo: un tiempo acumulado de CPU no es un porcentaje instantáneo de uso. Antes de comparar, identifica magnitud, unidad e intervalo de medida.
 
-No todo proceso desconocido es malicioso. Investiga su usuario, ejecutable, origen, padre y registros. Finalizar un proceso importante puede interrumpir un servicio y afectar a otras personas.
+No todo proceso desconocido es malicioso. Investiga su usuario, ejecutable, origen, padre y registros. En el servidor del grupo conviven tus procesos, los de tus compañeros y los del Proyecto Intermodular: finalizar un proceso ajeno puede interrumpir un servicio y afectar a otras personas.
 
 == Servicios y arranque
 
-Un *servicio* proporciona una función que el sistema o los usuarios necesitan. Puede iniciar procesos y tener dependencias. En los sistemas Linux del laboratorio, systemd permite consultar unidades y gestionar servicios.
+Un *servicio* proporciona una función que el sistema o los usuarios necesitan. Puede iniciar procesos y tener dependencias. En Ubuntu, systemd permite consultar unidades y gestionar servicios.
 
-Dos preguntas diferentes son: «¿está activo ahora?» y «¿está configurado para iniciarse cuando corresponda?». Un servicio puede estar habilitado y haber fallado; también puede estar activo porque se inició manualmente.
+Dos preguntas diferentes son: «¿está activo ahora?» y «¿está configurado para iniciarse cuando corresponda?». Un servicio puede estar habilitado y haber fallado; también puede estar activo porque se inició manualmente o porque otra unidad lo arrancó.
+
+El servicio SSH de Ubuntu 24.04 lo muestra bien. Por defecto se activa *por socket*: la unidad `ssh.socket` escucha en el puerto 22 y arranca `ssh.service` cuando llega la primera conexión. Por eso `ssh.service` puede aparecer como activo sin estar habilitado. Comprueba qué ocurre en vuestro servidor:
+
+[source,bash]
+----
+systemctl status ssh.socket ssh.service
+systemctl is-enabled ssh.socket ssh.service
+journalctl -u ssh.service --since today
+----
 
 Para diagnosticar, combina estado, registros y pruebas de funcionamiento. El orden útil es observar el error, localizar su contexto, formular una hipótesis, cambiar una sola condición y volver a comprobar.
 
+IMPORTANT: Consultar es libre; parar o reiniciar `ssh` no. Si el servicio SSH se detiene, todo el grupo pierde el acceso al servidor, también para el Proyecto Intermodular.
+
 == Práctica A · Seguir un proceso propio
 
-En una sesión Bash del laboratorio, ejecuta un proceso de espera de tu usuario:
+Con tu cuenta de ASO, ejecuta un proceso de espera:
 
 [source,bash]
 ----
 sleep 120 &
 pid=$!
-ps -p "$pid" -o pid,ppid,stat,comm
+ps -p "$pid" -o pid,ppid,user,stat,comm
 kill "$pid"
 ----
 
 Identifica su PID, padre y estado. Comprueba después que terminó. Solo se envía la señal al proceso que acabas de crear; no se elige un PID de otro usuario.
 
-Completa la práctica con el servicio de prueba indicado por la docente: consulta su estado, localiza un mensaje de registro y explica la diferencia entre proceso y servicio.
+Completa la práctica con el servicio SSH del servidor:
+
+. Muestra la cadena de procesos que va de `systemd` a tu intérprete y explica cada eslabón.
+. Localiza con `ps` las sesiones de tus compañeros sin intervenir en ellas.
+. Consulta el estado de `ssh.socket` y `ssh.service` y explica si están activos y si están habilitados.
+. Localiza en el registro el mensaje de tu propio inicio de sesión.
+. Explica la diferencia entre proceso y servicio con este ejemplo.
 
 *Entrega.* Secuencia observada, explicación de la señal y un diagnóstico del servicio basado en evidencias.
 
@@ -69,3 +113,4 @@ Un servicio está configurado para iniciarse, pero su estado indica `failed`. El
 * ¿Qué comparten dos hilos del mismo proceso?
 * ¿Por qué activo y habilitado no significan lo mismo?
 * ¿Qué debes averiguar antes de finalizar un proceso desconocido?
+* ¿Por qué `usermod -G` sin `-a` puede quitarle grupos a una cuenta?

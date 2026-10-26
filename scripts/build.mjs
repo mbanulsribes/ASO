@@ -35,7 +35,7 @@ for(const [directory, extension] of [['', '.html'], ['fuentes', '.adoc'], ['pdf'
   }
 }
 fs.cpSync(path.join(root, 'assets'), path.join(out, 'assets'), {recursive:true});
-const nav = current => `<a class="home-link ${current.url === 'index.html'?'active':''}" href="index.html" ${current.url==='index.html'?'aria-current="page"':''}>Vista del curso</a><p class="nav-label">TEMARIO</p>${units.map(p => `<a class="nav-unit ${p.url===current.url?'active':''}" href="${p.url}" ${p.url===current.url?'aria-current="page"':''}><span>${escape(p.number)}</span><span>${escape(p.title)}</span></a>`).join('')}<div class="nav-end"><a href="guia.html" ${current.url==='guia.html'?'aria-current="page"':''}>Cómo trabajamos</a><a href="creditos.html" ${current.url==='creditos.html'?'aria-current="page"':''}>Fuentes y créditos</a></div>`;
+const nav = current => `<a class="home-link ${current.url === 'index.html'?'active':''}" href="index.html" ${current.url==='index.html'?'aria-current="page"':''}>Vista del curso</a><p class="nav-label">TEMARIO</p>${units.map(p => `<a class="nav-unit ${p.url===current.url?'active':''}" href="${p.url}" ${p.url===current.url?'aria-current="page"':''}><span>${escape(p.number)}</span><span>${escape(p.title)}</span></a>`).join('')}<div class="nav-end"><a href="proyecto.html" ${current.url==='proyecto.html'?'aria-current="page"':''}>Proyecto Intermodular</a><a href="guia.html" ${current.url==='guia.html'?'aria-current="page"':''}>Cómo trabajamos</a><a href="creditos.html" ${current.url==='creditos.html'?'aria-current="page"':''}>Fuentes y créditos</a></div>`;
 for(const p of pages){
   const home = p.url==='index.html';
   const i = units.indexOf(p);

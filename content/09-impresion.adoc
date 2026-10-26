@@ -3,6 +3,35 @@
 :description: Configura impresoras lógicas, administra colas y comparte el servicio entre clientes.
 :period: Después del 22 de enero
 :ra: RA5
+:note-caption: Nota
+:warning-caption: Atención
+
+== Preparación del servidor
+
+En Linux usaremos CUPS con una impresora virtual que genera archivos PDF, en el servidor Ubuntu. En Windows, la máquina virtual de Windows Server preparada en la unidad 07. No hace falta ninguna impresora física ni ninguna regla nueva en el router: la VM está en la misma red que el servidor y la consola web de CUPS se usa a través de un túnel SSH.
+
+WARNING: *Copia de seguridad antes de empezar:* `sudo tar czf /root/etc-antes-u09.tar.gz /etc`. Comprobad que la copia se puede leer con `sudo tar tzf`.
+
+Desde el usuario del proyecto:
+
+[source,bash]
+----
+sudo apt install cups printer-driver-cups-pdf
+sudo usermod -aG lpadmin usuario
+sudo cupsctl --share-printers
+lpstat -p
+----
+
+* `printer-driver-cups-pdf` crea una impresora lógica llamada `PDF`.
+* El grupo `lpadmin` permite administrar impresoras y colas. Añadid cada cuenta de ASO del equipo; el cambio se aplica al volver a entrar.
+* `cupsctl --share-printers` comparte las impresoras con la red local del grupo, donde está la VM de Windows.
+
+Para abrir la consola web de CUPS desde tu equipo, crea un túnel y visita `http://localhost:6310` en el navegador:
+
+[source,bash]
+----
+ssh -L 6310:localhost:631 usuario@10.113.136.25x
+----
 
 == De un documento a un trabajo
 
@@ -14,25 +43,44 @@ En una red intervienen cliente, servidor, protocolo, permisos y dispositivo o sa
 
 Cada trabajo tiene propietario y estado. Administrar una cola puede implicar consultar, pausar, reanudar o cancelar trabajos, dentro de los permisos asignados. Hay que distinguir el derecho a imprimir del derecho a administrar la impresora o los trabajos ajenos.
 
+En CUPS, estas órdenes cubren las operaciones básicas:
+
+[source,bash]
+----
+lp -d PDF ~/aso-lab/documentos/prueba.txt
+lpstat -o
+cupsdisable PDF
+cupsenable PDF
+cancel ID-DEL-TRABAJO
+----
+
 Antes de eliminar trabajos, comprueba alcance y consecuencias. Si otros documentos imprimen correctamente, el problema puede estar en un trabajo concreto; si ninguno progresa, revisa el estado de la cola y el destino.
 
 == Windows Server y CUPS
 
 Trabajaremos con administración de impresión en Windows Server y CUPS en Linux. Conservamos las prácticas de impresora virtual, compartición y cliente del ZIP. El despliegue mediante GPO se relaciona con la unidad de directorio.
 
+Los dos sistemas pueden servirse mutuamente. Windows puede imprimir en una impresora de CUPS por IPP, indicando su dirección al añadir la impresora:
+
+[source,text]
+----
+http://192.168.10X.2:631/printers/PDF
+----
+
 La interfaz web de un servidor permite administrarlo cuando la red y los permisos lo autorizan. Poder abrir esa interfaz no demuestra que el cliente tenga configurada correctamente su impresora ni que un trabajo llegue al destino.
+
+NOTE: CUPS-PDF guarda la salida de los trabajos de usuarios locales en `~/PDF` de quien imprime, y la de los trabajos llegados por red sin usuario reconocido en `/var/spool/cups-pdf/ANONYMOUS`.
 
 == Práctica A · Compartir una impresora virtual
 
-En el servidor de laboratorio, sigue el procedimiento que facilite la docente para preparar una impresora virtual.
+. Identifica servidor, impresora lógica, protocolo y salida en CUPS.
+. Imprime un documento propio en `PDF`, sigue su estado en la cola y localiza el archivo generado.
+. Pausa la cola, envía dos trabajos y gestiónalos desde la consola web y desde la terminal.
+. En Windows Server, instala el rol de *Servicios de impresión y documentos*, crea una impresora lógica con salida a archivo y compártela.
+. Añade en Windows la impresora `PDF` de CUPS por IPP, envía un documento de prueba y comprueba la salida en Ubuntu.
+. Documenta una operación de gestión de trabajos en cada sistema.
 
-. Identifica servidor, impresora lógica, protocolo y salida.
-. Configura la compartición y los permisos del caso.
-. Añade la impresora desde un cliente autorizado.
-. Envía un documento de prueba y sigue su estado en la cola.
-. Comprueba la salida generada y documenta una operación de gestión de trabajos.
-
-*Entrega.* Esquema, configuración, seguimiento del trabajo y prueba final. No se necesita una impresora física si el entorno dispone de salida virtual.
+*Entrega.* Esquema, configuración, seguimiento del trabajo y prueba final. No se necesita una impresora física: el entorno dispone de salida virtual.
 
 [.plan-b]
 === Plan B · Una cola detenida
@@ -51,3 +99,4 @@ La cola contiene tres trabajos: el primero está pausado, los otros dos esperan.
 * ¿Qué diferencia hay entre una impresora lógica y un dispositivo físico?
 * ¿Qué evidencia demuestra que el trabajo llegó al destino?
 * ¿Qué permisos necesita quien administra las colas?
+* ¿Por qué la consola web de CUPS se abre a través de un túnel y no directamente desde el aula?

@@ -24,9 +24,9 @@ Estas consultas muestran el usuario, el equipo, el directorio actual y su conten
 
 === El aula y los servidores
 
-Cada grupo tiene un servidor Ubuntu Server 24.04 en una red interna propia. Un router MikroTik separa esa red de la red del aula: tiene una dirección en la red del aula (`10.113.129.x`) y otra en la red del grupo (`.1`). El router redirige su puerto 22 al puerto 22 del servidor, así que desde tu equipo te conectas a la IP del router y la conexión llega al servidor.
+Cada grupo tiene un servidor Ubuntu Server 24.04 en una red interna propia. Un router MikroTik separa esa red de la red del aula: tiene una dirección en la red del aula (`10.113.136.25x`) y otra en la red del grupo (`.1`). El router redirige su puerto 22 al puerto 22 del servidor, así que desde tu equipo te conectas a la IP del router y la conexión llega al servidor.
 
-image::assets/img/aula-red.svg[Esquema de la red del aula: equipos del alumnado, red 10.113.129.0, cuatro routers MikroTik y un servidor Ubuntu por grupo]
+image::assets/img/aula-red.svg[Esquema de la red del aula: equipos del alumnado, red 10.113.136.0, cuatro routers MikroTik y un servidor Ubuntu por grupo]
 
 [cols="1,2,2",options="header"]
 |===
@@ -37,11 +37,11 @@ image::assets/img/aula-red.svg[Esquema de la red del aula: equipos del alumnado,
 |G4 |`192.168.104.0/24` |`192.168.104.2`
 |===
 
-La dirección `10.113.129.x` del router de cada grupo la indica el profesorado. Para conectarte:
+Cada router tiene una dirección de la forma `10.113.136.25x`; la de tu grupo la indica el profesorado. Para conectarte:
 
 [source,bash]
 ----
-ssh usuario@10.113.129.x
+ssh usuario@10.113.136.25x
 ----
 
 La primera vez, SSH muestra la huella del servidor y pregunta si confías en él. Al aceptar, la guarda en `~/.ssh/known_hosts` de tu equipo. Una vez dentro, el indicador del intérprete pasa a mostrar `usuario@servidor`: es la forma más rápida de saber en qué máquina estás.

@@ -3,6 +3,23 @@
 :description: Mantén servicios, interpreta registros y prepara una recuperación de los datos.
 :period: Antes del 22 de enero
 :ra: Aplicación de RA2 · RA3 · RA7
+:important-caption: Importante
+:warning-caption: Atención
+
+== Preparación del servidor
+
+Esta unidad reutiliza lo preparado en la unidad 05: Docker con Compose, las cuentas de ASO en el grupo `docker` y los puertos 8081-8086 abiertos en el router. Comprobadlo antes de empezar:
+
+[source,bash]
+----
+docker compose version
+id
+docker ps
+----
+
+Cada persona sigue usando su puerto asignado y trabaja en un directorio propio, `~/aso-lab/web-$USER`. Compose toma el nombre del proyecto del directorio, así que un nombre único evita que dos personas manejen sin querer los mismos contenedores.
+
+IMPORTANT: En un servidor compartido no se usan `docker system prune`, `docker volume prune` ni `docker compose down -v` sobre recursos que no sean tuyos. Las órdenes de limpieza afectan a *todos* los contenedores y volúmenes del servidor, incluidos los del Proyecto Intermodular.
 
 == Administrar después del despliegue
 
@@ -12,7 +29,7 @@ Distinguimos parar, iniciar, reiniciar y recrear. Al recrear se genera una nueva
 
 == Describir el despliegue con Compose
 
-Compose permite describir servicios, redes y volúmenes en un archivo. Así se puede revisar y repetir la configuración. Este ejemplo didáctico describe un servicio web; el puerto y la imagen deben adaptarse a la asignación del laboratorio.
+Compose permite describir servicios, redes y volúmenes en un archivo. Así se puede revisar y repetir la configuración. Este ejemplo didáctico describe un servicio web; sustituye `8081` por tu puerto asignado.
 
 [source,yaml]
 ----
@@ -20,7 +37,7 @@ services:
   web:
     image: nginx:alpine
     ports:
-      - "8085:80"
+      - "8081:80"
 ----
 
 La etiqueta es un ejemplo: la docente fijará la versión de trabajo. Este archivo no incorpora datos propios ni una base de datos. Añadir un volumen sin estudiar qué espera la aplicación no convierte automáticamente el despliegue en correcto.
@@ -39,24 +56,36 @@ Entre componentes, el nombre y el puerto internos pueden ser diferentes de la di
 
 Para recuperar un servicio hacen falta su configuración y sus datos. Una copia útil debe poder restaurarse y verificarse. En una base de datos, la consistencia de la copia requiere un procedimiento compatible con el motor; copiar archivos mientras se escriben puede no ser suficiente.
 
+El contenido de un volumen puede copiarse con un contenedor auxiliar que monta el volumen y empaqueta sus archivos en tu directorio:
+
+[source,bash]
+----
+docker run --rm -v VOLUMEN:/datos:ro -v "$PWD":/copia alpine \
+  tar czf /copia/VOLUMEN-$(date +%F).tar.gz -C /datos .
+----
+
+Para una base de datos en uso, utiliza la herramienta de copia del propio motor en lugar de este método.
+
 Antes de actualizar, registra la versión, prepara la copia y define una prueba de éxito. No supongas que volver a una imagen anterior revierte una migración de datos. La estrategia de vuelta atrás debe contemplar ambos elementos.
 
 == Práctica A · Mantener un despliegue
 
-En el entorno asignado, documenta el despliegue con Compose y comprueba su configuración. La docente proporcionará el servicio con persistencia y su procedimiento de copia.
+Trabaja en `~/aso-lab/web-$USER`, con tu cuenta de ASO y tu puerto. La docente proporcionará el servicio con persistencia y su procedimiento de copia.
+
+WARNING: *Copia de seguridad antes de los pasos 4 y 5.* Copia el volumen con el método anterior y comprueba que el archivo se puede leer con `tar tzf`. Recrear y restaurar son justo las operaciones en las que se pierden datos.
 
 . Consulta estado y registros.
 . Identifica redes y almacenamiento utilizado.
-. Realiza un cambio de configuración autorizado y verifica el servicio.
+. Realiza un cambio de configuración autorizado y verifica el servicio desde el navegador del aula.
 . Recrea la instancia según el procedimiento y comprueba la conservación de datos.
-. Restaura una copia en el entorno de prueba indicado y verifica su contenido.
+. Restaura la copia en un volumen de prueba y verifica su contenido.
 
 *Entrega.* Configuración, diagnóstico de una incidencia y evidencia de recuperación. El hito del 22 de enero incluye administrar y recuperar, no solo arrancar.
 
 [.plan-b]
 === Plan B · Resolver tres incidencias
 
-*Caso 1.* El puerto 8085 ya está ocupado por otro servicio. Propón cómo detectar el conflicto y resolverlo respetando la asignación de puertos.
+*Caso 1.* Al arrancar tu servicio en el 8083, Docker indica que el puerto ya está ocupado. Propón cómo averiguar quién lo usa y cómo resolverlo respetando la asignación de puertos.
 
 *Caso 2.* Tras recrear el contenedor desaparecen los archivos subidos. No había volumen para ese directorio. Explica el error de diseño y qué información necesitas para valorar una recuperación.
 
@@ -68,6 +97,7 @@ En el entorno asignado, documenta el despliegue con Compose y comprueba su confi
 
 * ¿Qué conserva un volumen y qué conserva un archivo Compose?
 * ¿Por qué una copia no probada no demuestra que puedas recuperar el servicio?
+* ¿Por qué una orden de limpieza de Docker es peligrosa en un servidor compartido?
 * ¿Qué cambiaría tu diagnóstico si la aplicación responde desde el servidor pero no desde el aula?
 
 == Referencia técnica

@@ -3,6 +3,35 @@
 :description: Comparte recursos entre Linux y Windows y verifica quién puede acceder a ellos.
 :period: Después del 22 de enero
 :ra: RA6
+:note-caption: Nota
+:warning-caption: Atención
+
+== Preparación del servidor
+
+El recurso compartido se configura con Samba en el servidor Ubuntu. Los clientes serán la VM de Windows Server de la unidad 07 y el propio Ubuntu. Todo ocurre dentro de la red del grupo, así que no hace falta ninguna regla nueva en el router.
+
+WARNING: *Copia de seguridad antes de empezar:* `sudo tar czf /root/etc-antes-u10.tar.gz /etc`. Comprobad que la copia se puede leer con `sudo tar tzf`.
+
+Desde el usuario del proyecto:
+
+[source,bash]
+----
+sudo apt install samba smbclient
+sudo groupadd alumnado
+sudo groupadd profesorado
+sudo mkdir -p /srv/compartido/materiales /srv/compartido/entregas
+----
+
+Repartid las cuentas de ASO del equipo entre `alumnado` y `profesorado` con `usermod -aG`. Samba guarda sus contraseñas aparte de las del sistema, así que cada cuenta que vaya a conectarse necesita una contraseña de Samba:
+
+[source,bash]
+----
+sudo smbpasswd -a usuario
+----
+
+Los permisos de las carpetas y la configuración de `/etc/samba/smb.conf` forman parte de la práctica: se diseñan antes de escribirlos.
+
+NOTE: Windows Server 2025 no permite el acceso de invitado y exige firma en las conexiones SMB salientes. Por eso cada prueba se hace con una cuenta y su contraseña de Samba.
 
 == Sistemas diferentes, recursos comunes
 
@@ -15,6 +44,32 @@ El ZIP de referencia menciona esta unidad en la programación, pero no incluye u
 Estudiaremos SMB mediante Samba para compartir recursos con clientes Windows y Linux, y compararemos el enfoque con NFS. No elegimos un protocolo solo porque ambos equipos estén conectados: también importan identidades, permisos, clientes y requisitos del servicio.
 
 Compartir una carpeta no elimina los permisos del sistema de archivos. El resultado depende de la configuración del recurso y de la identidad con que se accede. Una cuenta local con el mismo nombre en dos equipos no demuestra que ambos reconozcan a la misma persona.
+
+Un recurso de Samba se declara en `/etc/samba/smb.conf`. Este fragmento es un punto de partida, no la solución:
+
+[source,ini]
+----
+[materiales]
+   path = /srv/compartido/materiales
+   valid users = @alumnado @profesorado
+   read only = yes
+   write list = @profesorado
+----
+
+Después de cada cambio, revisa la sintaxis con `testparm` y aplica la configuración con `sudo systemctl reload smbd`.
+
+Desde los clientes:
+
+[source,bash]
+----
+smbclient -L //192.168.10X.2 -U usuario
+smbclient //192.168.10X.2/materiales -U usuario
+----
+
+[source,powershell]
+----
+net use Z: \\192.168.10X.2\materiales /user:usuario
+----
 
 == Diseñar pruebas de acceso
 
@@ -32,11 +87,11 @@ La matriz es una especificación, no una configuración terminada. Para converti
 
 == Práctica A · Un recurso compartido
 
-. Dibuja el mapa de red del entorno asignado.
-. Define carpeta, grupos y matriz de acceso.
-. Configura el servicio siguiendo el procedimiento del laboratorio.
-. Prueba lectura y escritura desde un cliente Windows y otro Linux.
-. Realiza una prueba con una cuenta no autorizada.
+. Dibuja el mapa de red del grupo: aula, router, servidor Ubuntu y VM de Windows.
+. Define carpetas, grupos y matriz de acceso.
+. Configura los permisos de `/srv/compartido` y los recursos de Samba según tu diseño.
+. Prueba lectura y escritura desde Windows con `net use` y desde Ubuntu con `smbclient`.
+. Realiza una prueba con una cuenta no autorizada, por ejemplo la del proyecto sin contraseña de Samba.
 . Documenta configuración, resultados e incidencias.
 
 *Entrega.* Mapa, matriz, pruebas positivas y negativas. Que una cuenta administradora consiga entrar no demuestra que el diseño de permisos sea correcto para el alumnado.
@@ -58,3 +113,4 @@ Un recurso llamado `materiales` debe permitir lectura al alumnado. En la prueba 
 * ¿Qué significa interoperar entre sistemas?
 * ¿Por qué necesitas pruebas con cuentas que no sean administradoras?
 * ¿Qué capas de permisos pueden intervenir en una carpeta compartida?
+* ¿Por qué Samba necesita su propia contraseña para cada cuenta?

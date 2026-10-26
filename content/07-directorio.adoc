@@ -3,12 +3,167 @@
 :description: Organiza identidades, administra objetos e integra clientes con un servicio de directorio.
 :period: Después del 22 de enero
 :ra: RA1 · aplicación de RA7
+:note-caption: Nota
+:important-caption: Importante
+:warning-caption: Atención
+
+== Preparación del servidor
+
+Esta unidad necesita un Windows Server. Usaremos *Windows Server 2025 de evaluación*, gratuito durante 180 días, en una máquina virtual dentro del servidor de cada grupo. La misma máquina servirá para las unidades 09 y 10. Además, OpenLDAP se instalará directamente en Ubuntu.
+
+[cols="1,2",options="header"]
+|===
+|Equipo |Dirección
+|Router |`192.168.10X.1`
+|Servidor Ubuntu |`192.168.10X.2`
+|Windows Server (VM) |`192.168.10X.3`
+|===
+
+La preparación se hace en equipo, con el usuario del proyecto y delante del servidor: el paso 3 cambia la red y, si sale mal, solo se puede corregir desde su teclado y su pantalla.
+
+[WARNING]
+====
+*Copia de seguridad antes de empezar.*
+
+* Router: `/export file=antes-u07` y descargad el archivo.
+* Servidor: `sudo tar czf /root/etc-antes-u07.tar.gz /etc` y comprobad la copia con `sudo tar tzf /root/etc-antes-u07.tar.gz | head`.
+* Si el proyecto tiene datos propios, copiadlos también según su procedimiento.
+====
+
+=== 1. Comprobar que el servidor puede alojar la VM
+
+[source,bash]
+----
+egrep -c '(vmx|svm)' /proc/cpuinfo
+free -h
+df -h /var/lib
+----
+
+* Si la primera orden devuelve `0`, hay que activar la virtualización (VT-x o AMD-V) en la BIOS del servidor.
+* La VM necesita 4 GB de memoria. Con 8 GB en total queda lo justo para Ubuntu y el proyecto: la VM se enciende solo durante las sesiones de Windows y se apaga al terminar. Si el servidor tiene menos de 8 GB, hablad con la docente para compartir la VM de otro grupo.
+* Hacen falta unos 45 GB libres de disco.
+
+=== 2. Instalar KVM
+
+[source,bash]
+----
+sudo apt update
+sudo apt install qemu-kvm libvirt-daemon-system virtinst
+sudo usermod -aG libvirt usuario
+----
+
+Añadid al grupo `libvirt` cada cuenta de ASO del equipo. Igual que `docker`, este grupo permite controlar las máquinas virtuales del servidor y debe tratarse como un privilegio de administración.
+
+=== 3. Crear un puente de red
+
+Para que la VM tenga su propia dirección en la red del grupo, la interfaz física del servidor pasa a formar parte de un *puente* (`br0`). La dirección `.2` del servidor se mueve de la interfaz al puente.
+
+Primero localizad el archivo de red y el nombre de la interfaz:
+
+[source,bash]
+----
+ls /etc/netplan/
+ip -br link
+----
+
+Editad el archivo de `/etc/netplan/` sustituyendo `enp1s0` por vuestra interfaz y `X` por el número del grupo. Conservad los servidores DNS que ya tuvierais:
+
+[source,yaml]
+----
+network:
+  version: 2
+  ethernets:
+    enp1s0:
+      dhcp4: false
+  bridges:
+    br0:
+      interfaces: [enp1s0]
+      addresses: [192.168.10X.2/24]
+      routes:
+        - to: default
+          via: 192.168.10X.1
+      nameservers:
+        addresses: [192.168.10X.1]
+      dhcp4: false
+----
+
+Aplicadlo con `netplan try`, que deshace el cambio automáticamente si no lo confirmáis en 120 segundos:
+
+[source,bash]
+----
+sudo netplan try
+----
+
+Mientras corre la cuenta atrás, comprobad desde un equipo del aula que SSH sigue funcionando. Si funciona, confirmad con Intro; si no, esperad a que se deshaga.
+
+=== 4. Crear la VM
+
+Descargad la ISO en español desde el https://www.microsoft.com/es-es/evalcenter/download-windows-server-2025[Evaluation Center de Microsoft] (requiere registro). Copiadla al servidor con `scp` y movedla a `/var/lib/libvirt/images/`. Después:
+
+[source,bash]
+----
+sudo virt-install --name ws2025 --memory 4096 --vcpus 2 \
+  --osinfo win2k22 \
+  --cdrom /var/lib/libvirt/images/WindowsServer2025.iso \
+  --disk size=40,bus=sata \
+  --network bridge=br0,model=e1000e \
+  --graphics vnc,listen=127.0.0.1 --noautoconsole
+----
+
+`--osinfo win2k22` sirve también para 2025; si `virt-install --osinfo list | grep win2k25` lo muestra, podéis usar `win2k25`. El disco SATA y la tarjeta `e1000e` evitan tener que cargar controladores adicionales durante la instalación.
+
+Para ver la pantalla de la VM, abrid un túnel desde vuestro equipo y conectad un cliente VNC (como Remmina) a `localhost:5900`:
+
+[source,bash]
+----
+ssh -L 5900:localhost:5900 usuario@10.113.136.25x
+----
+
+Instalad la edición *Standard Evaluation (Experiencia de escritorio)*. Al terminar, asignad a Windows la dirección `192.168.10X.3/24`, con puerta de enlace `.1`, y comprobad que tiene acceso a Internet.
+
+IMPORTANT: La versión de evaluación debe activarse por Internet en los primeros 10 días; si no, se apaga periódicamente. Comprobad el estado con `slmgr /dlv`.
+
+=== 5. Escritorio remoto desde el aula
+
+Cread en el router una regla para el puerto 3389 hacia `192.168.10X.3`, igual que la del 22, y activad el Escritorio remoto en Windows. Desde el aula, conectad con un cliente RDP a `10.113.136.25x`.
+
+=== 6. Encender y apagar
+
+[source,bash]
+----
+virsh -c qemu:///system start ws2025
+virsh -c qemu:///system shutdown ws2025
+virsh -c qemu:///system list --all
+----
+
+La VM no se inicia sola al arrancar el servidor. Apagadla al final de cada sesión para dejar memoria al proyecto.
+
+=== 7. OpenLDAP en Ubuntu
+
+[source,bash]
+----
+sudo apt install slapd ldap-utils
+sudo dpkg-reconfigure slapd
+----
+
+En la reconfiguración, usad como dominio `grupoX.aso` (base `dc=grupoX,dc=aso`) y una contraseña de administrador que guardéis fuera de las entregas.
+
+=== 8. Cliente Kerberos en Ubuntu
+
+[source,bash]
+----
+sudo apt install krb5-user
+----
+
+El instalador pregunta por el reino y los servidores. Contestad `GRUPOX.ASO.LOCAL` (en mayúsculas, con el número del grupo) como reino y `192.168.10X.3` como servidor Kerberos y servidor administrativo. Este paquete no cambia cómo inician sesión las cuentas del servidor.
 
 == Centralizar identidades
 
 Un servicio de directorio organiza información sobre objetos de una red: personas, grupos, equipos y otros recursos. Permite consultar y administrar esa información de forma centralizada. La autenticación comprueba una identidad; la autorización determina qué puede hacer.
 
-LDAP es un protocolo de acceso a directorios. Active Directory y OpenLDAP no son nombres intercambiables: ofrecen servicios y modelos que deben estudiarse en su contexto. Un dominio de Active Directory incorpora funciones que van más allá de realizar consultas LDAP.
+En la unidad 02 creasteis cuentas *locales*: existen solo en el servidor del grupo. Con un directorio, una misma cuenta sirve en todos los equipos integrados, y darla de baja en un solo sitio la retira de todos.
+
+LDAP es un protocolo de acceso a directorios. Active Directory y OpenLDAP no son nombres intercambiables: ofrecen servicios y modelos que deben estudiarse en su contexto. Un dominio de Active Directory incorpora funciones que van más allá de realizar consultas LDAP, como Kerberos, DNS y directivas de grupo.
 
 == Diseñar antes de crear objetos
 
@@ -16,11 +171,11 @@ El esquema define tipos de objetos y atributos. La estructura lógica permite or
 
 Un departamento de una empresa no tiene por qué convertirse automáticamente en un dominio. Elegimos unidades organizativas y grupos según delegación, aplicación de políticas y acceso a recursos. Es importante documentar el motivo de cada decisión.
 
-En LDAP, un nombre distinguido identifica la posición de una entrada. Este ejemplo representa una unidad organizativa dentro de un directorio de prácticas:
+En LDAP, un nombre distinguido identifica la posición de una entrada. Este ejemplo representa una unidad organizativa dentro del directorio del grupo:
 
 [source,ldif]
 ----
-dn: ou=alumnado,dc=ejemplo,dc=net
+dn: ou=alumnado,dc=grupoX,dc=aso
 objectClass: organizationalUnit
 ou: alumnado
 ----
@@ -29,19 +184,48 @@ El formato LDIF permite representar entradas y operaciones sobre ellas. Debe int
 
 == Administración e integración
 
-Mantendremos dos recorridos: Active Directory con Windows Server y OpenLDAP con Linux. Incluyen instalación, objetos, búsquedas, cuentas y grupos, integración de clientes y documentación. En Active Directory añadiremos GPO, delegación y relaciones de confianza según el caso de prácticas.
+Mantendremos dos recorridos: Active Directory en la VM de Windows Server y OpenLDAP en Ubuntu. Incluyen instalación, objetos, búsquedas, cuentas y grupos, comprobación desde clientes y documentación. En Active Directory añadiremos GPO y delegación según el caso de prácticas.
+
+Al promover el servidor a controlador de dominio, Windows instala también un servidor DNS. Usad como dominio `grupoX.aso.local` para no confundirlo con el de OpenLDAP.
 
 Crear una cuenta en el directorio no demuestra que un cliente pueda autenticarse. Debemos verificar el cliente, sus dependencias de red y la autorización esperada. También hay que comprobar que una persona sin permiso no obtiene el mismo acceso.
 
+Ubuntu puede comprobar credenciales de ambos directorios sin cambiar cómo inician sesión sus usuarios. En OpenLDAP, `ldapwhoami` valida una cuenta y `ldapsearch` consulta objetos:
+
+[source,bash]
+----
+ldapwhoami -x -H ldap://localhost -D "uid=alopez,ou=alumnado,dc=grupoX,dc=aso" -W
+ldapsearch -x -H ldap://localhost -b "dc=grupoX,dc=aso" "(uid=alopez)" cn
+----
+
+Con Active Directory no sirve una consulta LDAP sencilla: en los dominios nuevos de Windows Server 2025 la *firma LDAP es obligatoria*, y el controlador rechaza las conexiones por el puerto 389 que envían la contraseña sin firmar ni cifrar. Es una medida de seguridad que conviene entender, no un fallo. Para comprobar una cuenta del dominio desde Ubuntu usamos Kerberos, que es el método propio de Active Directory:
+
+[source,bash]
+----
+kinit alopez@GRUPOX.ASO.LOCAL
+klist
+kdestroy
+----
+
+Si `kinit` obtiene un tique, el dominio ha autenticado la cuenta. Kerberos exige que los relojes de ambos equipos no difieran más de cinco minutos: si `kinit` se queja del reloj, compara `date` en Ubuntu con la hora de Windows. Las consultas de objetos de Active Directory se hacen desde Windows, con la consola de usuarios y equipos o con PowerShell:
+
+[source,powershell]
+----
+Get-ADUser -Filter "Name -like '*López*'" -Properties MemberOf
+Get-ADGroupMember alumnado
+----
+
+NOTE: Unir el servidor Ubuntu al dominio (con `realm join`) cambiaría cómo se autentican *todas* sus cuentas, también la del proyecto. En esta unidad no se hace; la docente lo mostrará en un entorno separado.
+
 == Práctica A · Un directorio para el aula
 
-La docente asigna servidor, cliente y datos del dominio. Se trabajará en una red de laboratorio.
-
 . Diseña una estructura para alumnado y profesorado, con grupos de acceso diferenciados.
-. Crea los objetos del caso y documenta sus atributos esenciales.
-. Realiza consultas que localicen los objetos por criterios definidos.
-. Integra un cliente y verifica un inicio de sesión y una restricción de acceso.
-. Repite las operaciones indicadas en OpenLDAP y compara herramientas y estructura.
+. Promueve Windows Server a controlador de dominio y crea los objetos del caso en Active Directory. Documenta sus atributos esenciales.
+. Crea la misma estructura en OpenLDAP mediante archivos LDIF y `ldapadd`.
+. Realiza consultas que localicen los objetos por criterios definidos: con `ldapsearch` en OpenLDAP y con PowerShell en Active Directory.
+. Comprueba desde Ubuntu, en ambos directorios, una autenticación correcta y una contraseña errónea.
+. Explica qué demuestra cada prueba y qué no: autenticar una cuenta no dice nada de lo que tiene permitido hacer.
+. Compara herramientas, estructura y nombres de ambos directorios.
 
 *Entrega.* Diseño, operaciones realizadas, pruebas desde el cliente y explicación de permisos. Los ejercicios de scripts de cuentas se retomarán sobre este entorno.
 
@@ -55,10 +239,13 @@ Una organización tiene 12 estudiantes y 2 docentes. Todos pueden leer materiale
 . Describe una consulta para encontrar el alumnado y qué resultado esperarías.
 . Escribe pruebas de acceso para una cuenta de cada grupo y una cuenta sin autorización.
 
-*Entrega B.* Árbol, matriz de permisos y pruebas esperadas. La instalación e integración real del cliente quedan pendientes.
+*Entrega B.* Árbol, matriz de permisos y pruebas esperadas. La instalación y las pruebas reales quedan pendientes.
 
 == Comprueba lo que sabes
 
+* ¿Qué diferencia hay entre una cuenta local y una cuenta de directorio?
 * ¿Qué diferencia hay entre autenticar y autorizar?
 * ¿Qué función tienen el esquema, un grupo y una unidad organizativa?
-* ¿Qué prueba demuestra que un cliente está integrado correctamente?
+* ¿Por qué el servidor Ubuntu necesita un puente de red para alojar la VM?
+* ¿Qué prueba demuestra que un cliente puede autenticarse contra el directorio?
+* ¿Por qué Windows Server 2025 rechaza una consulta LDAP con contraseña por el puerto 389?
