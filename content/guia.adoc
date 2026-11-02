@@ -1,5 +1,6 @@
 = Cómo trabajamos
 :description: Un método común para aprender, realizar las prácticas y explicar los resultados.
+:important-caption: Importante
 
 == Dos sesiones por semana
 
@@ -35,17 +36,28 @@ Resuelve el Plan B que aparece debajo de la práctica. Incluye un caso, activida
 
 El Plan B permite avanzar en comprensión y diseño. Cuando vuelva la conexión se comprobarán las operaciones prácticas pendientes. Saber explicar un despliegue y haberlo ejecutado son evidencias diferentes.
 
+== Al final de cada unidad, una evaluable
+
+IMPORTANT: Cada unidad termina con una *actividad evaluable* individual. Su nota cuenta para el *resultado de aprendizaje (RA)* de esa unidad, que aparece en la cabecera de cada tema.
+
+* Se hace *en clase*, en el servidor del grupo y con tu cuenta de ASO, y se entrega en Aules dentro del horario indicado.
+* Se hace *una sola vez*. Si no la entregas, cuenta como un 0.
+* Puedes consultar la web del módulo y tus propios ejercicios. *No se puede usar inteligencia artificial.*
+* Una entrega copiada o hecha con IA se califica con 0, tanto a quien copia como a quien deja copiar.
+* La unidad 01 es de preparación: su evaluable sirve de evaluación inicial y no cuenta para la nota.
+
+La nota de cada RA es la media de sus evaluables. La nota del módulo es la media de los RA según su peso (tabla de abajo), y *hay que llegar al menos a un 5 en cada RA* para aprobar. Las prácticas de clase son el entrenamiento para la evaluable: hazlas todas.
+
 == Relación con los resultados de aprendizaje
 
-[cols="1,2",options="header"]
+[cols="1,3,1",options="header"]
 |===
-|RA |Qué se trabaja
-|RA1 |Servicio de directorio e integración de clientes.
-|RA2 |Administración de procesos.
-|RA3 |Automatización de tareas.
-|RA4 |Administración remota.
-|RA5 |Servidores de impresión.
-|RA6 |Integración de sistemas libres y propietarios.
-|RA7 |Lenguajes de guiones aplicados a la administración.
+|RA |Qué se trabaja |Peso en la nota
+|RA1 |Servicio de directorio e integración de clientes. |20 %
+|RA2 |Administración de procesos. |15 %
+|RA3 |Automatización de tareas. |15 %
+|RA4 |Administración remota. |12 %
+|RA5 |Servidores de impresión. |8 %
+|RA6 |Integración de sistemas libres y propietarios. |12 %
+|RA7 |Lenguajes de guiones aplicados a la administración. |18 %
 |===
-
