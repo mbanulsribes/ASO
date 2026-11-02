@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>De systemd a tu bash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: mapa de la cadena arriba, escena (texto + terminal) en el centro, navegación abajo. Pensado para proyector. */
+:root{
+  --bg:#EEF1F4; --panel:#FFFFFF; --ink:#16202B; --muted:#5A6878; --line:#C9D2DC;
+  --accent:#1F5FBF; --accent-soft:#DCE7F7; --mine:#B4610B; --mine-soft:#F6E6D2;
+  --danger:#B42318; --danger-soft:#F8DEDB; --ok:#1E7A46; --ok-soft:#DBF0E2;
+  --term-bg:#18212B; --term-fg:#DCE3EA; --term-dim:#8796A6; --term-prompt:#7FB2F0; --term-hi:#F2C46D;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161D; --panel:#18212B; --ink:#E6ECF2; --muted:#9AA8B7; --line:#2C3946;
+  --accent:#78A9EE; --accent-soft:#1D3150; --mine:#E9A55A; --mine-soft:#3A2A17;
+  --danger:#F0877C; --danger-soft:#3E1E1B; --ok:#6CCB93; --ok-soft:#173527;
+  --term-bg:#0B1117; --term-fg:#DCE3EA; --term-dim:#7D8C9C; --term-prompt:#7FB2F0; --term-hi:#F2C46D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161D; --panel:#18212B; --ink:#E6ECF2; --muted:#9AA8B7; --line:#2C3946;
+  --accent:#78A9EE; --accent-soft:#1D3150; --mine:#E9A55A; --mine-soft:#3A2A17;
+  --danger:#F0877C; --danger-soft:#3E1E1B; --ok:#6CCB93; --ok-soft:#173527;
+  --term-bg:#0B1117; --term-fg:#DCE3EA; --term-dim:#7D8C9C; --term-prompt:#7FB2F0; --term-hi:#F2C46D; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:clamp(14px,0.85vw + 7px,20px);line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;box-sizing:border-box}
+.app{max-width:1400px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;gap:14px}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.kicker{font-family:var(--mono);font-size:.7em;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* mapa */
+.map{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 2px 8px}
+.node{flex:1 1 0;min-width:96px;border:1.5px solid var(--line);background:var(--panel);border-radius:10px;padding:.45em .6em;text-align:center;transition:border-color .3s,background .3s,opacity .3s,transform .3s;opacity:.45}
+.node b{display:block;font-family:var(--mono);font-weight:600;font-size:.9em}
+.node span{display:block;font-size:.66em;color:var(--muted)}
+.node.on{opacity:1;border-color:var(--accent);background:var(--accent-soft)}
+.node.mine.on{border-color:var(--mine);background:var(--mine-soft)}
+.node.gone{opacity:.25;border-style:dashed;transform:scale(.96)}
+.arrow{flex:0 0 auto;align-self:center;width:28px;height:2px;background:var(--line);position:relative;margin:0 2px}
+.arrow::after{content:"";position:absolute;right:-1px;top:-5px;border:6px solid transparent;border-left:8px solid var(--line);border-right:0}
+.arrow.on{background:var(--accent)} .arrow.on::after{border-left-color:var(--accent)}
+.group-labels{display:flex;gap:0;font-size:.62em;color:var(--muted);font-family:var(--mono);letter-spacing:.04em}
+/* escena */
+.scene{flex:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:22px;align-items:start}
+.scene.cover{grid-template-columns:1fr}
+.text h1{font-family:var(--display);font-weight:800;font-size:clamp(1.9em,3.3vw,3em);line-height:1.05;margin:.1em 0 .35em;text-wrap:balance;letter-spacing:-.01em}
+.text h2{font-family:var(--display);font-weight:700;font-size:clamp(1.45em,2.3vw,2.1em);line-height:1.1;margin:.1em 0 .45em;text-wrap:balance}
+.text p{margin:0 0 .7em;max-width:34em}
+.text ul{margin:.2em 0 .8em;padding-left:1.1em} .text li{margin:.25em 0}
+code{font-family:var(--mono);font-size:.92em;background:var(--accent-soft);padding:.05em .3em;border-radius:4px}
+.callout{border-left:4px solid var(--accent);background:var(--panel);padding:.6em .9em;border-radius:0 8px 8px 0;margin:.6em 0}
+.callout.stop{border-color:var(--danger);background:var(--danger-soft)}
+.callout.okc{border-color:var(--ok);background:var(--ok-soft)}
+.term{background:var(--term-bg);color:var(--term-fg);border-radius:12px;font-family:var(--mono);font-size:.72em;line-height:1.5;min-width:0;overflow:hidden;box-shadow:0 1px 0 var(--line)}
+.term .bar{display:flex;gap:6px;align-items:center;padding:.45em .8em;background:rgba(255,255,255,.06);color:var(--term-dim);font-size:.85em}
+.term .bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18);display:inline-block}
+.term pre{margin:0;padding:.8em 1em 1em;white-space:pre;overflow-x:auto;font:inherit}
+.term .p{color:var(--term-prompt)} .term .d{color:var(--term-dim)} .term .h{color:var(--term-hi);font-weight:600}
+.term .ln{display:block;transition:opacity .35s} .term .ln.hidden{opacity:0}
+.term .note{display:block;color:var(--term-dim);font-style:italic}
+/* tablero activo/habilitado */
+.states{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:.4em 0 .8em}
+.unit{background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:.6em .8em}
+.unit b{font-family:var(--mono)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72em;padding:.12em .5em;border-radius:999px;margin:.25em .3em 0 0;border:1px solid}
+.pill.yes{color:var(--ok);background:var(--ok-soft);border-color:var(--ok)}
+.pill.no{color:var(--muted);background:transparent;border-color:var(--line)}
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:.6em 0}
+.vs > div{background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:.7em .9em}
+.vs h3{margin:0 0 .3em;font-family:var(--display);font-size:1.05em}
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rules > div{border-radius:12px;padding:.8em 1em}
+.rules .yes{background:var(--ok-soft);border:1.5px solid var(--ok)}
+.rules .no{background:var(--danger-soft);border:1.5px solid var(--danger)}
+.rules h3{margin:0 0 .4em;font-family:var(--display)}
+.rules ul{margin:0;padding-left:1.1em}
+/* navegación */
+nav.ctrl{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:6px;border-top:1px solid var(--line)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots button{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;padding:0;cursor:pointer}
+.dots button[aria-current="step"]{background:var(--accent);border-color:var(--accent)}
+.btns{display:flex;gap:8px}
+.btns button{font:inherit;font-size:.85em;font-weight:600;padding:.45em 1em;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent);color:var(--panel);cursor:pointer}
+.btns button.sec{background:transparent;color:var(--accent)}
+.btns button:disabled{opacity:.35;cursor:default}
+button:focus-visible{outline:3px solid var(--mine);outline-offset:2px}
+.hint{font-size:.7em;color:var(--muted)}
+.cover-wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center;padding:2vh 0}
+.cmds{background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:.55em .9em}
+.cmds h3{margin:0 0 .35em;font-family:var(--mono);font-size:.68em;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.cmds dl{margin:0;display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:.3em 1em;font-size:.82em}
+.cmds dt{font-family:var(--mono);font-weight:600;color:var(--accent);white-space:nowrap}
+.cmds dd{margin:0;min-width:0}
+.cmds dd code{font-size:.9em}
+@media (max-width:820px){.cmds dl{grid-template-columns:1fr}.cmds dt{white-space:normal}.cmds dd{margin-bottom:.4em}}
+@media (max-width:820px){.scene,.cover-wrap{grid-template-columns:1fr}.states,.vs,.rules{grid-template-columns:1fr}.node{min-width:84px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head><body>
+<p class="back" style="margin:0 0 6px;font-size:.75em"><a href="../../03-procesos.html" style="color:var(--accent)">← Volver a la unidad 03</a></p>
+<div class="app">
+  <header class="top">
+    <span class="kicker">ASO · UD3 Procesos y servicios · Ubuntu Server 24.04</span>
+    <span class="kicker" id="count">1 / 8</span>
+  </header>
+
+  <div>
+    <div class="map" id="map" aria-label="Cadena de procesos de una conexión SSH">
+      <div class="node" data-n="systemd"><b>systemd</b><span>PID 1</span></div>
+      <div class="arrow" data-a="1"></div>
+      <div class="node" data-n="socket"><b>ssh.socket</b><span>escucha el puerto 22</span></div>
+      <div class="arrow" data-a="2"></div>
+      <div class="node" data-n="service"><b>sshd</b><span>el servicio · PID 1050</span></div>
+      <div class="arrow" data-a="3"></div>
+      <div class="node" data-n="conn"><b>sshd ×2</b><span>tu conexión</span></div>
+      <div class="arrow" data-a="4"></div>
+      <div class="node mine" data-n="bash"><b>bash</b><span>tu intérprete · 15233</span></div>
+      <div class="arrow" data-a="5"></div>
+      <div class="node mine" data-n="sleep"><b>sleep 120</b><span>tu proceso</span></div>
+    </div>
+  </div>
+
+  <main id="stage" class="scene cover" aria-live="polite"></main>
+
+  <section class="cmds" id="cmds" aria-label="Qué hace cada orden"><h3>Qué hace cada orden</h3><dl id="cmdlist"></dl></section>
+
+  <nav class="ctrl" aria-label="Navegación">
+    <div class="dots" id="dots"></div>
+    <span class="hint">Flechas ← → o barra espaciadora</span>
+    <div class="btns">
+      <button class="sec" id="prev" type="button">Anterior</button>
+      <button id="next" type="button">Siguiente</button>
+    </div>
+  </nav>
+</div>
+
+<script>
+const P = s => `<span class="p">alopez@servidor:~$</span> ${s}`;
+const scenes = [
+  { map:[], arrows:[], cover:true, html:`
+    <div class="cover-wrap">
+      <div class="text">
+        <span class="kicker">Antes de empezar la práctica</span>
+        <h1>Qué pasa en el servidor cuando entras por SSH</h1>
+        <p>Todo lo que funciona en el servidor es un <strong>proceso</strong>. Algunos procesos son <strong>servicios</strong> que <code>systemd</code> mantiene en marcha. Hoy lo vemos en vuestra propia conexión.</p>
+        <div class="callout stop"><strong>Norma de la unidad:</strong> se mira todo, no se para nada. Solo se termina el proceso que crea cada uno.</div>
+      </div>
+      <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; ssh alopez@10.113.136.251</div><pre>${P('echo $$')}
+15233
+${P('pstree -sp $$')}
+systemd(1)───sshd(1050)───sshd(15120)───sshd(15232)───bash(15233)───pstree(15301)</pre></div>
+    </div>`},
+  { map:['bash'], arrows:[], steps:3, html:`
+    <div class="text">
+      <h2>Programa y proceso no son lo mismo</h2>
+      <p>Un <strong>programa</strong> es un archivo guardado en el disco, como <code>/usr/bin/bash</code>. No hace nada mientras nadie lo ejecuta.</p>
+      <p>Un <strong>proceso</strong> es ese programa <em>en marcha</em>. Cada proceso tiene:</p>
+      <ul><li><strong>PID</strong>: su número</li><li><strong>PPID</strong>: el número de su padre, quien lo arrancó</li><li><strong>dueño</strong>: la cuenta que lo ejecuta</li><li><strong>estado</strong>: trabajando o esperando</li></ul>
+      <p>Si 15 personas abren Bash, hay <strong>un</strong> programa y <strong>15</strong> procesos.</p>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; el programa y su proceso</div><pre><span class="ln" data-s="1">${P('ls -l /usr/bin/bash')}
+-rwxr-xr-x 1 root root 1446024 Mar 31  2024 /usr/bin/bash</span><span class="ln" data-s="2"><span class="note"># el programa: un archivo</span>
+${P('echo $$')}
+15233</span><span class="ln" data-s="3"><span class="note"># el PID de MI bash: el proceso</span>
+${P('ps -p $$ -o pid,ppid,user,stat,comm')}
+    PID    PPID USER     STAT COMMAND
+  <span class="h">15233</span>   15232 alopez   Ss   bash</span></pre></div>`},
+  { map:['systemd','socket','service','conn','bash'], arrows:[1,2,3,4], steps:5, reveal:true, html:`
+    <div class="text">
+      <h2>Tu conexión es una cadena de procesos</h2>
+      <p><code>pstree -sp $$</code> dibuja de quién viene tu Bash. Se lee de izquierda a derecha:</p>
+      <ul>
+        <li data-s="1"><code>systemd</code> es el proceso 1: arranca todo lo demás.</li>
+        <li data-s="2"><code>ssh.socket</code> vigila el puerto 22 y despierta al servicio.</li>
+        <li data-s="3">El primer <code>sshd</code> es el <strong>servicio SSH</strong>, esperando conexiones.</li>
+        <li data-s="4">Dos <code>sshd</code> más son <strong>tu conexión</strong>: uno comprueba la contraseña y otro trabaja con tu cuenta.</li>
+        <li data-s="5"><code>bash</code> es tu intérprete. Su número es el de <code>echo $$</code>.</li>
+      </ul>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; pstree</div><pre>${P('pstree -sp $$')}
+systemd(1)───sshd(1050)───sshd(15120)───sshd(15232)───<span class="h">bash(15233)</span>───pstree(15301)
+<span class="note"># ssh.socket no sale: no es un proceso,
+# es una unidad de systemd que vigila el puerto 22</span></pre></div>`},
+  { map:['conn','bash'], arrows:[4], steps:3, html:`
+    <div class="text">
+      <h2>Ver los procesos: mirar sí, actuar no</h2>
+      <p><code>ps -u "$USER"</code> muestra solo los tuyos. <code>ps -ef</code> muestra todos, de todas las cuentas: la columna <strong>UID</strong> dice de quién es y <strong>PPID</strong> quién es su padre.</p>
+      <p>Veréis las sesiones de los compañeros y las del usuario del proyecto. <strong>Mirar está permitido a todos; actuar sobre ellas, no.</strong></p>
+      <div class="callout">Un proceso desconocido no es malo por ser desconocido. Primero: ¿de quién es, qué programa es, quién es su padre, qué dice el registro?</div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; ps</div><pre><span class="ln" data-s="1">${P('ps -u "$USER"')}
+    PID TTY          TIME CMD
+  15232 ?        00:00:00 sshd
+  15233 pts/0    00:00:00 bash
+  15410 pts/0    00:00:00 ps
+</span><span class="ln" data-s="2">${P('ps -ef')}
+UID          PID    PPID  C STIME TTY      CMD
+root           1       0  0 07:05 ?        /sbin/init
+root        1050       1  0 08:01 ?        sshd: /usr/sbin/sshd -D [listener] …
+root       15120    1050  0 08:12 ?        sshd: alopez [priv]
+<span class="h">alopez     15232   15120</span>  0 08:12 ?        sshd: alopez@pts/0
+<span class="h">alopez     15233   15232</span>  0 08:12 pts/0    -bash
+bmartin    15290   15255  0 08:13 pts/1    -bash
+<span class="note">… muchas líneas más</span>
+</span><span class="ln" data-s="3"><span class="note"># ps -ef --forest: lo mismo, dibujado como árbol</span></span></pre></div>`},
+  { map:['bash','sleep'], arrows:[5], steps:5, sleepGoneAt:4, html:`
+    <div class="text">
+      <h2>Un proceso propio: nacer, mirar, terminar</h2>
+      <p>Creamos un proceso que solo espera 2 minutos. Es nuestro y no molesta a nadie, así que podemos terminarlo.</p>
+      <ul>
+        <li data-s="1"><code>sleep 120 &amp;</code>: el <code>&amp;</code> lo deja en segundo plano. Sale su PID.</li>
+        <li data-s="2"><code>pid=$!</code> guarda ese PID en una variable.</li>
+        <li data-s="3"><code>ps -p</code>: su padre es <strong>15233</strong>, tu Bash. Estado <code>S</code>: esperando, sin gastar procesador.</li>
+        <li data-s="4"><code>kill</code> le envía una señal para que termine.</li>
+        <li data-s="5">Al repetir <code>ps -p</code> ya no aparece.</li>
+      </ul>
+      <div class="callout stop">Solo el PID que acabáis de crear. Con un proceso de otra cuenta el sistema responde <code>Operation not permitted</code>.</div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; las cuatro líneas, seguidas y en la misma ventana</div><pre><span class="ln" data-s="1">${P('sleep 120 &')}
+[1] <span class="h">15420</span>
+</span><span class="ln" data-s="2">${P('pid=$!')}
+</span><span class="ln" data-s="3">${P('ps -p "$pid" -o pid,ppid,user,stat,comm')}
+    PID    PPID USER     STAT COMMAND
+  15420   <span class="h">15233</span> alopez   S    sleep
+</span><span class="ln" data-s="4">${P('kill "$pid"')}
+[1]+  Terminated              sleep 120
+</span><span class="ln" data-s="5">${P('ps -p "$pid" -o pid,ppid,user,stat,comm')}
+    PID    PPID USER     STAT COMMAND
+<span class="note"># solo títulos: el proceso ya no existe</span></span></pre></div>`},
+  { map:['systemd','socket','service'], arrows:[1,2], steps:3, html:`
+    <div class="text">
+      <h2>Un servicio: ¿activo? ¿habilitado?</h2>
+      <p>Un <strong>servicio</strong> es un programa que <code>systemd</code> mantiene funcionando para dar una función. Dos preguntas distintas:</p>
+      <div class="vs"><div><h3>Activo</h3>¿Funciona <em>ahora</em>?</div><div><h3>Habilitado</h3>¿Arranca solo al encender el servidor?</div></div>
+      <div class="states" data-s="3">
+        <div class="unit"><b>ssh.socket</b><br><span class="pill yes">activo · listening</span><span class="pill yes">habilitado</span></div>
+        <div class="unit"><b>ssh.service</b><br><span class="pill yes">activo · running</span><span class="pill no">no habilitado</span></div>
+      </div>
+      <p data-s="3">El servicio está activo <strong>sin estar habilitado</strong>: no lo arranca el encendido, lo arranca el socket cuando llega una conexión.</p>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; systemctl · si no vuelve el indicador, pulsa q</div><pre><span class="ln" data-s="1">${P('systemctl status ssh.socket ssh.service')}
+● ssh.socket - OpenBSD Secure Shell server socket
+     Loaded: loaded (/usr/lib/systemd/system/ssh.socket; enabled; …)
+     <span class="h">Active: active (listening)</span> since Mon 2026-11-02 07:05:12 CET
+   Triggers: ● ssh.service
+     Listen: [::]:22 (Stream)
+
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/usr/lib/systemd/system/ssh.service; disabled; …)
+     <span class="h">Active: active (running)</span> since Tue 2026-11-03 08:01:40 CET
+<span class="h">TriggeredBy: ● ssh.socket</span>
+   Main PID: 1050 (sshd)
+</span><span class="ln" data-s="2">${P('systemctl is-enabled ssh.socket ssh.service')}
+<span class="h">enabled</span>
+<span class="h">disabled</span>
+<span class="note"># si en vuestro servidor salen los dos enabled, también vale: explicad lo que sale</span></span></pre></div>`},
+  { map:['service','conn'], arrows:[3], steps:2, html:`
+    <div class="text">
+      <h2>El registro: el diario del servicio</h2>
+      <p><code>journalctl</code> enseña lo que han anotado los servicios. Por eso vuestra cuenta necesitaba el grupo <code>adm</code>: da permiso para <strong>leer</strong> el diario, nada más.</p>
+      <p data-s="2">En la línea de vuestro inicio de sesión se ve:</p>
+      <ul data-s="2"><li>la hora</li><li>el <strong>PID</strong> del <code>sshd</code> de vuestra conexión, el mismo de <code>pstree</code></li><li>vuestra cuenta</li><li>la IP desde la que entrasteis</li></ul>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; journalctl · flechas para moverse, Fin para ir al final, q para salir</div><pre><span class="ln" data-s="1">${P('journalctl -u ssh.service --since today')}
+<span class="d">Nov 03 08:01:40 servidor systemd[1]: Started ssh.service - OpenBSD Secure Shell server.</span>
+<span class="d">Nov 03 08:10:02 servidor sshd[14870]: Accepted password for user from 10.113.136.30 port 50112 ssh2</span>
+</span><span class="ln" data-s="2"><span class="h">Nov 03 08:12:44</span> servidor sshd[<span class="h">15120</span>]: Accepted password for <span class="h">alopez</span> from <span class="h">10.113.136.48</span> port 51734 ssh2
+Nov 03 08:12:44 servidor sshd[15120]: pam_unix(sshd:session): session opened for user alopez(uid=1004)</span></pre></div>`},
+  { map:['systemd','socket','service','conn','bash'], arrows:[1,2,3,4], html:`
+    <div class="text" style="grid-column:1/-1">
+      <h2>Lo que se puede hacer y lo que no</h2>
+      <div class="rules">
+        <div class="yes"><h3>Se puede, siempre</h3><ul>
+          <li><code>ps</code>, <code>pstree</code>: mirar procesos</li>
+          <li><code>systemctl status</code>, <code>systemctl is-enabled</code></li>
+          <li><code>journalctl</code>: leer el registro</li>
+          <li><code>kill</code> sobre el proceso que acabas de crear</li></ul></div>
+        <div class="no"><h3>No se hace nunca</h3><ul>
+          <li><code>systemctl stop ssh</code> o <code>restart</code>: el grupo entero se queda fuera del servidor, también el Proyecto Intermodular</li>
+          <li><code>kill</code> sobre un proceso de otra cuenta</li>
+          <li><code>usermod -G</code> sin la <code>a</code>: la cuenta pierde sus grupos</li></ul></div>
+      </div>
+      <div class="callout okc" style="margin-top:1em"><strong>Ahora, la Práctica A:</strong> repetid cada paso en vuestro servidor y copiad en el bloc de notas la orden, su salida y una explicación.</div>
+    </div>`}
+];
+const CMDS = [
+  [['echo $$','Escribe el PID de tu propio Bash. <code>$$</code> significa «el número de mi intérprete».'],
+   ['pstree -sp $$','Dibuja el árbol de procesos. <code>-s</code> enseña los antecesores (de quién viene) y <code>-p</code> pone el PID de cada uno.']],
+  [['ls -l /usr/bin/bash','Muestra el archivo del programa Bash: permisos, dueño, tamaño y fecha. Es el programa guardado, no en marcha.'],
+   ['echo $$','El PID de tu Bash: el programa ya en marcha, es decir, el proceso.'],
+   ['ps -p $$ -o pid,ppid,user,stat,comm','Enseña un solo proceso (<code>-p</code> y su número) y solo las columnas que pides (<code>-o</code>): número, padre, dueño, estado y nombre.']],
+  [['pstree -sp $$','Dibuja la cadena desde <code>systemd</code> hasta tu Bash, con el PID de cada eslabón.']],
+  [['ps -u "$USER"','Lista solo tus procesos. <code>$USER</code> se cambia solo por el nombre de tu cuenta.'],
+   ['ps -ef','Lista todos los procesos del servidor (<code>-e</code>) con todos los datos (<code>-f</code>): dueño (UID), número (PID) y padre (PPID).'],
+   ['ps -ef --forest','Lo mismo, dibujado como árbol para ver quién cuelga de quién.']],
+  [['sleep 120 &','<code>sleep 120</code> espera 120 segundos sin hacer nada. El <code>&amp;</code> lo manda a segundo plano para que puedas seguir escribiendo.'],
+   ['pid=$!','Guarda en la variable <code>pid</code> el número del último proceso lanzado en segundo plano. <code>$!</code> es ese número.'],
+   ['ps -p "$pid" -o …','Muestra solo ese proceso: su número, su padre, su dueño, su estado y su nombre.'],
+   ['kill "$pid"','Envía al proceso la señal de terminar. Solo funciona con procesos de tu cuenta.']],
+  [['systemctl status ssh.socket ssh.service','Enseña el estado de cada unidad: si está cargada, si está activa y desde cuándo, y sus últimas líneas del registro. Se sale con <code>q</code>.'],
+   ['systemctl is-enabled ssh.socket ssh.service','Responde una palabra por unidad: <code>enabled</code> si arranca sola al encender el servidor, <code>disabled</code> si no.']],
+  [['journalctl -u ssh.service --since today','Lee el registro del sistema. <code>-u</code> filtra una sola unidad (aquí, el servicio SSH) y <code>--since today</code> enseña solo lo de hoy. Flechas para moverse, Fin para ir al final, <code>q</code> para salir.']],
+  [['systemctl stop / restart','Para o reinicia un servicio. Con SSH dejaría al grupo sin acceso: en esta unidad no se usa.'],
+   ['usermod -aG grupo cuenta','Añade la cuenta a un grupo sin quitarle los que ya tiene. Sin la <code>a</code> sustituye sus grupos.']]
+];
+let si = 0, sub = 0;
+const stage = document.getElementById('stage'), dots = document.getElementById('dots');
+scenes.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Pantalla '+(i+1));b.addEventListener('click',()=>go(i,999));dots.appendChild(b)});
+function render(){
+  const s = scenes[si], steps = s.steps||0;
+  if(stage.dataset.si!==String(si)){stage.innerHTML=s.html;stage.dataset.si=si;stage.className='scene'+(s.cover?' cover':'')}
+  stage.querySelectorAll('[data-s]').forEach(el=>{const n=+el.dataset.s;const show=!steps||n<=sub;if(el.classList.contains('ln'))el.classList.toggle('hidden',!show);else el.hidden=!show});
+  document.querySelectorAll('.node').forEach(n=>{const k=n.dataset.n;let on=s.map.includes(k);if(s.reveal){const order=['systemd','socket','service','conn','bash'];on=on&&order.indexOf(k)<sub}n.classList.toggle('on',on);n.classList.toggle('gone',k==='sleep'&&s.sleepGoneAt!==undefined&&sub>=s.sleepGoneAt)});
+  document.querySelectorAll('.arrow').forEach(a=>{const k=+a.dataset.a;let on=s.arrows.includes(k);if(s.reveal)on=on&&k<sub;a.classList.toggle('on',on)});
+  if(scenes[si].map.includes('sleep')){const n=document.querySelector('[data-n="sleep"]');n.classList.toggle('on',sub>=1)}
+  [...dots.children].forEach((d,i)=>{if(i===si)d.setAttribute('aria-current','step');else d.removeAttribute('aria-current')});
+  const list = CMDS[si]||[];
+  document.getElementById('cmds').hidden = !list.length;
+  document.getElementById('cmdlist').innerHTML = list.map(([c,t])=>`<dt>${c}</dt><dd>${t}</dd>`).join('');
+  document.getElementById('count').textContent=(si+1)+' / '+scenes.length;
+  document.getElementById('prev').disabled = si===0 && sub===0;
+  document.getElementById('next').disabled = si===scenes.length-1;
+}
+function go(i,subStart){si=Math.max(0,Math.min(scenes.length-1,i));const st=scenes[si].steps||0;sub=Math.min(subStart,st);render()}
+function next(){const st=scenes[si].steps||0;if(sub<st){sub++;render()}else if(si<scenes.length-1){go(si+1,0);if((scenes[si].steps||0)>0){sub=1;render()}}}
+function prev(){if(sub>1){sub--;render()}else if(si>0){go(si-1,999)}else{sub=0;render()}}
+document.getElementById('next').addEventListener('click',next);
+document.getElementById('prev').addEventListener('click',prev);
+document.addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev()}});
+go(0,0);
+</script>
+
+</body></html>

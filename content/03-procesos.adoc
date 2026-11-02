@@ -6,6 +6,8 @@
 :note-caption: Nota
 :important-caption: Importante
 
+TIP: Antes de empezar, mira la explicación paso a paso link:assets/explicaciones/procesos-servicios.html[De systemd a tu bash^]: qué pasa en el servidor cuando entras por SSH, con las órdenes de esta unidad y lo que hace cada una.
+
 == Preparación del servidor
 
 Para leer los registros del sistema sin ser administrador, tu cuenta de ASO necesita pertenecer al grupo `adm`. Hacedlo en equipo, desde el usuario del proyecto, para cada cuenta de ASO:
