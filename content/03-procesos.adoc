@@ -5,6 +5,7 @@
 :ra: RA2
 :note-caption: Nota
 :important-caption: Importante
+:tip-caption: Consejo
 
 TIP: Antes de empezar, mira la explicación paso a paso link:assets/explicaciones/procesos-servicios.html[De systemd a tu bash^]: qué pasa en el servidor cuando entras por SSH, con las órdenes de esta unidad y lo que hace cada una.
 
