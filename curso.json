@@ -2,6 +2,7 @@
   "unidadesPublicadas": [
     "01-instalacion",
     "02-linux",
-    "03-procesos"
+    "03-procesos",
+    "04-scripting"
   ]
 }
