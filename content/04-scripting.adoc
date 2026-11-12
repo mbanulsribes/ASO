@@ -4,6 +4,9 @@
 :period: Noviembre
 :ra: RA3 · RA7
 :note-caption: Nota
+:tip-caption: Consejo
+
+TIP: Antes de empezar, mira la explicación paso a paso link:assets/explicaciones/scripting-automatizacion.html[De una orden a un guion^]: cómo guardar, ejecutar, probar y programar un script, con las órdenes de esta unidad y lo que hace cada una.
 
 == Preparación del servidor
 
@@ -78,7 +81,18 @@ Programar no equivale a verificar. Revisa la ejecución, sus errores y el archiv
 
 Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`.
 
-. Guarda el script en un archivo de tu espacio de prácticas.
+. Guarda el script en un archivo de tu espacio de prácticas:
+.. Crea la carpeta, si aún no existe, y entra en ella:
++
+[source,bash]
+----
+mkdir -p ~/aso-lab
+cd ~/aso-lab
+----
+.. Abre el editor con el nombre del archivo: `nano informe.sh`. Si el archivo no existe, `nano` lo crea al guardar.
+.. Escribe o pega el script. La primera línea debe ser `#!/usr/bin/env bash`.
+.. Guarda con `Ctrl+O` y confirma el nombre con `Intro`. Sal con `Ctrl+X`.
+.. Comprueba que se ha guardado: `cat informe.sh` muestra su contenido y `ls -l informe.sh` muestra el archivo con su tamaño.
 . Ejecútalo mediante Bash con un destino propio.
 . Comprueba el contenido y repite los tres casos de prueba.
 . Programa la tarea en tu `crontab` con un calendario cercano para poder comprobarla, y retírala después.

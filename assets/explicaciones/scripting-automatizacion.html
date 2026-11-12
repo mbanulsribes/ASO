@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>De una orden a un guion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: mapa del recorrido arriba, escena (texto + terminal) en el centro, navegación abajo. Pensado para proyector. */
+:root{
+  --bg:#EEF1F4; --panel:#FFFFFF; --ink:#16202B; --muted:#5A6878; --line:#C9D2DC;
+  --accent:#1F5FBF; --accent-soft:#DCE7F7; --mine:#B4610B; --mine-soft:#F6E6D2;
+  --danger:#B42318; --danger-soft:#F8DEDB; --ok:#1E7A46; --ok-soft:#DBF0E2;
+  --term-bg:#18212B; --term-fg:#DCE3EA; --term-dim:#8796A6; --term-prompt:#7FB2F0; --term-hi:#F2C46D;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161D; --panel:#18212B; --ink:#E6ECF2; --muted:#9AA8B7; --line:#2C3946;
+  --accent:#78A9EE; --accent-soft:#1D3150; --mine:#E9A55A; --mine-soft:#3A2A17;
+  --danger:#F0877C; --danger-soft:#3E1E1B; --ok:#6CCB93; --ok-soft:#173527;
+  --term-bg:#0B1117; --term-fg:#DCE3EA; --term-dim:#7D8C9C; --term-prompt:#7FB2F0; --term-hi:#F2C46D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161D; --panel:#18212B; --ink:#E6ECF2; --muted:#9AA8B7; --line:#2C3946;
+  --accent:#78A9EE; --accent-soft:#1D3150; --mine:#E9A55A; --mine-soft:#3A2A17;
+  --danger:#F0877C; --danger-soft:#3E1E1B; --ok:#6CCB93; --ok-soft:#173527;
+  --term-bg:#0B1117; --term-fg:#DCE3EA; --term-dim:#7D8C9C; --term-prompt:#7FB2F0; --term-hi:#F2C46D; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:clamp(14px,0.85vw + 7px,20px);line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;box-sizing:border-box}
+.app{max-width:1400px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;gap:14px}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.kicker{font-family:var(--mono);font-size:.7em;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* mapa */
+.map{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 2px 8px}
+.node{flex:1 1 0;min-width:96px;border:1.5px solid var(--line);background:var(--panel);border-radius:10px;padding:.45em .6em;text-align:center;transition:border-color .3s,background .3s,opacity .3s,transform .3s;opacity:.45}
+.node b{display:block;font-family:var(--mono);font-weight:600;font-size:.9em}
+.node span{display:block;font-size:.66em;color:var(--muted)}
+.node.on{opacity:1;border-color:var(--accent);background:var(--accent-soft)}
+.node.mine.on{border-color:var(--mine);background:var(--mine-soft)}
+.arrow{flex:0 0 auto;align-self:center;width:28px;height:2px;background:var(--line);position:relative;margin:0 2px}
+.arrow::after{content:"";position:absolute;right:-1px;top:-5px;border:6px solid transparent;border-left:8px solid var(--line);border-right:0}
+.arrow.on{background:var(--accent)} .arrow.on::after{border-left-color:var(--accent)}
+/* escena */
+.scene{flex:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:22px;align-items:start}
+.scene.cover{grid-template-columns:1fr}
+.text h1{font-family:var(--display);font-weight:800;font-size:clamp(1.9em,3.3vw,3em);line-height:1.05;margin:.1em 0 .35em;text-wrap:balance;letter-spacing:-.01em}
+.text h2{font-family:var(--display);font-weight:700;font-size:clamp(1.45em,2.3vw,2.1em);line-height:1.1;margin:.1em 0 .45em;text-wrap:balance}
+.text p{margin:0 0 .7em;max-width:34em}
+.text ul{margin:.2em 0 .8em;padding-left:1.1em} .text li{margin:.25em 0}
+code{font-family:var(--mono);font-size:.92em;background:var(--accent-soft);padding:.05em .3em;border-radius:4px}
+kbd{font-family:var(--mono);font-size:.85em;border:1.5px solid var(--line);border-bottom-width:3px;border-radius:5px;padding:.02em .4em;background:var(--panel)}
+.callout{border-left:4px solid var(--accent);background:var(--panel);padding:.6em .9em;border-radius:0 8px 8px 0;margin:.6em 0}
+.callout.stop{border-color:var(--danger);background:var(--danger-soft)}
+.callout.okc{border-color:var(--ok);background:var(--ok-soft)}
+.term{background:var(--term-bg);color:var(--term-fg);border-radius:12px;font-family:var(--mono);font-size:.72em;line-height:1.5;min-width:0;overflow:hidden;box-shadow:0 1px 0 var(--line)}
+.term .bar{display:flex;gap:6px;align-items:center;padding:.45em .8em;background:rgba(255,255,255,.06);color:var(--term-dim);font-size:.85em}
+.term .bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18);display:inline-block}
+.term pre{margin:0;padding:.8em 1em 1em;white-space:pre;overflow-x:auto;font:inherit}
+.term .p{color:var(--term-prompt)} .term .d{color:var(--term-dim)} .term .h{color:var(--term-hi);font-weight:600}
+.term .ln{display:block;transition:opacity .35s} .term .ln.hidden{opacity:0}
+.term .wrap{display:block;white-space:pre-wrap;overflow-wrap:anywhere;border-left:3px solid var(--term-hi);padding-left:.6em;margin:.2em 0}
+.term .note{display:block;color:var(--term-dim);font-style:italic}
+.term .nanobar{display:block;background:#DCE3EA;color:#18212B;padding:0 .3em}
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:.6em 0}
+.vs > div{background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:.7em .9em}
+.vs h3{margin:0 0 .3em;font-family:var(--display);font-size:1.05em}
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rules > div{border-radius:12px;padding:.8em 1em}
+.rules .yes{background:var(--ok-soft);border:1.5px solid var(--ok)}
+.rules .no{background:var(--danger-soft);border:1.5px solid var(--danger)}
+.rules h3{margin:0 0 .4em;font-family:var(--display)}
+.rules ul{margin:0;padding-left:1.1em}
+/* campos de cron */
+.fields{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,2.2fr);gap:8px;margin:.5em 0 .9em}
+.fields > div{background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:.45em .5em;text-align:center}
+.fields b{display:block;font-family:var(--mono);font-size:1.5em;color:var(--accent)}
+.fields span{display:block;font-size:.7em;color:var(--muted)}
+.fields .cmd{border-color:var(--mine);background:var(--mine-soft)} .fields .cmd b{font-size:.8em;overflow-wrap:anywhere;color:var(--mine);padding:.45em 0}
+/* tabla de pruebas */
+table.tests{border-collapse:collapse;width:100%;font-size:.82em;margin:.3em 0 .8em;background:var(--panel)}
+table.tests th,table.tests td{border:1px solid var(--line);padding:.35em .55em;text-align:left;vertical-align:top}
+table.tests th{font-family:var(--mono);font-size:.8em;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
+table.tests td.ok{color:var(--ok);font-weight:600} table.tests td.ko{color:var(--danger);font-weight:600}
+/* navegación */
+nav.ctrl{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:6px;border-top:1px solid var(--line)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots button{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;padding:0;cursor:pointer}
+.dots button[aria-current="step"]{background:var(--accent);border-color:var(--accent)}
+.btns{display:flex;gap:8px}
+.btns button{font:inherit;font-size:.85em;font-weight:600;padding:.45em 1em;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent);color:var(--panel);cursor:pointer}
+.btns button.sec{background:transparent;color:var(--accent)}
+.btns button:disabled{opacity:.35;cursor:default}
+button:focus-visible{outline:3px solid var(--mine);outline-offset:2px}
+.hint{font-size:.7em;color:var(--muted)}
+.cover-wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center;padding:2vh 0}
+.cmds{background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:.55em .9em}
+.cmds h3{margin:0 0 .35em;font-family:var(--mono);font-size:.68em;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.cmds dl{margin:0;display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:.3em 1em;font-size:.82em}
+.cmds dt{font-family:var(--mono);font-weight:600;color:var(--accent);white-space:nowrap}
+.cmds dd{margin:0;min-width:0}
+.cmds dd code{font-size:.9em}
+@media (max-width:820px){.cmds dl{grid-template-columns:1fr}.cmds dt{white-space:normal}.cmds dd{margin-bottom:.4em}}
+@media (max-width:820px){.scene,.cover-wrap{grid-template-columns:1fr}.vs,.rules{grid-template-columns:1fr}.node{min-width:84px}.fields{grid-template-columns:repeat(5,minmax(0,1fr))}.fields .cmd{grid-column:1/-1}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head><body>
+<p class="back" style="margin:0 0 6px;font-size:.75em"><a href="../../04-scripting.html" style="color:var(--accent)">← Volver a la unidad 04</a></p>
+<div class="app">
+  <header class="top">
+    <span class="kicker">ASO · UD4 Scripting y automatización · Ubuntu Server 24.04</span>
+    <span class="kicker" id="count">1 / 10</span>
+  </header>
+
+  <div>
+    <div class="map" id="map" aria-label="Recorrido de un script: escribir, guardar, ejecutar, programar y comprobar">
+      <div class="node" data-n="nano"><b>nano</b><span>escribes</span></div>
+      <div class="arrow" data-a="1"></div>
+      <div class="node mine" data-n="guion"><b>informe.sh</b><span>tu script guardado</span></div>
+      <div class="arrow" data-a="2"></div>
+      <div class="node" data-n="bash"><b>bash</b><span>lo ejecuta</span></div>
+      <div class="arrow" data-a="3"></div>
+      <div class="node mine" data-n="informe"><b>informe.txt</b><span>el resultado</span></div>
+      <div class="arrow" data-a="4"></div>
+      <div class="node" data-n="cron"><b>cron</b><span>lo lanza a su hora</span></div>
+      <div class="arrow" data-a="5"></div>
+      <div class="node" data-n="registro"><b>registro</b><span>¿se ejecutó? ¿funcionó?</span></div>
+    </div>
+  </div>
+
+  <main id="stage" class="scene cover" aria-live="polite"></main>
+
+  <section class="cmds" id="cmds" aria-label="Qué hace cada orden"><h3>Qué hace cada orden</h3><dl id="cmdlist"></dl></section>
+
+  <nav class="ctrl" aria-label="Navegación">
+    <div class="dots" id="dots"></div>
+    <span class="hint">Flechas ← → o barra espaciadora</span>
+    <div class="btns">
+      <button class="sec" id="prev" type="button">Anterior</button>
+      <button id="next" type="button">Siguiente</button>
+    </div>
+  </nav>
+</div>
+
+<script>
+const P = s => `<span class="p">alopez@servidor:~/aso-lab$</span> ${s}`;
+const PH = s => `<span class="p">alopez@servidor:~$</span> ${s}`;
+const PS = s => `<span class="p">PS /home/alopez/aso-lab&gt;</span> ${s}`;
+const DF = `Filesystem                         Size  Used Avail Use% Mounted on
+tmpfs                              781M  1.6M  780M   1% /run
+/dev/mapper/ubuntu--vg-ubuntu--lv   98G   12G   82G  13% /
+tmpfs                              3.9G     0  3.9G   0% /dev/shm
+/dev/sda2                          2.0G  185M  1.7G  10% /boot`;
+const LINEA = '27 9 * * * /usr/bin/bash /home/alopez/aso-lab/informe.sh /home/alopez/aso-lab/cron.txt &gt;&gt; /home/alopez/aso-lab/cron.log 2&gt;&amp;1';
+const scenes = [
+  { map:[], arrows:[], cover:true, html:`
+    <div class="cover-wrap">
+      <div class="text">
+        <span class="kicker">Antes de empezar la práctica</span>
+        <h1>De una orden a un guion</h1>
+        <p>Un <strong>script</strong> es un archivo con órdenes que Bash ejecuta una detrás de otra. Lo escribes una vez y lo repites las veces que quieras.</p>
+        <p>Hoy hacemos el recorrido completo: <strong>escribirlo, guardarlo, ejecutarlo, probarlo y programarlo</strong> para que se ejecute solo a una hora.</p>
+        <div class="callout stop"><strong>Norma de la unidad:</strong> todo con tu cuenta de ASO, dentro de <code>~/aso-lab</code> y sin <code>sudo</code>.</div>
+      </div>
+      <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; ssh alopez@10.113.136.251</div><pre>${P('bash informe.sh')}
+Informe guardado en informe.txt
+${P('head -3 informe.txt')}
+Thu Nov 12 09:14:03 CET 2026
+servidor
+Filesystem                         Size  Used Avail Use% Mounted on</pre></div>
+    </div>`},
+  { map:['nano','guion'], arrows:[1], steps:4, html:`
+    <div class="text">
+      <h2>Guardar un script</h2>
+      <ul>
+        <li data-s="1">Crea tu espacio de prácticas y entra en él. <code>-p</code> evita el error si ya existe.</li>
+        <li data-s="2"><code>nano informe.sh</code> abre el editor. Si el archivo no existe, se crea al guardar.</li>
+        <li data-s="3">Pega el script. La primera línea es <code>#!/usr/bin/env bash</code>. Guarda con <kbd>Ctrl</kbd>+<kbd>O</kbd>, confirma el nombre con <kbd>Intro</kbd> y sal con <kbd>Ctrl</kbd>+<kbd>X</kbd>.</li>
+        <li data-s="4">Comprueba que está: <code>ls -l</code> enseña el archivo y su tamaño; <code>cat</code>, su contenido.</li>
+      </ul>
+      <div class="callout" data-s="4">No hace falta <code>chmod +x</code>: lo ejecutaremos escribiendo <code>bash informe.sh</code>.</div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; del teclado al archivo</div><pre><span class="ln" data-s="1">${PH('mkdir -p ~/aso-lab')}
+${PH('cd ~/aso-lab')}
+</span><span class="ln" data-s="2">${P('nano informe.sh')}
+</span><span class="ln" data-s="3"><span class="nanobar">  GNU nano 7.2              informe.sh                Modified  </span>#!/usr/bin/env bash
+destino="\${1:-informe.txt}"
+<span class="d">…</span>
+<span class="nanobar">File Name to Write: informe.sh                                  </span><span class="h">^O</span> Write Out   <span class="h">^X</span> Exit
+</span><span class="ln" data-s="4">${P('ls -l informe.sh')}
+-rw-rw-r-- 1 alopez alopez 211 Nov 12 09:05 <span class="h">informe.sh</span>
+${P('cat informe.sh')}
+#!/usr/bin/env bash
+<span class="d">… el script completo</span></span></pre></div>`},
+  { map:['guion'], arrows:[], steps:5, html:`
+    <div class="text">
+      <h2>Leer el script antes de ejecutarlo</h2>
+      <ul>
+        <li data-s="1"><code>#!/usr/bin/env bash</code>: dice qué intérprete lo ejecuta.</li>
+        <li data-s="2"><code>destino="\${1:-informe.txt}"</code>: <code>$1</code> es el <strong>primer argumento</strong>. Si no escribes ninguno, usa <code>informe.txt</code>.</li>
+        <li data-s="3">Las llaves agrupan <code>date</code>, <code>hostname</code> y <code>df -h</code>. El <code>&gt;</code> manda toda su salida al archivo y lo <strong>reemplaza</strong> si ya existía.</li>
+        <li data-s="4"><code>if … then</code>: si se pudo escribir el archivo, avisa de que está guardado.</li>
+        <li data-s="5"><code>else</code>: si no, escribe un error (<code>&gt;&amp;2</code>, la salida de errores) y termina con <code>exit 1</code>.</li>
+      </ul>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; informe.sh</div><pre><span class="d"> 1</span>  <span class="h">#!/usr/bin/env bash</span>
+<span class="d"> 2</span>  destino="<span class="h">\${1:-informe.txt}</span>"
+<span class="d"> 3</span>  <span class="h">if</span> {
+<span class="d"> 4</span>    date
+<span class="d"> 5</span>    hostname
+<span class="d"> 6</span>    df -h
+<span class="d"> 7</span>  } <span class="h">&gt; "$destino"</span>; <span class="h">then</span>
+<span class="d"> 8</span>    printf 'Informe guardado en %s\\n' "$destino"
+<span class="d"> 9</span>  <span class="h">else</span>
+<span class="d">10</span>    printf 'No se pudo generar el informe\\n' <span class="h">&gt;&amp;2</span>
+<span class="d">11</span>    <span class="h">exit 1</span>
+<span class="d">12</span>  fi</pre></div>`},
+  { map:['guion','bash','informe'], arrows:[2,3], steps:3, html:`
+    <div class="text">
+      <h2>Ejecutarlo con un destino propio</h2>
+      <p>Lo que escribes detrás del nombre del script es el <strong>argumento</strong>: dentro del script se llama <code>$1</code>.</p>
+      <ul>
+        <li data-s="1">Sin argumento: guarda en <code>informe.txt</code>.</li>
+        <li data-s="2">Con argumento: guarda donde tú digas.</li>
+        <li data-s="3"><code>echo $?</code> enseña cómo terminó la última orden: <strong>0</strong> es que fue bien.</li>
+      </ul>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; ejecutar</div><pre><span class="ln" data-s="1">${P('bash informe.sh')}
+Informe guardado en informe.txt
+</span><span class="ln" data-s="2">${P('bash informe.sh <span class="h">lunes.txt</span>')}
+Informe guardado en lunes.txt
+${P('cat lunes.txt')}
+Thu Nov 12 09:16:40 CET 2026
+servidor
+${DF}
+</span><span class="ln" data-s="3">${P('echo $?')}
+<span class="h">0</span></span></pre></div>`},
+  { map:['guion','bash','informe'], arrows:[2,3], steps:3, html:`
+    <div class="text">
+      <h2>Probarlo: tres casos</h2>
+      <table class="tests">
+        <tr><th>Caso</th><th>Espero</th><th>Ocurre</th></tr>
+        <tr data-s="1"><td>Normal</td><td>Se guarda</td><td class="ok">Guardado · 0</td></tr>
+        <tr data-s="2"><td>Ruta con espacios</td><td>Un solo archivo</td><td class="ok">Guardado · 0</td></tr>
+        <tr data-s="3"><td>Sin permiso de escritura</td><td>Error y código 1</td><td class="ko">Permission denied · 1</td></tr>
+      </table>
+      <p data-s="2">Con espacios, el nombre va <strong>entre comillas</strong> al ejecutar. Dentro del script, <code>"$destino"</code> también va entre comillas para no partirlo.</p>
+      <div class="callout" data-s="3">El directorio personal de un compañero no deja escribir: es justo el error que queremos ver. Esa tabla, con lo que esperabais y lo que pasó, va a la entrega.</div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; casos de prueba</div><pre><span class="ln" data-s="1">${P('bash informe.sh lunes.txt; echo $?')}
+Informe guardado en lunes.txt
+0
+</span><span class="ln" data-s="2">${P('bash informe.sh <span class="h">"informe del lunes.txt"</span>; echo $?')}
+Informe guardado en informe del lunes.txt
+0
+${P('ls')}
+informe.sh  informe.txt  <span class="h">'informe del lunes.txt'</span>  lunes.txt
+</span><span class="ln" data-s="3">${P('bash informe.sh /home/bmartin/informe.txt; echo $?')}
+informe.sh: line 12: /home/bmartin/informe.txt: <span class="h">Permission denied</span>
+No se pudo generar el informe
+<span class="h">1</span></span></pre></div>`},
+  { map:['cron'], arrows:[], steps:2, html:`
+    <div class="text">
+      <h2>Una tarea programada: cuándo y qué</h2>
+      <p><code>cron</code> es el servicio que lanza tareas a su hora. Cada cuenta tiene su propia tabla de tareas, la <strong>crontab</strong>. Cada línea dice <strong>cuándo</strong> y <strong>qué</strong>:</p>
+      <div class="fields">
+        <div><b>30</b><span>minuto</span></div>
+        <div><b>8</b><span>hora</span></div>
+        <div><b>*</b><span>día del mes</span></div>
+        <div><b>*</b><span>mes</span></div>
+        <div><b>1</b><span>día de la semana · 1 = lunes</span></div>
+        <div class="cmd"><b>/ruta/absoluta/orden</b><span>qué ejecuta</span></div>
+      </div>
+      <p><code>*</code> significa «todos». Esta línea: <strong>los lunes a las 08:30</strong>, con la hora del servidor.</p>
+      <div class="callout stop" data-s="2">cron no abre tu sesión ni entra en <code>~/aso-lab</code>: las rutas van <strong>completas</strong>, desde <code>/</code>.</div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; antes de programar</div><pre><span class="ln" data-s="1">${P('date')}
+Thu Nov 12 <span class="h">09:24</span>:51 CET 2026
+<span class="note"># la hora del servidor: la que usa cron</span>
+</span><span class="ln" data-s="2">${P('crontab -l')}
+no crontab for alopez
+<span class="note"># todavía no tienes ninguna tarea</span>
+${P('pwd')}
+<span class="h">/home/alopez/aso-lab</span>
+<span class="note"># la ruta completa para la tarea</span></span></pre></div>`},
+  { map:['guion','cron'], arrows:[], steps:3, html:`
+    <div class="text">
+      <h2>Programar con un calendario cercano</h2>
+      <ul>
+        <li data-s="1"><code>crontab -e</code> abre tu tabla. La primera vez pregunta el editor: elige <strong>1</strong>, nano.</li>
+        <li data-s="2">Escribe la línea al final, con una hora <strong>2 o 3 minutos</strong> después de la del servidor, para poder verla. Guarda y sal como antes.</li>
+        <li data-s="3"><code>crontab -l</code> comprueba que la tarea está guardada.</li>
+      </ul>
+      <div class="callout" data-s="2"><code>&gt;&gt; cron.log 2&gt;&amp;1</code> guarda los mensajes del script, los buenos y los de error. Sin esto, cron los descarta y no sabrías qué pasó.</div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; crontab -e</div><pre><span class="ln" data-s="1">${P('crontab -e')}
+no crontab for alopez - using an empty one
+
+Select an editor.  To change later, run 'select-editor'.
+  1. /bin/nano        &lt;---- easiest
+  2. /usr/bin/vim.basic
+  3. /usr/bin/vim.tiny
+  4. /bin/ed
+
+Choose 1-4 [1]: <span class="h">1</span>
+</span><span class="ln" data-s="2"><span class="note"># al final del archivo, en una sola línea:</span><span class="h wrap">${LINEA}</span>
+<span class="d">… Ctrl+O, Intro, Ctrl+X</span>
+crontab: installing new crontab
+</span><span class="ln" data-s="3">${P('crontab -l | tail -1')}
+<span class="wrap">${LINEA}</span></span></pre></div>`},
+  { map:['cron','informe','registro'], arrows:[4,5], steps:4, html:`
+    <div class="text">
+      <h2>Programar no es comprobar</h2>
+      <div class="vs"><div><h3>El planificador</h3>¿cron <strong>lanzó</strong> la tarea? Lo dice el registro del sistema.</div><div><h3>El script</h3>¿<strong>funcionó</strong>? Lo dicen <code>cron.log</code> y el informe.</div></div>
+      <ul>
+        <li data-s="1">Pasada la hora, ¿están los archivos?</li>
+        <li data-s="2"><code>cron.log</code> guarda el mensaje del script.</li>
+        <li data-s="3"><code>journalctl</code> enseña que cron la lanzó con tu cuenta. Lo podéis leer porque estáis en el grupo <code>adm</code>.</li>
+        <li data-s="4">Al terminar, <strong>retira la tarea</strong>: borra la línea con <code>crontab -e</code> y compruébalo.</li>
+      </ul>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; después de las 09:27</div><pre><span class="ln" data-s="1">${P('ls -l cron.txt cron.log')}
+-rw-rw-r-- 1 alopez alopez  50 Nov 12 09:27 cron.log
+-rw-rw-r-- 1 alopez alopez 512 Nov 12 09:27 cron.txt
+</span><span class="ln" data-s="2">${P('cat cron.log')}
+Informe guardado en /home/alopez/aso-lab/cron.txt
+</span><span class="ln" data-s="3">${P('journalctl -u cron --since today')}
+<span class="h">Nov 12 09:27:01</span> servidor CRON[16121]: (<span class="h">alopez</span>) CMD (/usr/bin/bash /home/…/informe.sh …)
+<span class="note"># alrededor salen líneas de pam_unix: cron abre y cierra
+# una sesión con tu cuenta para lanzar la tarea</span></span><span class="ln" data-s="4">${P('crontab -e')}
+<span class="d">… borra la línea, Ctrl+O, Intro, Ctrl+X</span>
+${P('crontab -l | grep informe')}
+<span class="note"># sin respuesta: la tarea ya no está</span></span></pre></div>`},
+  { map:[], arrows:[], steps:3, html:`
+    <div class="text">
+      <h2>PowerShell: objetos con propiedades</h2>
+      <p>En Bash, entre órdenes pasa <strong>texto</strong>. En PowerShell pasan <strong>objetos</strong>: cada proceso trae sus datos ya separados en <strong>propiedades</strong>.</p>
+      <ul>
+        <li data-s="1"><code>Select-Object</code> se queda con algunos objetos y algunas propiedades. Aquí, los 5 primeros por nombre, no los que más gastan.</li>
+        <li data-s="2"><code>Get-Member</code> enseña qué propiedades tiene un proceso.</li>
+        <li data-s="3"><code>Sort-Object</code> ordena por una propiedad. Aquí, por tiempo de procesador.</li>
+      </ul>
+      <div class="callout" data-s="3">En la práctica lo haréis por <strong>memoria</strong>: buscad qué propiedad la mide y explicad por qué la elegís.</div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; pwsh · se sale con exit</div><pre><span class="ln" data-s="1">${P('pwsh')}
+${PS('Get-Process | Select-Object -First 5 Name, Id')}
+
+Name           Id
+----           --
+agetty        812
+bash        15233
+containerd   1104
+cron          790
+dbus-daemon   702
+</span><span class="ln" data-s="2">${PS('Get-Process | Get-Member -MemberType Properties')}
+   TypeName: System.Diagnostics.Process
+Name       MemberType     Definition
+----       ----------     ----------
+<span class="h">CPU</span>        ScriptProperty System.Object CPU {get=…}
+<span class="h">Id</span>         Property       int Id {get;}
+<span class="h">Name</span>       AliasProperty  Name = ProcessName
+StartTime  Property       datetime StartTime {get;}
+<span class="note"># … y muchas más, entre ellas las de memoria</span></span><span class="ln" data-s="3">${PS('Get-Process | Sort-Object <span class="h">CPU</span> -Descending | Select-Object -First 5 Name, Id, CPU')}
+
+Name            Id    CPU
+----            --    ---
+snapd         1032  48.21
+containerd    1104  21.67
+systemd          1   9.84
+multipathd     411   6.02
+sshd          1050   1.35</span></pre></div>`},
+  { map:['nano','guion','bash','informe','cron','registro'], arrows:[1,2,3,4,5], html:`
+    <div class="text" style="grid-column:1/-1">
+      <h2>Lo que se puede hacer y lo que no</h2>
+      <div class="rules">
+        <div class="yes"><h3>Se puede, siempre</h3><ul>
+          <li>Crear y ejecutar scripts dentro de <code>~/aso-lab</code></li>
+          <li>Probar un destino sin permiso: falla, y es lo que queremos ver</li>
+          <li><code>crontab -e</code> y <code>crontab -l</code> de tu propia cuenta</li>
+          <li><code>journalctl -u cron</code> para ver si cron lanzó tu tarea</li>
+          <li><code>pwsh</code> para consultar procesos</li></ul></div>
+        <div class="no"><h3>No se hace nunca</h3><ul>
+          <li><code>sudo crontab</code> ni tareas con el usuario del proyecto</li>
+          <li>Escribir informes fuera de <code>~/aso-lab</code></li>
+          <li>Dejar la tarea puesta al acabar: se retira y se comprueba con <code>crontab -l</code></li></ul></div>
+      </div>
+      <div class="callout okc" style="margin-top:1em"><strong>Ahora, la Práctica A:</strong> repetid cada paso en vuestro servidor y apuntad el código comentado, la tabla de pruebas y la ficha de la tarea: usuario, calendario, acción, registros y comprobación.</div>
+    </div>`}
+];
+const CMDS = [
+  [['bash informe.sh','Ejecuta el script con Bash.'],
+   ['head -3 informe.txt','Enseña las 3 primeras líneas del archivo.']],
+  [['mkdir -p ~/aso-lab','Crea la carpeta de prácticas en tu directorio personal. <code>-p</code>: si ya existe, no da error.'],
+   ['cd ~/aso-lab','Entra en esa carpeta.'],
+   ['nano informe.sh','Abre el editor nano con ese archivo. <kbd>Ctrl</kbd>+<kbd>O</kbd> guarda, <kbd>Ctrl</kbd>+<kbd>X</kbd> sale.'],
+   ['ls -l / cat','<code>ls -l</code> enseña el archivo, su dueño y su tamaño. <code>cat</code> escribe su contenido en pantalla.']],
+  [['$1','El primer argumento que escribes al ejecutar el script.'],
+   ['${1:-informe.txt}','El primer argumento o, si no hay, <code>informe.txt</code>.'],
+   ['>  /  >&2','<code>&gt;</code> manda la salida a un archivo y lo reemplaza. <code>&gt;&amp;2</code> la manda a la salida de errores.'],
+   ['exit 1','Termina el script con código 1: algo salió mal.']],
+  [['bash informe.sh lunes.txt','Ejecuta el script con <code>lunes.txt</code> como primer argumento.'],
+   ['echo $?','Escribe el código con el que terminó la última orden. 0: bien. Otro número: error.']],
+  [['"informe del lunes.txt"','Las comillas hacen que el nombre con espacios sea un solo argumento.'],
+   ['ls','Lista los archivos de la carpeta. Los nombres con espacios salen entre comillas simples.']],
+  [['date','Fecha y hora del servidor.'],
+   ['crontab -l','Lista las tareas programadas de tu cuenta.'],
+   ['pwd','Escribe la ruta completa de la carpeta en la que estás.']],
+  [['crontab -e','Abre tu tabla de tareas para editarla. Al guardar, cron la carga.'],
+   ['>> cron.log 2>&1','<code>&gt;&gt;</code> añade al final del archivo sin borrar lo anterior. <code>2&gt;&amp;1</code> manda también los errores al mismo archivo.'],
+   ['crontab -l | tail -1','Lista tus tareas y enseña solo la última línea.']],
+  [['journalctl -u cron --since today','Lee el registro del servicio cron de hoy. <code>CMD</code> es la orden que lanzó y, entre paréntesis, la cuenta.'],
+   ['crontab -l | grep informe','Busca en tus tareas las líneas que contienen «informe».']],
+  [['pwsh','Abre PowerShell. Se sale con <code>exit</code>.'],
+   ['Get-Process','Obtiene los procesos como objetos.'],
+   ['Select-Object -First 5 Name, Id','Se queda con los 5 primeros y solo con las propiedades <code>Name</code> e <code>Id</code>.'],
+   ['Get-Member -MemberType Properties','Enseña las propiedades que tiene cada objeto.'],
+   ['Sort-Object CPU -Descending','Ordena por la propiedad <code>CPU</code>, de mayor a menor.']],
+  []
+];
+let si = 0, sub = 0;
+const stage = document.getElementById('stage'), dots = document.getElementById('dots');
+scenes.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Pantalla '+(i+1));b.addEventListener('click',()=>go(i,999));dots.appendChild(b)});
+function render(){
+  const s = scenes[si], steps = s.steps||0;
+  if(stage.dataset.si!==String(si)){stage.innerHTML=s.html;stage.dataset.si=si;stage.className='scene'+(s.cover?' cover':'')}
+  stage.querySelectorAll('[data-s]').forEach(el=>{const n=+el.dataset.s;const show=!steps||n<=sub;if(el.classList.contains('ln'))el.classList.toggle('hidden',!show);else el.hidden=!show});
+  document.querySelectorAll('.node').forEach(n=>n.classList.toggle('on',s.map.includes(n.dataset.n)));
+  document.querySelectorAll('.arrow').forEach(a=>a.classList.toggle('on',s.arrows.includes(+a.dataset.a)));
+  [...dots.children].forEach((d,i)=>{if(i===si)d.setAttribute('aria-current','step');else d.removeAttribute('aria-current')});
+  const list = CMDS[si]||[];
+  document.getElementById('cmds').hidden = !list.length;
+  document.getElementById('cmdlist').innerHTML = list.map(([c,t])=>`<dt>${c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</dt><dd>${t}</dd>`).join('');
+  document.getElementById('count').textContent=(si+1)+' / '+scenes.length;
+  document.getElementById('prev').disabled = si===0 && sub===0;
+  document.getElementById('next').disabled = si===scenes.length-1;
+}
+function go(i,subStart){si=Math.max(0,Math.min(scenes.length-1,i));const st=scenes[si].steps||0;sub=Math.min(subStart,st);render()}
+function next(){const st=scenes[si].steps||0;if(sub<st){sub++;render()}else if(si<scenes.length-1){go(si+1,0);if((scenes[si].steps||0)>0){sub=1;render()}}}
+function prev(){if(sub>1){sub--;render()}else if(si>0){go(si-1,999)}else{sub=0;render()}}
+document.getElementById('next').addEventListener('click',next);
+document.getElementById('prev').addEventListener('click',prev);
+document.addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev()}});
+go(0,0);
+</script>
+
+</body></html>
