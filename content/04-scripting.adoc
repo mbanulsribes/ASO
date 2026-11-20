@@ -97,37 +97,39 @@ Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y cond
 
 Programar no equivale a verificar. Revisa la ejecución, sus errores y el archivo generado; comprueba también qué sucede si el sistema estaba apagado o la operación anterior aún no había terminado.
 
-== Práctica A · Generar y revisar un informe
+== Práctica A · Registro de conexiones
 
-Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`.
+Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`. Escribe tú el script: puedes consultar `informe.sh` para ver la estructura, pero no copiarlo.
 
-. Guarda el script en un archivo de tu espacio de prácticas:
-.. Crea la carpeta, si aún no existe, y entra en ella:
-+
-[source,bash]
-----
-mkdir -p ~/aso-lab
-cd ~/aso-lab
-----
-.. Abre el editor con el nombre del archivo: `nano informe.sh`. Si el archivo no existe, `nano` lo crea al guardar.
-.. Escribe o pega el script. La primera línea debe ser `#!/usr/bin/env bash`.
-.. Guarda con `Ctrl+O` y confirma el nombre con `Intro`. Sal con `Ctrl+X`.
-.. Comprueba que se ha guardado: `cat informe.sh` muestra su contenido y `ls -l informe.sh` muestra el archivo con su tamaño.
-. Ejecútalo mediante Bash con un destino propio.
-. Comprueba el contenido y repite los tres casos de prueba.
-. Programa la tarea en tu `crontab` con un calendario cercano para poder comprobarla, y retírala después.
-. Registra una ejecución y distingue el resultado del script del estado del planificador.
+. Crea el script `conexiones.sh`. Debe:
+.. Recibir como primer argumento el archivo de registro y, si no lo recibe, usar `conexiones.log`.
+.. *Añadir* al final de ese archivo la fecha y las cuentas conectadas al servidor (`date` y `who`), sin borrar lo que ya había.
+.. Escribir «Registro actualizado en …» si lo consigue. Si no, escribir un mensaje de error por la salida de errores y terminar con código 1.
+. Comenta en el código qué hace cada línea.
+. Pruébalo con estos cuatro casos y anota en una tabla, para cada uno, qué esperabas, qué ocurrió y su código de salida (`echo $?`):
+.. sin argumento;
+.. con un nombre de archivo con espacios;
+.. con un destino sin permiso de escritura, por ejemplo el directorio personal de un compañero;
+.. ejecutándolo dos veces con el mismo archivo: demuestra con `cat` que conserva lo anterior.
+. Prográmalo en tu `crontab` para que se ejecute cada 10 minutos durante la clase, con rutas absolutas y guardando sus mensajes en `conexiones-cron.log`.
+. Cuando hayan pasado al menos dos ejecuciones, demuestra:
+.. que cron la lanzó, con `journalctl -u cron`;
+.. que funcionó, con tu archivo de registro y `conexiones-cron.log`;
+.. quién estaba conectado en cada ejecución.
+. Retira la tarea y comprueba con `crontab -l` que ya no está.
 
 *Entrega.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
 
 [.plan-b]
 === Plan B · Revisar antes de ejecutar
 
-Traza el script con dos destinos: `informe.txt` y `mis informes/lunes.txt`. Supón que el segundo directorio no existe. Explica qué debería observarse y por qué.
+Si no puedes trabajar en el servidor, escribe `conexiones.sh` y trázalo sobre el papel con dos destinos: `conexiones.log` y `mis registros/lunes.log`. Supón que el directorio `mis registros` no existe. Explica qué debería observarse en cada caso y por qué.
 
-Diseña una ejecución semanal y enumera las condiciones que deben cumplirse. Revisa este requisito: «generar un informe a las 08:30 y conservar los informes anteriores». Detecta qué parte del script tendrías que adaptar para evitar sobrescrituras.
+Explica qué cambiaría si el script usara `>` en lugar de `>>`, y por qué `>>` cumple el requisito «conservar los registros anteriores».
 
-*Entrega B.* Script propuesto, trazas y calendario interpretado. La prueba con el planificador real queda pendiente.
+Escribe la línea de `crontab` para ejecutarlo cada 10 minutos y explica cada campo.
+
+*Entrega B.* Script comentado, trazas y línea de cron interpretada. La prueba con el planificador real queda pendiente.
 
 == Comprueba lo que sabes
 
