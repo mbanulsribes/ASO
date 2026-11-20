@@ -99,7 +99,20 @@ Cada cuenta tiene su propia tabla de tareas, que se edita con `crontab -e` y se 
 └ minuto (0 - 59)
 ....
 
-`*` significa «todos». Así, `30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria del servidor. La orden se escribe con rutas absolutas. Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
+`30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria del servidor. En cada campo se pueden usar estos símbolos, y se pueden combinar:
+
+[cols="1,2,3",options="header"]
+|===
+|Símbolo |Ejemplo |Se lee
+|`*` todos |`* * * * *` |cada minuto
+|`,` lista |`0 8,14 * * *` |a las 8:00 y a las 14:00
+|`-` rango |`30 8 * * 1-5` |de lunes a viernes a las 8:30
+|`/` cada tanto |`*/10 * * * *` |cada 10 minutos
+|===
+
+Por ejemplo, `0 8-14/2 * * 1-5` se ejecuta de lunes a viernes a las 8, 10, 12 y 14 en punto.
+
+La orden se escribe con rutas absolutas. Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
 
 Programar no equivale a verificar. Revisa la ejecución, sus errores y el archivo generado; comprueba también qué sucede si el sistema estaba apagado o la operación anterior aún no había terminado.
 

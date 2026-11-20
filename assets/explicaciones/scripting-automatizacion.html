@@ -80,7 +80,7 @@ kbd{font-family:var(--mono);font-size:.85em;border:1.5px solid var(--line);borde
 table.tests{border-collapse:collapse;width:100%;font-size:.82em;margin:.3em 0 .8em;background:var(--panel)}
 table.tests th,table.tests td{border:1px solid var(--line);padding:.35em .55em;text-align:left;vertical-align:top}
 table.tests th{font-family:var(--mono);font-size:.8em;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
-table.tests td.ok{color:var(--ok);font-weight:600} table.tests td.ko{color:var(--danger);font-weight:600}
+table.tests.tight td,table.tests.tight th{padding:.2em .5em} table.tests td.ok{color:var(--ok);font-weight:600} table.tests td.ko{color:var(--danger);font-weight:600}
 /* navegación */
 nav.ctrl{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:6px;border-top:1px solid var(--line)}
 .dots{display:flex;gap:6px;flex-wrap:wrap}
@@ -273,10 +273,11 @@ No se pudo generar el informe
         <div><b>1</b><span>día de la semana<br>0 – 7<br>0 y 7 = domingo</span></div>
         <div class="cmd"><b>/ruta/absoluta/orden</b><span>qué ejecuta</span></div>
       </div>
-      <p><code>*</code> significa «todos». Esta línea: <strong>los lunes (1) a las 08:30</strong>, con la hora del servidor.</p>
+      <p>Esta línea: <strong>los lunes (1) a las 08:30</strong>, con la hora del servidor. En cada campo puedes usar más símbolos: mira la tabla «Símbolos en cada campo».</p>
+      
       <div class="callout stop" data-s="2">cron no abre tu sesión ni entra en <code>~/aso-lab</code>: las rutas van <strong>completas</strong>, desde <code>/</code>.</div>
     </div>
-    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; antes de programar</div><pre><span class="ln" data-s="1">${P('date')}
+    <div><div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; antes de programar</div><pre><span class="ln" data-s="1">${P('date')}
 Thu Nov 12 <span class="h">09:24</span>:51 CET 2026
 <span class="note"># la hora del servidor: la que usa cron</span>
 </span><span class="ln" data-s="2">${P('crontab -l')}
@@ -284,7 +285,16 @@ no crontab for alopez
 <span class="note"># todavía no tienes ninguna tarea</span>
 ${P('pwd')}
 <span class="h">/home/alopez/aso-lab</span>
-<span class="note"># la ruta completa para la tarea</span></span></pre></div>`},
+<span class="note"># la ruta completa para la tarea</span></span></pre></div>
+      <p style="margin:.9em 0 .3em"><strong>Símbolos en cada campo</strong></p>
+      <table class="tests tight">
+        <tr><th>Símbolo</th><th>Ejemplo</th><th>Se lee</th></tr>
+        <tr><td><code>*</code> todos</td><td><code>* * * * *</code></td><td>cada minuto</td></tr>
+        <tr><td><code>,</code> lista</td><td><code>0 8,14 * * *</code></td><td>a las 8:00 y a las 14:00</td></tr>
+        <tr><td><code>-</code> rango</td><td><code>30 8 * * 1-5</code></td><td>de lunes a viernes a las 8:30</td></tr>
+        <tr><td><code>/</code> cada tanto</td><td><code>*/10 * * * *</code></td><td>cada 10 minutos</td></tr>
+      </table>
+    </div>`},
   { map:['guion','cron'], arrows:[], steps:3, html:`
     <div class="text">
       <h2>Programar con un calendario cercano</h2>
