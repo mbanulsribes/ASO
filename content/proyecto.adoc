@@ -3,15 +3,17 @@
 :important-caption: Importante
 :table-caption!:
 
-En cada hito del proyecto, el delegado o delegada de ASO sube a la carpeta de ASO en OneDrive lo que el grupo ha hecho en el servidor. La docente lo revisa en esas fechas.
+En cada hito, el grupo añade a la *memoria del proyecto* los apartados de ASO: cómo está montado y administrado el servidor sobre el que funciona el proyecto. No son ejercicios: es la documentación técnica del propio proyecto, con los datos reales del servidor. La docente lo revisa en esas fechas.
+
+Cada apartado lleva un *texto de ejemplo* para ayudar con la redacción. Cambiad lo que va entre « » por los datos de vuestro servidor y adaptad lo que haga falta: la memoria debe describir vuestro servidor, no el ejemplo.
 
 == Quién hace qué
 
 [cols="1,3",options="header"]
 |===
 |Quién |Qué hace
-|Delegado o delegada de ASO |Reúne lo que pide cada hito y lo sube a la carpeta de ASO en OneDrive. Avisa a los otros delegados antes de un cambio en el servidor que les afecte.
-|Resto del grupo |Hace los cambios en el servidor y pasa las evidencias al delegado.
+|Delegado o delegada de ASO |Redacta o reúne los apartados de ASO de la memoria y los sube a la carpeta de ASO en OneDrive. Avisa a los otros delegados antes de un cambio en el servidor que les afecte.
+|Resto del grupo |Hace los cambios en el servidor y pasa los datos y las salidas al delegado.
 |Docente |Publica en Aules lo que hay que hacer y revisa las carpetas en cada hito.
 |===
 
@@ -21,103 +23,110 @@ En cada hito del proyecto, el delegado o delegada de ASO sube a la carpeta de AS
 |===
 | |Aules |OneDrive · carpeta de ASO
 |Quién escribe |La docente |El delegado de ASO
-|Qué contiene |Enlace al libro, avisos de cada unidad, fechas y tareas evaluables |Lo que pide cada hito
+|Qué contiene |Enlace al libro, avisos de cada unidad, fechas y tareas evaluables |Los apartados de ASO de la memoria del proyecto
 |===
 
 IMPORTANT: Nunca se suben contraseñas ni claves privadas a OneDrive.
 
 == En cada hito
 
-. *Reunir.* Antes de la fecha, el grupo reúne lo que pide el hito.
-. *Subir.* El delegado de ASO lo sube a la carpeta de ASO en OneDrive.
-. *Corregir.* Tras la revisión, el grupo corrige lo que la docente haya comentado.
+. *Escribir.* Antes de la fecha, el grupo añade a la memoria los apartados de ASO del hito, con los datos reales de su servidor.
+. *Subir.* El delegado de ASO sube la memoria actualizada a la carpeta de ASO en OneDrive.
+. *Corregir.* Tras la revisión, el grupo corrige en la memoria lo que la docente haya comentado.
 
 [.hito.hito-1]
-== Hito 1 · 8 de octubre · Instalar un sistema
+== Hito 1 · 8 de octubre · Instalación del sistema operativo
 
 [.hito-meta]
-Unidad link:01-instalacion.html[01] · Documento: *Ficha de instalación del servidor*
+Apartado de la memoria: *Sistema operativo del servidor*
 
 * *Hardware:* procesador, memoria y disco.
-* *Sistema:* Ubuntu Server y su versión, nombre del equipo y usuario de trabajo (sin contraseña).
+* *Sistema:* Ubuntu Server y su versión, nombre del equipo y usuario de administración (sin contraseña).
 * *Red del servidor:* dirección `192.168.10X.2/24`, puerta de enlace `192.168.10X.1`.
-* *Comprobaciones*, con la salida de cada orden y una frase que la explique: `hostname`, `ip address`, `ip route`, `df -h`, `free -h`.
-* *Una dificultad* encontrada durante la instalación y cómo se resolvió.
+* *Estado del sistema*, con la salida de `hostname`, `ip address`, `ip route`, `df -h` y `free -h`.
+* *Incidencias de la instalación* y cómo se resolvieron.
+
+.Texto de ejemplo
+====
+El servidor del proyecto es un equipo físico del aula con un procesador «modelo», «N» GB de memoria RAM y un disco de «N» GB. Sobre él funcionan todos los servicios del proyecto, así que su capacidad limita cuántos servicios pueden ejecutarse a la vez.
+
+Se ha instalado Ubuntu Server «versión», un sistema sin entorno gráfico pensado para servidores: consume menos recursos y se administra de forma remota. El equipo se llama «nombre» y se administra con la cuenta «usuario», que tiene permisos de administración mediante `sudo`.
+
+El servidor está en la red interna del grupo, con la dirección `192.168.10X.2/24`. Su puerta de enlace es `192.168.10X.1`, el router del grupo, a través del cual se llega al servidor desde la red del aula.
+
+Durante la instalación «describid el problema». Se resolvió «cómo» y se comprobó con «orden y resultado».
+====
 
 [.hito.hito-2]
-== Hito 2 · 17 de diciembre · Desplegar un servicio
+== Hito 2 · 17 de diciembre · Servicios en contenedores
 
 [.hito-meta]
-Unidades 02 a 05 · Solo el trabajo del administrador en el servidor del proyecto. Por cada unidad: lo que se hizo, las órdenes con su salida y una explicación breve. Las cuentas de ASO no forman parte del proyecto.
+Apartados de la memoria: *Administración del servidor* y *Servicios en contenedores*
 
-[cols="1,6",options="header"]
-|===
-|Unidad |Qué subir
-|link:02-linux.html[02] |Tablas de la cuenta de administración, grupo y directorio (ver abajo)
-|link:03-procesos.html[03] |Estado del servicio SSH
-|link:04-scripting.html[04] |Zona horaria y servicio cron
-|05 |Servicio web en un contenedor
-|===
+=== Administración del servidor
 
-=== Unidad 02 · Tablas con los datos reales del servidor
+Solo la administración del servidor del proyecto; las cuentas de ASO de cada alumno no forman parte del proyecto. Sustituid `proyecto` por el nombre real del usuario de administración.
 
-Recogen solo la administración del servidor. Sustituid `proyecto` por el nombre real del usuario del proyecto.
+*Cuentas y permisos de administración*
 
-.Cuentas
 [cols="2,3,3,2",options="header"]
 |===
 |Cuenta |Para qué se usa |Grupos |¿Administra?
-|`proyecto` |Proyecto Intermodular y preparar el servidor |`proyecto`, `sudo`, `adm`… |Sí, con `sudo`
+|`proyecto` |Proyecto Intermodular y administración del servidor |`proyecto`, `sudo`, `adm`… |Sí, con `sudo`
 |`root` |Administrador del sistema |`root` |Sí, a través de `sudo`
 |===
 
-.Grupos
-[cols="1,2,2",options="header"]
-|===
-|Grupo |Quién está |Para qué
-|`proyecto` |Solo el usuario del proyecto |Grupo personal
-|`sudo` |Solo el usuario del proyecto |Administrar
-|===
-
-.Directorios y permisos
 [cols="2,2,2,2",options="header"]
 |===
 |Directorio |Propietario y grupo |Permisos |Quién entra
-|`/home/proyecto` |`proyecto` · `proyecto` |`drwxr-x---` (750) |Solo el usuario del proyecto
+|`/home/proyecto` |`proyecto` · `proyecto` |`drwxr-x---` (750) |Solo el usuario de administración
 |===
 
-Cada tabla va acompañada de las órdenes que la demuestran y su salida: `id proyecto`, `getent group sudo` y `ls -ld /home/proyecto`.
+Con la salida de `id proyecto`, `getent group sudo` y `ls -ld /home/proyecto`.
 
-=== Unidad 03 · Servicio SSH
+.Texto de ejemplo
+====
+La administración del servidor se hace con una única cuenta, «proyecto», que pertenece al grupo `sudo`. No se trabaja directamente como `root`: cada orden de administración se ejecuta con `sudo`, de modo que queda registrada y se sabe quién la hizo. El directorio personal de esta cuenta tiene permisos `750`, así que nadie más puede entrar en él.
+====
 
-Es el servicio por el que todo el grupo entra al servidor del proyecto.
+*Acceso remoto.* Cómo se entra al servidor: servicio SSH, puerto y activación por socket, con la salida de `systemctl status ssh.socket ssh.service` y `systemctl is-enabled ssh.socket ssh.service`.
 
-[source,bash]
-----
-systemctl status ssh.socket ssh.service
-systemctl is-enabled ssh.socket ssh.service
-----
+.Texto de ejemplo
+====
+Al servidor se accede de forma remota por SSH, en el puerto 22. El router del grupo redirige ese puerto hacia el servidor, de modo que desde el aula se entra con `ssh «usuario»@10.113.136.25X`. En Ubuntu 24.04 el servicio se activa por socket: `ssh.socket` escucha el puerto y arranca `ssh.service` cuando llega la primera conexión. Todo el grupo depende de este servicio para trabajar, por eso no se detiene ni se reinicia sin avisar.
+====
 
-Explicad con una frase si cada unidad está activa y si está habilitada.
+*Hora del sistema y tareas programadas.* Zona horaria del servidor y servicio `cron`, con la salida de `timedatectl` y `systemctl status cron`.
 
-=== Unidad 04 · Zona horaria y servicio cron
+.Texto de ejemplo
+====
+El servidor usa la zona horaria `Europe/Madrid`. Así, la hora de los registros coincide con la hora real y las tareas programadas se ejecutan cuando se espera: con otra zona horaria, una tarea programada a las 08:30 se ejecutaría a otra hora. Las tareas programadas las lanza el servicio `cron`, que está activo en el servidor.
+====
 
-Cambio que hace el usuario del proyecto en la preparación del servidor de la unidad 04.
+=== Servicios en contenedores
 
-[source,bash]
-----
-timedatectl
-systemctl status cron
-----
+Qué servicio del proyecto funciona en un contenedor, cómo se ha desplegado y cómo se comprueba que responde. Se concretará al empezar la unidad link:05-docker.html[05].
 
-`timedatectl` debe mostrar `Time zone: Europe/Madrid`, y `cron` debe estar activo después de reiniciarlo. Explicad por qué la zona horaria importa para las tareas programadas.
+.Texto de ejemplo
+====
+El servicio «nombre» funciona en un contenedor creado a partir de la imagen «imagen». Se publica en el puerto «N» del servidor y sus datos se guardan en «volumen o directorio», fuera del contenedor, para que no se pierdan si el contenedor se elimina. Se comprueba que responde con «orden y resultado».
+====
 
 [.hito.hito-3]
-== Hito 3 · 26 de enero · Gestionar contenedores
+== Hito 3 · 26 de enero · Gestión de contenedores
 
 [.hito-meta]
-Unidad 06 · Lo que se hizo, las órdenes con su salida y una explicación breve.
+Apartado de la memoria: *Gestión de los contenedores*
 
-* Despliegue descrito con *Compose*.
-* *Copia de seguridad* de los datos del servicio.
-* *Recuperación probada* a partir de esa copia.
+* *Despliegue descrito con Compose:* servicios, puertos, volúmenes y archivo de configuración.
+* *Copias de seguridad* de los datos de los servicios, coordinadas con el plan de copias de SAD.
+* *Recuperación:* cómo se recupera un servicio a partir de su copia y la prueba realizada.
+
+.Texto de ejemplo
+====
+Los servicios del proyecto se describen en el archivo «compose.yaml», que indica para cada uno la imagen, los puertos publicados y los volúmenes con sus datos. Así el despliegue completo se puede repetir con una sola orden.
+
+Los datos de «servicio» se copian «cada cuánto» en «dónde», según el plan de copias de seguridad de SAD.
+
+La recuperación se ha probado: «qué se hizo» y se comprobó que «resultado».
+====
