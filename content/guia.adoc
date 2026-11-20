@@ -11,7 +11,7 @@ Tenemos clase los lunes y martes, dos horas cada día.
 * *Preparación del servidor:* cambios que el equipo hace antes de la práctica en el servidor o en el router, como instalar un paquete, añadir una cuenta a un grupo o abrir un puerto.
 * *Teoría inicial:* conceptos necesarios para comprender las operaciones.
 * *Práctica A:* trabajo en el servidor del grupo y comprobación de resultados.
-* *Plan B:* un supuesto que puede resolverse sin acceder al servidor.
+* *Práctica B: Escenario Real de Producción:* desde la unidad 04, un encargo como los de una empresa que resuelves en el servidor del grupo: decidir, implementar, probar, poner en marcha y explicar el resultado a quien lo pidió. En las unidades 01 a 03 su lugar lo ocupa un *Plan B*, un supuesto que puede resolverse sin acceder al servidor.
 * *Preguntas de repaso:* para comprobar si puedes explicar lo que has aprendido.
 
 == El servidor es compartido
@@ -32,7 +32,9 @@ Una captura necesita explicación. Una salida copiada del enunciado debe identif
 
 == Cuando no hay acceso al servidor
 
-Resuelve el Plan B que aparece debajo de la práctica. Incluye un caso, actividades y una entrega específica. Puedes usar un editor o trabajar sobre papel; no exige instalar programas en el ordenador del aula.
+En las unidades 01 a 03, resuelve el Plan B que aparece debajo de la práctica. Incluye un caso, actividades y una entrega específica. Puedes usar un editor o trabajar sobre papel; no exige instalar programas en el ordenador del aula.
+
+Desde la unidad 04, si un día no puedes entrar en el servidor, avanza en las partes de diseño y análisis de la Práctica B y deja las pruebas para cuando vuelva la conexión.
 
 El Plan B permite avanzar en comprensión y diseño. Cuando vuelva la conexión se comprobarán las operaciones prácticas pendientes. Saber explicar un despliegue y haberlo ejecutado son evidencias diferentes.
 

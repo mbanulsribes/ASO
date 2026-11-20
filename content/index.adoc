@@ -1,7 +1,7 @@
 = Administración de sistemas operativos
 :description: Del primer servidor a los servicios en red. Un recorrido práctico por Linux, automatización y contenedores para 2.º de ASIR.
 
-En este curso aprenderás a preparar un sistema, entender cómo funciona y mantener sus servicios. Cada unidad combina conceptos, una práctica guiada y un *Plan B sin conexión al servidor*.
+En este curso aprenderás a preparar un sistema, entender cómo funciona y mantener sus servicios. Cada unidad combina conceptos, una práctica guiada y, desde la unidad 04, un *escenario real de producción* que se resuelve en el servidor.
 
 Trabajamos los *lunes y martes, dos horas cada día*. Los tres hitos conectan el módulo con el Proyecto Intermodular: consulta link:proyecto.html[qué entrega ASO en cada hito]. Después del 22 de enero completaremos directorio, acceso remoto, impresión e integración de sistemas.
 

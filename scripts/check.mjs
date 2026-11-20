@@ -18,7 +18,7 @@ for(const file of files){
     if(!content.includes(`id="${hash}"`))errors.push(`${file}: ancla inexistente ${ref}`);
   }
  }
- if(/^\d\d-/.test(file) && !html.includes('Plan B'))errors.push(`${file}: falta Plan B`);
+ if(/^\d\d-/.test(file) && !html.includes('Plan B') && !html.includes('Práctica B'))errors.push(`${file}: falta Plan B o Práctica B`);
  if(html.includes('Unresolved directive'))errors.push(`${file}: directiva sin resolver`);
 }
 for(const id of published){
