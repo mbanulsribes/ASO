@@ -112,7 +112,11 @@ Cada cuenta tiene su propia tabla de tareas, que se edita con `crontab -e` y se 
 
 Por ejemplo, `0 8-14/2 * * 1-5` se ejecuta de lunes a viernes a las 8, 10, 12 y 14 en punto.
 
-La orden se escribe con rutas absolutas. Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
+La orden se escribe con rutas absolutas.
+
+TIP: Para ampliar, con más ejemplos de calendarios: link:https://cubepath.com/es/docs/herramientas-de-automatizaci%C3%B3n/trabajos-cron-sintaxis-y-ejemplos-practicos[Trabajos cron: sintaxis y ejemplos prácticos^].
+
+Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
 
 Programar no equivale a verificar. Revisa la ejecución, sus errores y el archivo generado; comprueba también qué sucede si el sistema estaba apagado o la operación anterior aún no había terminado.
 
