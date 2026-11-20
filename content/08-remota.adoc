@@ -1,7 +1,7 @@
 = Administración remota
 :unit: 08
 :description: Accede con claves, diagnostica conexiones a través del router y documenta el estado del sistema.
-:period: Después del 22 de enero
+:period: Después del 26 de enero
 :ra: RA4 · aplicación de RA3
 :note-caption: Nota
 :warning-caption: Atención

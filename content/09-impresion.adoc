@@ -1,7 +1,7 @@
 = Servidores de impresión
 :unit: 09
 :description: Configura impresoras lógicas, administra colas y comparte el servicio entre clientes.
-:period: Después del 22 de enero
+:period: Después del 26 de enero
 :ra: RA5
 :note-caption: Nota
 :warning-caption: Atención

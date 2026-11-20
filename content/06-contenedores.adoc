@@ -1,7 +1,7 @@
 = Gestión de contenedores
 :unit: 06
 :description: Mantén servicios, interpreta registros y prepara una recuperación de los datos.
-:period: Antes del 22 de enero
+:period: Antes del 26 de enero
 :ra: Aplicación de RA2 · RA3 · RA7
 :important-caption: Importante
 :warning-caption: Atención
@@ -80,7 +80,7 @@ WARNING: *Copia de seguridad antes de los pasos 4 y 5.* Copia el volumen con el 
 . Recrea la instancia según el procedimiento y comprueba la conservación de datos.
 . Restaura la copia en un volumen de prueba y verifica su contenido.
 
-*Entrega.* Configuración, diagnóstico de una incidencia y evidencia de recuperación. El hito del 22 de enero incluye administrar y recuperar, no solo arrancar.
+*Entrega.* Configuración, diagnóstico de una incidencia y evidencia de recuperación. El hito del 26 de enero incluye administrar y recuperar, no solo arrancar.
 
 [.plan-b]
 === Plan B · Resolver tres incidencias

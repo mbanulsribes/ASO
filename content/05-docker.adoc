@@ -1,7 +1,7 @@
 = Docker y despliegue
 :unit: 05
 :description: Despliega un servicio y entiende la relación entre imágenes, puertos y datos.
-:period: Hasta el 21 de diciembre
+:period: Hasta el 17 de diciembre
 :ra: Aplicación de RA2 · RA4
 :note-caption: Nota
 :important-caption: Importante
@@ -130,7 +130,7 @@ curl -I http://localhost:PUERTO
 . Accede desde el navegador del aula a `http://10.113.136.25x:PUERTO`.
 . Documenta la respuesta del servicio y cualquier incidencia, indicando en qué salto del recorrido se produjo.
 
-*Entrega.* Ficha del despliegue, orden adaptada y comprobación desde el servidor y desde el cliente. El objetivo del 21 de diciembre es desplegar un servicio, no únicamente crear un contenedor.
+*Entrega.* Ficha del despliegue, orden adaptada y comprobación desde el servidor y desde el cliente. El objetivo del 17 de diciembre es desplegar un servicio, no únicamente crear un contenedor.
 
 [.plan-b]
 === Plan B · Seguir la petición web

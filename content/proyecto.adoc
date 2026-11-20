@@ -45,7 +45,7 @@ Unidad link:01-instalacion.html[01] · Documento: *Ficha de instalación del ser
 * *Una dificultad* encontrada durante la instalación y cómo se resolvió.
 
 [.hito.hito-2]
-== Hito 2 · 21 de diciembre · Desplegar un servicio
+== Hito 2 · 17 de diciembre · Desplegar un servicio
 
 [.hito-meta]
 Unidades 02 a 05 · Solo el trabajo del administrador en el servidor del proyecto. Por cada unidad: lo que se hizo, las órdenes con su salida y una explicación breve. Las cuentas de ASO no forman parte del proyecto.
@@ -113,7 +113,7 @@ systemctl status cron
 `timedatectl` debe mostrar `Time zone: Europe/Madrid`, y `cron` debe estar activo después de reiniciarlo. Explicad por qué la zona horaria importa para las tareas programadas.
 
 [.hito.hito-3]
-== Hito 3 · 22 de enero · Gestionar contenedores
+== Hito 3 · 26 de enero · Gestionar contenedores
 
 [.hito-meta]
 Unidad 06 · Lo que se hizo, las órdenes con su salida y una explicación breve.

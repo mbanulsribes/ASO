@@ -1,7 +1,7 @@
 = Servicios de directorio
 :unit: 07
 :description: Organiza identidades, administra objetos e integra clientes con un servicio de directorio.
-:period: Después del 22 de enero
+:period: Después del 26 de enero
 :ra: RA1 · aplicación de RA7
 :note-caption: Nota
 :important-caption: Importante

@@ -1,7 +1,7 @@
 = Redes heterogéneas
 :unit: 10
 :description: Comparte recursos entre Linux y Windows y verifica quién puede acceder a ellos.
-:period: Después del 22 de enero
+:period: Después del 26 de enero
 :ra: RA6
 :note-caption: Nota
 :warning-caption: Atención
