@@ -110,7 +110,7 @@ button:focus-visible{outline:3px solid var(--mine);outline-offset:2px}
 <div class="app">
   <header class="top">
     <span class="kicker">ASO · UD4 Scripting y automatización · Ubuntu Server 24.04</span>
-    <span class="kicker" id="count">1 / 10</span>
+    <span class="kicker" id="count">1 / 9</span>
   </header>
 
   <div>
@@ -146,7 +146,6 @@ button:focus-visible{outline:3px solid var(--mine);outline-offset:2px}
 <script>
 const P = s => `<span class="p">alopez@servidor:~/aso-lab$</span> ${s}`;
 const PH = s => `<span class="p">alopez@servidor:~$</span> ${s}`;
-const PS = s => `<span class="p">PS /home/alopez/aso-lab&gt;</span> ${s}`;
 const DF = `Filesystem                         Size  Used Avail Use% Mounted on
 tmpfs                              781M  1.6M  780M   1% /run
 /dev/mapper/ubuntu--vg-ubuntu--lv   98G   12G   82G  13% /
@@ -343,44 +342,6 @@ Informe guardado en /home/alopez/aso-lab/cron.txt
 <span class="d">… borra la línea, Ctrl+O, Intro, Ctrl+X</span>
 ${P('crontab -l | grep informe')}
 <span class="note"># sin respuesta: la tarea ya no está</span></span></pre></div>`},
-  { map:[], arrows:[], steps:3, html:`
-    <div class="text">
-      <h2>PowerShell: objetos con propiedades</h2>
-      <p>En Bash, entre órdenes pasa <strong>texto</strong>. En PowerShell pasan <strong>objetos</strong>: cada proceso trae sus datos ya separados en <strong>propiedades</strong>.</p>
-      <ul>
-        <li data-s="1"><code>Select-Object</code> se queda con algunos objetos y algunas propiedades. Aquí, los 5 primeros por nombre, no los que más gastan.</li>
-        <li data-s="2"><code>Get-Member</code> enseña qué propiedades tiene un proceso.</li>
-        <li data-s="3"><code>Sort-Object</code> ordena por una propiedad. Aquí, por tiempo de procesador.</li>
-      </ul>
-      <div class="callout" data-s="3">En la práctica lo haréis por <strong>memoria</strong>: buscad qué propiedad la mide y explicad por qué la elegís.</div>
-    </div>
-    <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; pwsh · se sale con exit</div><pre><span class="ln" data-s="1">${P('pwsh')}
-${PS('Get-Process | Select-Object -First 5 Name, Id')}
-
-Name           Id
-----           --
-agetty        812
-bash        15233
-containerd   1104
-cron          790
-dbus-daemon   702
-</span><span class="ln" data-s="2">${PS('Get-Process | Get-Member -MemberType Properties')}
-   TypeName: System.Diagnostics.Process
-Name       MemberType     Definition
-----       ----------     ----------
-<span class="h">CPU</span>        ScriptProperty System.Object CPU {get=…}
-<span class="h">Id</span>         Property       int Id {get;}
-<span class="h">Name</span>       AliasProperty  Name = ProcessName
-StartTime  Property       datetime StartTime {get;}
-<span class="note"># … y muchas más, entre ellas las de memoria</span></span><span class="ln" data-s="3">${PS('Get-Process | Sort-Object <span class="h">CPU</span> -Descending | Select-Object -First 5 Name, Id, CPU')}
-
-Name            Id    CPU
-----            --    ---
-snapd         1032  48.21
-containerd    1104  21.67
-systemd          1   9.84
-multipathd     411   6.02
-sshd          1050   1.35</span></pre></div>`},
   { map:['nano','guion','bash','informe','cron','registro'], arrows:[1,2,3,4,5], html:`
     <div class="text" style="grid-column:1/-1">
       <h2>Lo que se puede hacer y lo que no</h2>
@@ -389,8 +350,7 @@ sshd          1050   1.35</span></pre></div>`},
           <li>Crear y ejecutar scripts dentro de <code>~/aso-lab</code></li>
           <li>Probar un destino sin permiso: falla, y es lo que queremos ver</li>
           <li><code>crontab -e</code> y <code>crontab -l</code> de tu propia cuenta</li>
-          <li><code>journalctl -u cron</code> para ver si cron lanzó tu tarea</li>
-          <li><code>pwsh</code> para consultar procesos</li></ul></div>
+          <li><code>journalctl -u cron</code> para ver si cron lanzó tu tarea</li></ul></div>
         <div class="no"><h3>No se hace nunca</h3><ul>
           <li><code>sudo crontab</code> ni tareas con el usuario del proyecto</li>
           <li>Escribir informes fuera de <code>~/aso-lab</code></li>
@@ -422,11 +382,6 @@ const CMDS = [
    ['crontab -l | tail -1','Lista tus tareas y enseña solo la última línea.']],
   [['journalctl -u cron --since today','Lee el registro del servicio cron de hoy. <code>CMD</code> es la orden que lanzó y, entre paréntesis, la cuenta.'],
    ['crontab -l | grep informe','Busca en tus tareas las líneas que contienen «informe».']],
-  [['pwsh','Abre PowerShell. Se sale con <code>exit</code>.'],
-   ['Get-Process','Obtiene los procesos como objetos.'],
-   ['Select-Object -First 5 Name, Id','Se queda con los 5 primeros y solo con las propiedades <code>Name</code> e <code>Id</code>.'],
-   ['Get-Member -MemberType Properties','Enseña las propiedades que tiene cada objeto.'],
-   ['Sort-Object CPU -Descending','Ordena por la propiedad <code>CPU</code>, de mayor a menor.']],
   []
 ];
 let si = 0, sub = 0;

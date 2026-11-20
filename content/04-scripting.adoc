@@ -25,23 +25,11 @@ timedatectl
 
 NOTE: Cambiar la zona horaria no modifica servicios ni datos, así que no hace falta copia de seguridad.
 
-Para la parte de PowerShell, como no trabajamos con equipos Windows, instalaremos PowerShell en el servidor del grupo. Hacedlo una vez, desde el usuario del proyecto:
-
-[source,bash]
-----
-sudo snap install powershell --classic
-pwsh --version
-----
-
-Después, cualquier cuenta puede abrirlo con `pwsh` y salir con `exit`.
-
-NOTE: Instalar PowerShell añade un programa independiente y no modifica servicios ni datos, así que no hace falta copia de seguridad.
-
 == De una orden a un guion
 
 Un script reúne instrucciones para repetir una operación. Su utilidad depende de que los datos de entrada estén claros, los errores se detecten y el resultado se pueda comprobar. Automatizar una operación incorrecta solo permite repetir el error más deprisa.
 
-En Bash trabajaremos variables, comillas, argumentos, condiciones, bucles y funciones. En PowerShell aprenderemos a tratar objetos, seleccionar propiedades y combinar cmdlets. Ambos permiten administrar, aunque su modelo de datos sea diferente.
+En Bash trabajaremos variables, comillas, argumentos, condiciones, bucles y funciones.
 
 == Un informe sencillo en Bash
 
@@ -66,19 +54,6 @@ fi
 Las comillas conservan el argumento aunque contenga espacios. La redirección reemplaza el archivo de destino. Debes elegir una ruta propia de prácticas, dentro de `~/aso-lab`, y comprobar el resultado. Este ejemplo inicial comprueba el estado final del grupo; un guion más exigente debe comprobar cada operación cuya ejecución correcta sea necesaria.
 
 La depuración combina lectura, datos de prueba y observación. Prueba un caso normal, una ruta con espacios y un destino sin permisos de escritura, por ejemplo el directorio personal de un compañero. Documenta lo que esperabas y lo que ocurrió.
-
-== Objetos en PowerShell
-
-En PowerShell una canalización puede transportar objetos con propiedades. Por ejemplo:
-
-[source,powershell]
-----
-Get-Process | Select-Object -First 5 Name, Id
-----
-
-El objetivo es seleccionar cinco procesos y mostrar su nombre e identificador. No los ordena por consumo. Para construir un informe útil hay que escoger qué propiedades medir y qué pregunta se quiere responder.
-
-PowerShell en Linux no incluye todos los cmdlets de Windows: los que gestionan servicios, registro o cuentas de Windows no están disponibles. Para aprender el modelo de objetos y las canalizaciones es suficiente.
 
 Los scripts de gestión de cuentas y directorio se retomarán cuando conozcamos esos servicios. Crear usuarios mediante un script exige el mismo cuidado con permisos y datos que hacerlo de forma manual.
 
@@ -142,7 +117,6 @@ cd ~/aso-lab
 . Comprueba el contenido y repite los tres casos de prueba.
 . Programa la tarea en tu `crontab` con un calendario cercano para poder comprobarla, y retírala después.
 . Registra una ejecución y distingue el resultado del script del estado del planificador.
-. Obtén con PowerShell los cinco procesos que más memoria usan y explica qué propiedad has utilizado.
 
 *Entrega.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
 
