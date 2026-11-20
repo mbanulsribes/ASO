@@ -105,7 +105,7 @@ El servidor usa la zona horaria `Europe/Madrid`. Así, la hora de los registros 
 
 === Servicios en contenedores
 
-Qué servicio del proyecto funciona en un contenedor, cómo se ha desplegado y cómo se comprueba que responde. Se concretará al empezar la unidad link:05-docker.html[05].
+Qué servicio del proyecto funciona en un contenedor, cómo se ha desplegado y cómo se comprueba que responde. Se concretará al empezar la unidad 05.
 
 .Texto de ejemplo
 ====
