@@ -86,7 +86,20 @@ Los scripts de gestión de cuentas y directorio se retomarán cuando conozcamos 
 
 Una tarea programada necesita una acción, una identidad, un calendario y un registro del resultado. También necesita rutas y un entorno definidos: una orden que funciona en tu terminal puede fallar al ejecutarse sin tu sesión.
 
-Cada cuenta tiene su propia tabla de tareas, que se edita con `crontab -e` y se consulta con `crontab -l`. En una entrada de cron de usuario, `30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria del servidor. Después se escribe la orden, con rutas absolutas. Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
+Cada cuenta tiene su propia tabla de tareas, que se edita con `crontab -e` y se consulta con `crontab -l`. Cada línea tiene cinco campos que indican cuándo se ejecuta y, detrás, la orden que se ejecuta:
+
+[literal]
+....
+30   8   *   *   1   /ruta/absoluta/orden
+│    │   │   │   │
+│    │   │   │   └ día de la semana (1 = lunes)
+│    │   │   └ mes
+│    │   └ día del mes
+│    └ hora
+└ minuto
+....
+
+`*` significa «todos». Así, `30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria del servidor. La orden se escribe con rutas absolutas. Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
 
 Programar no equivale a verificar. Revisa la ejecución, sus errores y el archivo generado; comprueba también qué sucede si el sistema estaba apagado o la operación anterior aún no había terminado.
 
