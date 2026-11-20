@@ -121,23 +121,7 @@ Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`. Escribe tú el script: pued
 *Entrega en Teams.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
 
 [.plan-b]
-=== Plan B · Revisar antes de ejecutar
-
-Si no puedes trabajar en el servidor, escribe `conexiones.sh` y trázalo sobre el papel con dos destinos: `conexiones.log` y `mis registros/lunes.log`. Supón que el directorio `mis registros` no existe. Explica qué debería observarse en cada caso y por qué.
-
-Explica qué cambiaría si el script usara `>` en lugar de `>>`, y por qué `>>` cumple el requisito «conservar los registros anteriores».
-
-Escribe la línea de `crontab` para ejecutarlo cada 10 minutos y explica cada campo.
-
-*Entrega B.* Script comentado, trazas y línea de cron interpretada. La prueba con el planificador real queda pendiente.
-
-== Comprueba lo que sabes
-
-* ¿Para qué sirven los argumentos de un script?
-* ¿Qué ocurre si el directorio de trabajo de una tarea cambia?
-* ¿Cómo demostrarías que una tarea se ejecutó correctamente?
-
-=== Ejercicio · Leer y escribir calendarios de cron
+=== Plan B · Leer y escribir calendarios de cron
 
 Completa la tabla. En las primeras filas tienes la expresión y escribes cuándo se ejecuta y para qué podría servir; en las últimas, al revés.
 
@@ -154,3 +138,11 @@ Completa la tabla. En las primeras filas tienes la expresión y escribes cuándo
 | |Los viernes a las 14:30 |Copia de seguridad semanal
 | |El día 1 de cada mes a las 00:00 |Archivar los registros del mes anterior
 |===
+
+*Entrega B en Teams.* La tabla completa.
+
+== Comprueba lo que sabes
+
+* ¿Para qué sirven los argumentos de un script?
+* ¿Qué ocurre si el directorio de trabajo de una tarea cambia?
+* ¿Cómo demostrarías que una tarea se ejecutó correctamente?
