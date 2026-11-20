@@ -99,7 +99,7 @@ Programar no equivale a verificar. Revisa la ejecución, sus errores y el archiv
 
 == Práctica A · Registro de conexiones
 
-Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`. Escribe tú el script: puedes consultar `informe.sh` para ver la estructura, pero no copiarlo.
+Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`. Escribe tú el script: puedes consultar `informe.sh` para ver la estructura.
 
 . Crea el script `conexiones.sh`. Debe:
 .. Recibir como primer argumento el archivo de registro y, si no lo recibe, usar `conexiones.log`.
@@ -118,7 +118,7 @@ Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`. Escribe tú el script: pued
 .. quién estaba conectado en cada ejecución.
 . Retira la tarea y comprueba con `crontab -l` que ya no está.
 
-*Entrega.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
+*Entrega en Teams.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
 
 [.plan-b]
 === Plan B · Revisar antes de ejecutar
