@@ -48,27 +48,26 @@ Unidad link:01-instalacion.html[01] · Documento: *Ficha de instalación del ser
 == Hito 2 · 21 de diciembre · Desplegar un servicio
 
 [.hito-meta]
-Unidades 02 a 05 · Por cada unidad: lo que se hizo, las órdenes con su salida y una explicación breve.
+Unidades 02 a 05 · Solo el trabajo del administrador en el servidor del proyecto. Por cada unidad: lo que se hizo, las órdenes con su salida y una explicación breve. Las cuentas de ASO no forman parte del proyecto.
 
 [cols="1,6",options="header"]
 |===
 |Unidad |Qué subir
-|link:02-linux.html[02] |Tablas de cuentas, grupos y directorios (ver abajo)
-|03 |Procesos y servicio SSH
-|04 |Script y tarea programada
+|link:02-linux.html[02] |Tablas de la cuenta de administración, grupo y directorio (ver abajo)
+|link:03-procesos.html[03] |Estado del servicio SSH
+|link:04-scripting.html[04] |Zona horaria y servicio cron
 |05 |Servicio web en un contenedor
 |===
 
 === Unidad 02 · Tablas con los datos reales del servidor
 
-Recogen el usuario del proyecto y las cuentas de ASO de todo el equipo. Sustituid `proyecto` y `alopez` por los nombres reales.
+Recogen solo la administración del servidor. Sustituid `proyecto` por el nombre real del usuario del proyecto.
 
 .Cuentas
 [cols="2,3,3,2",options="header"]
 |===
 |Cuenta |Para qué se usa |Grupos |¿Administra?
 |`proyecto` |Proyecto Intermodular y preparar el servidor |`proyecto`, `sudo`, `adm`… |Sí, con `sudo`
-|`alopez` (una por alumno) |Prácticas de ASO |`alopez`, `aso` |No
 |`root` |Administrador del sistema |`root` |Sí, a través de `sudo`
 |===
 
@@ -76,8 +75,7 @@ Recogen el usuario del proyecto y las cuentas de ASO de todo el equipo. Sustitui
 [cols="1,2,2",options="header"]
 |===
 |Grupo |Quién está |Para qué
-|Uno por cuenta |Solo esa cuenta |Grupo personal
-|`aso` |Cuentas de ASO del equipo |Compartir `/srv/aso`
+|`proyecto` |Solo el usuario del proyecto |Grupo personal
 |`sudo` |Solo el usuario del proyecto |Administrar
 |===
 
@@ -86,11 +84,33 @@ Recogen el usuario del proyecto y las cuentas de ASO de todo el equipo. Sustitui
 |===
 |Directorio |Propietario y grupo |Permisos |Quién entra
 |`/home/proyecto` |`proyecto` · `proyecto` |`drwxr-x---` (750) |Solo el usuario del proyecto
-|`/home/alopez` (uno por alumno) |`alopez` · `alopez` |`drwxr-x---` (750) |Solo esa cuenta
-|`/srv/aso` |`root` · `aso` |`drwxrws---` (2770) |Todo el grupo `aso`
 |===
 
-Cada tabla va acompañada de las órdenes que la demuestran y su salida: `id` de cada cuenta, `getent group aso`, `getent group sudo` y `ls -ld /home/* /srv/aso`.
+Cada tabla va acompañada de las órdenes que la demuestran y su salida: `id proyecto`, `getent group sudo` y `ls -ld /home/proyecto`.
+
+=== Unidad 03 · Servicio SSH
+
+Es el servicio por el que todo el grupo entra al servidor del proyecto.
+
+[source,bash]
+----
+systemctl status ssh.socket ssh.service
+systemctl is-enabled ssh.socket ssh.service
+----
+
+Explicad con una frase si cada unidad está activa y si está habilitada.
+
+=== Unidad 04 · Zona horaria y servicio cron
+
+Cambio que hace el usuario del proyecto en la preparación del servidor de la unidad 04.
+
+[source,bash]
+----
+timedatectl
+systemctl status cron
+----
+
+`timedatectl` debe mostrar `Time zone: Europe/Madrid`, y `cron` debe estar activo después de reiniciarlo. Explicad por qué la zona horaria importa para las tareas programadas.
 
 [.hito.hito-3]
 == Hito 3 · 22 de enero · Gestionar contenedores
