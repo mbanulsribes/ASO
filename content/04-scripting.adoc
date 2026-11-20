@@ -121,9 +121,13 @@ Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`. Escribe tú el script: pued
 *Entrega en Teams.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
 
 [.plan-b]
-=== Plan B · Leer y escribir calendarios de cron
+=== Plan B · Revisar antes de ejecutar
 
-Completa la tabla. En las primeras filas tienes la expresión y escribes cuándo se ejecuta y para qué podría servir; en las últimas, al revés.
+Traza el script con dos destinos: `informe.txt` y `mis informes/lunes.txt`. Supón que el segundo directorio no existe. Explica qué debería observarse y por qué.
+
+Diseña una ejecución semanal y enumera las condiciones que deben cumplirse. Revisa este requisito: «generar un informe a las 08:30 y conservar los informes anteriores». Detecta qué parte del script tendrías que adaptar para evitar sobrescrituras.
+
+Completa además esta tabla de calendarios de cron. En las primeras filas tienes la expresión y escribes cuándo se ejecuta y para qué podría servir; en las últimas, al revés.
 
 [cols="3,3,3",options="header"]
 |===
@@ -139,7 +143,7 @@ Completa la tabla. En las primeras filas tienes la expresión y escribes cuándo
 | |El día 1 de cada mes a las 00:00 |Archivar los registros del mes anterior
 |===
 
-*Entrega B en Teams.* La tabla completa.
+*Entrega B en Teams.* Script propuesto, trazas, calendario interpretado y tabla de calendarios completa. La prueba con el planificador real queda pendiente.
 
 == Comprueba lo que sabes
 
