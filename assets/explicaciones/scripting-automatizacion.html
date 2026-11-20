@@ -266,14 +266,14 @@ No se pudo generar el informe
       <h2>Una tarea programada: cuándo y qué</h2>
       <p><code>cron</code> es el servicio que lanza tareas a su hora. Cada cuenta tiene su propia tabla de tareas, la <strong>crontab</strong>. Cada línea dice <strong>cuándo</strong> y <strong>qué</strong>:</p>
       <div class="fields">
-        <div><b>30</b><span>minuto</span></div>
-        <div><b>8</b><span>hora</span></div>
-        <div><b>*</b><span>día del mes</span></div>
-        <div><b>*</b><span>mes</span></div>
-        <div><b>1</b><span>día de la semana · 1 = lunes</span></div>
+        <div><b>30</b><span>minuto<br>0 – 59</span></div>
+        <div><b>8</b><span>hora<br>0 – 23</span></div>
+        <div><b>*</b><span>día del mes<br>1 – 31</span></div>
+        <div><b>*</b><span>mes<br>1 – 12</span></div>
+        <div><b>1</b><span>día de la semana<br>0 – 7<br>0 y 7 = domingo</span></div>
         <div class="cmd"><b>/ruta/absoluta/orden</b><span>qué ejecuta</span></div>
       </div>
-      <p><code>*</code> significa «todos». Esta línea: <strong>los lunes a las 08:30</strong>, con la hora del servidor.</p>
+      <p><code>*</code> significa «todos». Esta línea: <strong>los lunes (1) a las 08:30</strong>, con la hora del servidor.</p>
       <div class="callout stop" data-s="2">cron no abre tu sesión ni entra en <code>~/aso-lab</code>: las rutas van <strong>completas</strong>, desde <code>/</code>.</div>
     </div>
     <div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp; antes de programar</div><pre><span class="ln" data-s="1">${P('date')}

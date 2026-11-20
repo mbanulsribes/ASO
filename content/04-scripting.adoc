@@ -92,11 +92,11 @@ Cada cuenta tiene su propia tabla de tareas, que se edita con `crontab -e` y se 
 ....
 30   8   *   *   1   /ruta/absoluta/orden
 │    │   │   │   │
-│    │   │   │   └ día de la semana (1 = lunes)
-│    │   │   └ mes
-│    │   └ día del mes
-│    └ hora
-└ minuto
+│    │   │   │   └ día de la semana (0 - 7, donde 0 y 7 son domingo; 1 = lunes)
+│    │   │   └ mes (1 - 12)
+│    │   └ día del mes (1 - 31)
+│    └ hora (0 - 23)
+└ minuto (0 - 59)
 ....
 
 `*` significa «todos». Así, `30 8 * * 1` representa una ejecución los lunes a las 08:30, según la zona horaria del servidor. La orden se escribe con rutas absolutas. Para comparar, estudiaremos sobre el papel los desencadenadores, acciones y condiciones del Programador de tareas de Windows.
