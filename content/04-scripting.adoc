@@ -10,7 +10,20 @@ TIP: Antes de empezar, mira la explicación paso a paso link:assets/explicacione
 
 == Preparación del servidor
 
-Los scripts de Bash y las tareas de `cron` se trabajan con tu cuenta de ASO, sin privilegios: no hay que cambiar nada en el servidor.
+Los scripts de Bash y las tareas de `cron` se trabajan con tu cuenta de ASO, sin privilegios.
+
+`cron` lanza las tareas a la hora del servidor, así que el servidor tiene que estar en la hora de España. Hacedlo una vez, desde el usuario del proyecto:
+
+[source,bash]
+----
+sudo timedatectl set-timezone Europe/Madrid
+sudo systemctl restart cron
+timedatectl
+----
+
+`timedatectl` debe mostrar `Time zone: Europe/Madrid` y una hora local igual a la de vuestro reloj. Se reinicia `cron` para que use la nueva zona horaria.
+
+NOTE: Cambiar la zona horaria no modifica servicios ni datos, así que no hace falta copia de seguridad.
 
 Para la parte de PowerShell, como no trabajamos con equipos Windows, instalaremos PowerShell en el servidor del grupo. Hacedlo una vez, desde el usuario del proyecto:
 
