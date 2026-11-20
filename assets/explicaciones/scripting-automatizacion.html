@@ -264,7 +264,7 @@ No se pudo generar el informe
   { map:['cron'], arrows:[], steps:2, html:`
     <div class="text">
       <h2>Una tarea programada: cuándo y qué</h2>
-      <p><code>cron</code> es el servicio que lanza tareas a su hora. Cada cuenta tiene su propia tabla de tareas, la <strong>crontab</strong>. Cada línea dice <strong>cuándo</strong> y <strong>qué</strong>:</p>
+      <p><code>cron</code> es un <strong>proceso</strong> que está siempre en marcha en el servidor, esperando la hora de cada tarea para lanzarla. Como en la unidad 3, es un servicio: <code>systemd</code> lo mantiene funcionando. Cada cuenta tiene su propia tabla de tareas, la <strong>crontab</strong>. Cada línea dice <strong>cuándo</strong> y <strong>qué</strong>:</p>
       <div class="fields">
         <div><b>30</b><span>minuto<br>0 – 59</span></div>
         <div><b>8</b><span>hora<br>0 – 23</span></div>
