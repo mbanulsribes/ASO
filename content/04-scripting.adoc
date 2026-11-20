@@ -121,13 +121,9 @@ Trabaja con tu cuenta de ASO, dentro de `~/aso-lab`. Escribe tú el script: pued
 *Entrega en Teams.* Código comentado, tabla de pruebas y ficha de la tarea: usuario, calendario, acción, registros y comprobación.
 
 [.plan-b]
-=== Plan B · Revisar antes de ejecutar
+=== Plan B · El informe de los lunes
 
-Traza el script con dos destinos: `informe.txt` y `mis informes/lunes.txt`. Supón que el segundo directorio no existe. Explica qué debería observarse y por qué.
-
-Diseña una ejecución semanal y enumera las condiciones que deben cumplirse. Revisa este requisito: «generar un informe a las 08:30 y conservar los informes anteriores». Detecta qué parte del script tendrías que adaptar para evitar sobrescrituras.
-
-Completa además esta tabla de calendarios de cron. En las primeras filas tienes la expresión y escribes cuándo se ejecuta y para qué podría servir; en las últimas, al revés.
+*Para empezar.* Completa la tabla de calendarios de cron. En las primeras filas tienes la expresión y escribes cuándo se ejecuta y para qué podría servir; en las últimas, al revés.
 
 [cols="3,3,3",options="header"]
 |===
@@ -143,7 +139,27 @@ Completa además esta tabla de calendarios de cron. En las primeras filas tienes
 | |El día 1 de cada mes a las 00:00 |Archivar los registros del mes anterior
 |===
 
-*Entrega B en Teams.* Script propuesto, trazas, calendario interpretado y tabla de calendarios completa. La prueba con el planificador real queda pendiente.
+*El encargo.* Administras el servidor de una pequeña empresa. Cada lunes, en la reunión de las 09:00, la responsable revisa el estado del servidor. Te pide: «generar un informe a las 08:30 y conservar los informes anteriores». Quiere también saber qué semanas no se generó.
+
+Tienes `informe.sh` de esta unidad, que hoy reemplaza siempre el mismo archivo.
+
+. *Diseño.* Diseña la ejecución semanal y enumera las condiciones que deben cumplirse para que el informe esté a las 08:30: estado del servidor, hora, servicio, cuenta, permisos, rutas y espacio. Justifica con qué cuenta se ejecuta la tarea y por qué no con el usuario del proyecto.
+. *Script.* Detecta qué parte de `informe.sh` tendrías que adaptar para evitar sobrescrituras. Propón cómo nombrar o guardar cada informe para que no se pierda ninguno y se pueda saber de qué lunes es.
+. *Calendario.* Escribe la línea de `crontab` completa, con rutas absolutas y un registro de los mensajes del script. Explica cada campo.
+. *Incidencias.* Durante el trimestre ocurre esto. Para cada caso separa lo que se observa de lo que supones, di qué comprobarías y propón una solución.
+.. El lunes después de un festivo no hay informe. El servidor estuvo apagado el fin de semana y se encendió a las 09:15. En `journalctl -u cron` de ese día no aparece ninguna línea `CMD` a las 08:30.
+.. Otro lunes `journalctl -u cron` muestra la línea `CMD` a las 08:30, pero no hay informe. El registro del script dice:
++
+[literal]
+....
+informe.sh: line 12: /srv/informes/informe.txt: Permission denied
+No se pudo generar el informe
+....
+.. Tras reinstalar el servidor, los informes aparecen con la hora de las 07:30.
+.. A final de curso hay más de 30 informes en el directorio y nadie los borra.
+. *Verificación.* Explica cómo demostrarías el lunes siguiente, solo con evidencias, que todo funcionó: qué miras, en qué orden y qué esperas ver.
+
+*Entrega B en Teams.* Tabla de calendarios completa y un documento técnico con el diseño justificado, el script adaptado y comentado, la línea de `crontab` explicada, el análisis de cada incidencia y el plan de verificación. La prueba con el planificador real queda pendiente.
 
 == Comprueba lo que sabes
 
